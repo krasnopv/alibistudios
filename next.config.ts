@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   output: 'export',
   distDir: 'docs',
   trailingSlash: true,
+  basePath: '/alibistudios',
+  assetPrefix: '/alibistudios/',
   images: {
     unoptimized: true,
   },
