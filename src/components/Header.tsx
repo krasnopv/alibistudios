@@ -53,7 +53,7 @@ const Header = () => {
           className="p-2 hover:opacity-70 transition-opacity duration-200"
         >
           <Image 
-            src={isScrolled ? "/menu.svg" : "/menu.svg"} 
+            src={isScrolled ? "./menu.svg" : "./menu.svg"} 
             alt="Menu" 
             width={24} 
             height={24}
@@ -64,7 +64,7 @@ const Header = () => {
         {/* Center - Logo */}
         <div className="flex items-center">
           <Image 
-            src={isScrolled ? "/logo_black.svg" : "/logo_white.svg"}
+            src={isScrolled ? "./logo_black.svg" : "./logo_white.svg"}
             alt="Alibi Studios" 
             width={120} 
             height={40}
@@ -78,7 +78,7 @@ const Header = () => {
           className="p-2 hover:opacity-70 transition-opacity duration-200"
         >
           <Image 
-            src="/contact.svg" 
+            src="./contact.svg" 
             alt="Contact" 
             width={24} 
             height={24}
@@ -124,7 +124,7 @@ const Header = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <img 
-                  src="/x.svg" 
+                  src="./x.svg" 
                   alt="Close menu" 
                   className="w-6 h-6"
                 />

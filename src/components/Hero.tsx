@@ -10,7 +10,7 @@ const Hero = () => {
       {/* Background Video */}
       <div className="relative w-full">
         <video
-          src="/clip.mp4"
+          src="./clip.mp4"
           autoPlay
           loop
           muted
