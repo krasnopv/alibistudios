@@ -111,7 +111,75 @@ src/
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### GitHub Pages (Static Export)
+
+This project is configured for GitHub Pages deployment with static export.
+
+#### Prerequisites
+- GitHub repository
+- GitHub Actions enabled
+
+#### Setup Steps
+
+1. **Enable GitHub Pages**
+   - Go to your repository Settings
+   - Navigate to "Pages" section
+   - Set Source to "GitHub Actions"
+
+2. **Deploy to GitHub Pages**
+   ```bash
+   # Push to main branch (triggers automatic deployment)
+   git add .
+   git commit -m "Deploy to GitHub Pages"
+   git push origin main
+   ```
+
+3. **Manual Build (Optional)**
+   ```bash
+   # Build for GitHub Pages
+   npm run build:gh-pages
+   
+   # The build output will be in the 'docs' folder
+   # You can then commit and push the docs folder
+   ```
+
+#### Configuration Details
+
+The project uses conditional configuration for GitHub Pages:
+- **Local Development**: `npm run dev` (port 3001)
+- **GitHub Pages Build**: Automatic via GitHub Actions
+- **Output Directory**: `docs/` (configured in `next.config.ts`)
+- **Base Path**: `/alibistudios` (your repository name)
+
+#### Environment Variables for GitHub Pages
+
+No environment variables needed for static export. The build process:
+1. Automatically detects GitHub Actions environment
+2. Switches to static export mode
+3. Builds to `docs/` directory
+4. Deploys to GitHub Pages
+
+#### Troubleshooting
+
+If deployment fails:
+1. Check GitHub Actions logs in your repository
+2. Ensure the workflow file exists in `.github/workflows/deploy.yml`
+3. Verify the repository name matches the `basePath` in `next.config.ts`
+
+**Common Issues:**
+
+**404 Errors for Assets (logos, images, etc.):**
+- This happens when assets aren't being copied to the build output
+- The `getAssetPath` function should handle this automatically
+- If assets are still missing, check that they exist in the `public/` directory
+- Ensure the GitHub Actions environment variable `GITHUB_ACTIONS: 'true'` is set correctly
+
+**Build Failures:**
+- Check that all dependencies are installed correctly
+- Verify that the build command `npm run build:gh-pages` completes successfully
+- Look for any TypeScript or ESLint errors in the build logs
+
+### Vercel (Alternative)
 
 1. **Connect your repository** to Vercel
 2. **Add environment variables** in Vercel dashboard
