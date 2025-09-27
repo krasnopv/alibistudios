@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import FooterItem from './FooterItem';
 
 const Footer = () => {
   const locations = [
@@ -37,53 +38,52 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="text-black border-t border-black">
-      <div className="container mx-auto py-16">
-        {/* Locations Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
-        >
-          {locations.map((location, index) => (
-            <motion.div
-              key={location.city}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="bg-white p-8 border border-black"
-            >
-              <h3 className="text-[14px] font-[700] leading-[21px] text-black mb-2">
-                {location.city}
-              </h3>
-              <p className="text-[14px] font-[400] leading-[21px] text-black mb-4 whitespace-pre-line">
-                {location.address}
-              </p>
-              <span className="text-[#FF0066] text-[14px] font-[400] leading-[21px]">
-                {location.country} →
-              </span>
-            </motion.div>
-          ))}
-        </motion.div>
+    <footer className="w-full text-black">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="row">
+          {/* Locations Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-6 gap-8 mb-16"
+          >
+            {locations.map((location, index) => (
+              <FooterItem
+                key={location.city}
+                city={location.city}
+                address={location.address}
+                country={location.country}
+                index={index}
+              />
+            ))}
+          </motion.div>
 
-        {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="border-t border-black py-8 text-center"
-        >
-          <div className="text-[32px] font-[400] leading-[48px] text-black mb-4">
-            ©
-          </div>
-          <div className="text-[14px] font-[400] leading-[21px] text-black">
-            Copyright © 2025 Alibi Studios
-          </div>
-        </motion.div>
+          {/* Bottom Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="py-8 text-center"
+          >
+            <div className="mb-8">
+              <svg 
+                width="32" 
+                height="32" 
+                viewBox="0 0 24 24" 
+                fill="currentColor" 
+                className="mx-auto text-black"
+              >
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </div>
+            <div className="text-[14px] font-[400] leading-[21px] text-black">
+              Copyright © 2025 Alibi Studios
+            </div>
+          </motion.div>
+        </div>
       </div>
     </footer>
   );
