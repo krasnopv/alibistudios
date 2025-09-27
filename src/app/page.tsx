@@ -1,6 +1,7 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import Services from '@/components/Services';
+import ThumbnailSection from '@/components/ThumbnailSection';
+import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
 import Team from '@/components/Team';
@@ -9,14 +10,15 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center">
       <Header />
-      <main className="w-[1440px] flex flex-col items-center">
-        <Hero />
-        <Services />
+      <main className="w-full flex flex-col items-center">
+        <Hero videoSrc="clip.mp4" />
+        <ThumbnailSection />
+        <OurServices />
+        <Team />
         <Awards />
         <Films />
-        <Team />
         <Locations />
       </main>
       <Footer />

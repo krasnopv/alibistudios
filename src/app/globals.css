@@ -25,19 +25,16 @@
   --font-heading: var(--font-plus-jakarta-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #fafafa;
-    --muted: #1a1a1a;
-    --border: #2a2a2a;
-  }
-}
+/* Dark mode disabled - using light theme only */
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+/* Reset margins and padding for specific elements only */
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, pre, hr, figure, figcaption {
   margin: 0;
+  padding: 0;
 }
 
 html {
@@ -58,6 +55,16 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-poppins), system-ui, sans-serif;
   font-weight: 600;
   line-height: 1.2;
+}
+
+h2 {
+  text-align: left;
+}
+
+/* Row wrapper for content spacing */
+.row {
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Custom scrollbar */
@@ -161,4 +168,69 @@ h1, h2, h3, h4, h5, h6 {
       text-decoration: line-through;
       text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
+    }
+
+    /* Services grid staggered margins */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .service-card:nth-child(2) {
+        margin-top: 90%;
+      }
+      
+      .service-card:nth-child(3),
+      .service-card:nth-child(5) {
+        margin-top: -42%;
+      }
+      
+      .service-card:nth-child(4),
+      .service-card:nth-child(6) {
+        margin-top: 48%;
+      }
+    }
+    
+    @media (min-width: 1024px) and (max-width: 1279px) {
+      .service-card:nth-child(2) {
+        margin-top: 65%;
+      }
+      
+      .service-card:nth-child(3),
+      .service-card:nth-child(5) {
+        margin-top: -33%;
+      }
+      
+      .service-card:nth-child(4),
+      .service-card:nth-child(6) {
+        margin-top: 33%;
+      }
+    }
+    
+    @media (min-width: 1280px) and (max-width: 1535px)  {
+      .service-card:nth-child(2) {
+        margin-top: 55%;
+      }
+      
+      .service-card:nth-child(3),
+      .service-card:nth-child(5) {
+        margin-top: -22%;
+      }
+      
+      .service-card:nth-child(4),
+      .service-card:nth-child(6) {
+        margin-top: 32%;
+      }
+    }
+    
+    @media (min-width: 1536px)  {
+      .service-card:nth-child(2) {
+        margin-top: 45%;
+      }
+      
+      .service-card:nth-child(3),
+      .service-card:nth-child(5) {
+        margin-top: -18%;
+      }
+      
+      .service-card:nth-child(4),
+      .service-card:nth-child(6) {
+        margin-top: 28%;
+      }
     }

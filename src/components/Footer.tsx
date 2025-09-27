@@ -37,8 +37,8 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[#F8F9FA] text-black border-t border-black">
-      <div className="w-[1440px] px-4 sm:px-6 lg:px-8 py-16">
+    <footer className="text-black border-t border-black">
+      <div className="container mx-auto py-16">
         {/* Locations Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

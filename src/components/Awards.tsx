@@ -19,8 +19,8 @@ const Awards = () => {
   ];
 
   return (
-    <section className="py-20 bg-[#F8F9FA]">
-      <div className="w-[1440px] px-4 sm:px-6 lg:px-8">
+    <section className="py-20">
+      <div className="container mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

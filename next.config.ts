@@ -1,12 +1,19 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === 'production';
+const isGHPages = process.env.GITHUB_ACTIONS === 'true';
+
 const nextConfig: NextConfig = {
-  // GitHub Pages configuration
-  output: 'export',
-  distDir: 'docs',
+  // GitHub Pages configuration (only for production builds)
+  ...(isGHPages && {
+    output: 'export',
+    distDir: 'docs',
+    basePath: '/alibistudios',
+    assetPrefix: '/alibistudios/',
+  }),
+  
+  // Common configuration
   trailingSlash: true,
-  basePath: '/alibistudios',
-  assetPrefix: '/alibistudios/',
   images: {
     unoptimized: true,
   },

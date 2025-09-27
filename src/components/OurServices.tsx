@@ -1,8 +1,8 @@
 'use client';
 
-const Team = () => {
+const OurServices = () => {
   return (
-    <section className="w-full py-20">
+    <section id="our_services" className="w-full py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}
@@ -17,7 +17,7 @@ const Team = () => {
               verticalAlign: 'middle',
               color: '#FF0066'
             }}>
-              Our Team
+              Our Services
             </h1>
           </div>
 
@@ -33,7 +33,7 @@ const Team = () => {
               verticalAlign: 'middle',
               color: '#000000'
             }}>
-              Alibi's multidisciplinary studios are powered by multicultural teams of seasoned industry veterans with decades of experience. Independent and adaptable, we tailor our pipeline and team to fit the unique needs of every project. Whether collaborating as partners or taking the lead on full productions, our scalable resources and deep expertise deliver exceptional results for clients worldwide. →
+              From traditional VFX to real-time and AI content & pipelines to Immersive gaming and interactive experiences, Alibi embraces the latest in virtual production stages, immersive LED volumes, forced-perspective media architecture. →
             </p>
           </div>
         </div>
@@ -42,4 +42,4 @@ const Team = () => {
   );
 };
 
-export default Team;
+export default OurServices;

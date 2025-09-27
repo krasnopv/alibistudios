@@ -2,16 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { getAssetPath } from '@/lib/assets';
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+      const heroHeight = window.innerHeight; // Hero section height (100vh)
+      const scrollY = window.scrollY;
+      const progress = Math.min(scrollY / heroHeight, 1); // 0 to 1
+      setScrollProgress(progress);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -40,35 +44,45 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg' 
-        : 'bg-transparent'
-    }`}>
+    <header 
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        backgroundColor: `rgba(255, 255, 255, ${scrollProgress * 0.95})`,
+        backdropFilter: `blur(${scrollProgress * 12}px)`,
+        boxShadow: scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none'
+      }}
+    >
       <div className="w-full flex justify-center">
-        <div className="w-[1440px] h-14 px-10 py-2.5 flex items-center justify-between">
+        <div className="container h-14 py-2.5 px-4 sm:px-6 lg:px-8">
+          <div className="row flex items-center justify-between">
         {/* Left - Burger Menu */}
         <button 
           onClick={handleMenuToggle}
           className="p-2 hover:opacity-70 transition-opacity duration-200"
         >
           <Image 
-            src={isScrolled ? "./menu.svg" : "./menu.svg"} 
+            src={getAssetPath('menu.svg')} 
             alt="Menu" 
             width={24} 
             height={24}
-            className={`w-6 h-6 ${isScrolled ? 'brightness-0' : 'brightness-0 invert'}`}
+            className="w-6 h-6 transition-all duration-300"
+            style={{
+              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+            }}
           />
         </button>
 
         {/* Center - Logo */}
         <div className="flex items-center">
           <Image 
-            src={isScrolled ? "./logo_black.svg" : "./logo_white.svg"}
+            src={getAssetPath(scrollProgress > 0.8 ? 'logo_black.svg' : 'logo_white.svg')}
             alt="Alibi Studios" 
             width={120} 
             height={40}
-            className="h-10 w-auto"
+            className="h-10 w-auto transition-all duration-300"
+            style={{
+              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+            }}
           />
         </div>
 
@@ -78,13 +92,17 @@ const Header = () => {
           className="p-2 hover:opacity-70 transition-opacity duration-200"
         >
           <Image 
-            src="./contact.svg" 
+            src={getAssetPath('contact.svg')} 
             alt="Contact" 
             width={24} 
             height={24}
-            className={`w-6 h-6 ${isScrolled ? 'brightness-0' : 'brightness-0 invert'}`}
+            className="w-6 h-6 transition-all duration-300"
+            style={{
+              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+            }}
           />
         </a>
+          </div>
         </div>
       </div>
 
@@ -124,7 +142,7 @@ const Header = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <img 
-                  src="./x.svg" 
+                  src={getAssetPath('x.svg')} 
                   alt="Close menu" 
                   className="w-6 h-6"
                 />
