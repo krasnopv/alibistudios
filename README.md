@@ -166,19 +166,6 @@ If deployment fails:
 2. Ensure the workflow file exists in `.github/workflows/deploy.yml`
 3. Verify the repository name matches the `basePath` in `next.config.ts`
 
-**Common Issues:**
-
-**404 Errors for Assets (logos, images, etc.):**
-- This happens when assets aren't being copied to the build output
-- The `getAssetPath` function should handle this automatically
-- If assets are still missing, check that they exist in the `public/` directory
-- Ensure the GitHub Actions environment variable `GITHUB_ACTIONS: 'true'` is set correctly
-
-**Build Failures:**
-- Check that all dependencies are installed correctly
-- Verify that the build command `npm run build:gh-pages` completes successfully
-- Look for any TypeScript or ESLint errors in the build logs
-
 ### Vercel (Alternative)
 
 1. **Connect your repository** to Vercel
