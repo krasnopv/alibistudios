@@ -32,14 +32,14 @@ const Films = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Import Sanity client dynamically to avoid SSR issues
-        const { client, queries } = await import('@/lib/sanity');
-        
         // Fetch films and categories in parallel
-        const [filmsData, categoriesData] = await Promise.all([
-          client.fetch(queries.films),
-          client.fetch(queries.categoriesWithFilms)
+        const [filmsResponse, categoriesResponse] = await Promise.all([
+          fetch('/api/films'),
+          fetch('/api/categories')
         ]);
+        
+            const filmsData = await filmsResponse.json();
+            const categoriesData = await categoriesResponse.json();
         
         setFilms(filmsData);
         setCategories(categoriesData);

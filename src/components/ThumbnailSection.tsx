@@ -21,9 +21,8 @@ const ThumbnailSection = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        // Import Sanity client dynamically to avoid SSR issues
-        const { client, queries } = await import('@/lib/sanity');
-        const data = await client.fetch(queries.services);
+        const response = await fetch('/api/services');
+        const data = await response.json();
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
