@@ -18,8 +18,9 @@ const Footer = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await fetch('/api/addresses');
-        const data = await response.json();
+        // Import Sanity client dynamically to avoid SSR issues
+        const { client, queries } = await import('@/lib/sanity');
+        const data = await client.fetch(queries.addresses);
         setLocations(data);
       } catch (error) {
         console.error('Error fetching addresses:', error);
@@ -84,7 +85,7 @@ const Footer = () => {
             style={{ transform: 'translateY(50%)' }}
           >
             <img 
-              src="/Layer_1.svg" 
+              src="./Layer_1.svg" 
               alt="Layer 1" 
               className="w-full h-auto absolute"
               style={{ marginTop: '-8.5%' }}
