@@ -20,6 +20,7 @@ COPY . .
 ENV NEXT_PUBLIC_SANITY_PROJECT_ID=srer6l4b
 ENV NEXT_PUBLIC_SANITY_DATASET=production
 ENV NODE_ENV=production
+ENV SERVER_DEPLOY=true
 
 # Build the application
 RUN npm run build
@@ -40,9 +41,10 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy the built application
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 
@@ -51,4 +53,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
