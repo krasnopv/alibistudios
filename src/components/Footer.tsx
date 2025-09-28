@@ -18,9 +18,8 @@ const Footer = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        // Import Sanity client directly
-        const { client, queries } = await import('@/lib/sanity');
-        const data = await client.fetch(queries.addresses);
+        const response = await fetch('/api/addresses');
+        const data = await response.json();
         setLocations(data);
       } catch (error) {
         console.error('Error fetching addresses:', error);

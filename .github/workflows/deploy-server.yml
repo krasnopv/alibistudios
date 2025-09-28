@@ -1,0 +1,88 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build
+      env:
+        SERVER_DEPLOY: true
+        NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+        NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+        SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+        
+    - name: Build Docker image
+      run: docker build -t alibi-app:${{ github.sha }} .
+      
+    - name: Save Docker image
+      run: docker save alibi-app:${{ github.sha }} | gzip > alibi-app.tar.gz
+      
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: 159.69.81.179
+        username: deployer
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          # Create deployment directory if it doesn't exist
+          sudo mkdir -p /opt/alibi
+          sudo chown deployer:deployer /opt/alibi
+          
+          # Stop existing containers
+          cd /opt/alibi
+          if [ -f docker-compose.yml ]; then
+            docker-compose down || true
+          fi
+          
+          # Clean up old images
+          docker image prune -f || true
+          
+    - name: Copy files to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: 159.69.81.179
+        username: deployer
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        source: "alibi-app.tar.gz,docker-compose.yml,nginx.conf,Dockerfile"
+        target: "/opt/alibi"
+        
+    - name: Load and start containers
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: 159.69.81.179
+        username: deployer
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd /opt/alibi
+          
+          # Load Docker image
+          docker load < alibi-app.tar.gz
+          docker tag alibi-app:${{ github.sha }} alibi-app:latest
+          
+          # Start services
+          docker-compose up -d
+          
+          # Clean up
+          rm alibi-app.tar.gz
+          
+          # Show status
+          docker-compose ps

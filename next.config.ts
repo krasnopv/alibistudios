@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === 'production';
 const isGHPages = process.env.GITHUB_ACTIONS === 'true';
+const isServerDeploy = process.env.SERVER_DEPLOY === 'true';
 
 const nextConfig: NextConfig = {
   // GitHub Pages configuration (only for production builds)
@@ -10,6 +11,11 @@ const nextConfig: NextConfig = {
     distDir: 'docs',
     basePath: '/alibistudios',
     assetPrefix: '/alibistudios/',
+  }),
+  
+  // Server deployment configuration
+  ...(isServerDeploy && {
+    output: 'standalone',
   }),
   
   // Common configuration
