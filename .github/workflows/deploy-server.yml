@@ -64,7 +64,7 @@ jobs:
         port: 2219
         username: deployer
         key: ${{ secrets.SERVER_SSH_KEY }}
-        source: "alibi-app.tar.gz,docker-compose.yml,nginx.conf,Dockerfile"
+        source: "alibi-app.tar.gz,docker-compose.yml"
         target: "/opt/alibi"
         
     - name: Load and start containers

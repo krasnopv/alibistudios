@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   alibi-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: alibi-app:latest
     container_name: alibi-app
     restart: unless-stopped
     ports:
