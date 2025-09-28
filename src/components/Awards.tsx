@@ -21,8 +21,9 @@ const Awards = () => {
   useEffect(() => {
     const fetchAwards = async () => {
       try {
-        const response = await fetch('/api/awards');
-        const data = await response.json();
+        // Import Sanity client directly
+        const { client, queries } = await import('@/lib/sanity');
+        const data = await client.fetch(queries.awards);
         setAwards(data);
       } catch (error) {
         console.error('Error fetching awards:', error);
