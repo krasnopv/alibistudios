@@ -1,0 +1,159 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+
+interface ContentItem {
+  id: string | number;
+  title: string;
+  image: string;
+  description?: string;
+  url?: string;
+  category?: string;
+}
+
+interface ContentGridProps {
+  title: string;
+  subtitle?: string;
+  categories: string[];
+  items: ContentItem[];
+  defaultCategory?: string;
+  onItemClick?: (item: ContentItem) => void;
+  className?: string;
+}
+
+const ContentGrid = ({
+  title,
+  subtitle,
+  categories,
+  items,
+  defaultCategory = 'All',
+  onItemClick,
+  className = ''
+}: ContentGridProps) => {
+  const [activeFilter, setActiveFilter] = useState(defaultCategory);
+
+  const filteredItems = activeFilter === 'All' 
+    ? items 
+    : items.filter(item => item.category === activeFilter);
+
+  const handleItemClick = (item: ContentItem) => {
+    if (onItemClick) {
+      onItemClick(item);
+    } else if (item.url) {
+      window.location.href = item.url;
+    }
+  };
+
+  return (
+    <section className={`w-full py-20 ${className}`}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="row">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h1 style={{
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: 250,
+              fontStyle: 'normal',
+              fontSize: '64px',
+              lineHeight: '120%',
+              letterSpacing: '0%',
+              verticalAlign: 'middle',
+              color: '#FF0066'
+            }}>
+              {title}
+            </h1>
+            {subtitle && (
+              <p style={{
+                fontFamily: 'Plus Jakarta Sans',
+                fontWeight: 250,
+                fontStyle: 'normal',
+                fontSize: '40px',
+                lineHeight: '120%',
+                letterSpacing: '0%',
+                verticalAlign: 'middle',
+                color: '#000000'
+              }}>
+                {subtitle}
+              </p>
+            )}
+          </motion.div>
+
+          {/* Filter Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-8 mb-12"
+          >
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveFilter(category)}
+                className={`text-[28px] font-[400] leading-[33.6px] transition-all duration-300 cursor-pointer ${
+                  activeFilter === category
+                    ? 'text-black active-filter'
+                    : 'text-black hover:text-black hover-filter'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Content Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-5 xl:gap-5"
+          >
+            {filteredItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.05 }}
+                viewport={{ once: true }}
+                className="group cursor-pointer"
+                onClick={() => handleItemClick(item)}
+              >
+                <div className="relative h-[307px] overflow-hidden">
+                  {item.image ? (
+                    <img 
+                      src={item.image} 
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                      <div className="text-2xl text-gray-500">🎬</div>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="text-white text-center">
+                      <div className="text-lg font-bold">{item.title}</div>
+                      {item.description && (
+                        <div className="text-sm opacity-90 mt-1">{item.description}</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ContentGrid;

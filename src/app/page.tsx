@@ -5,7 +5,6 @@ import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
 import Team from '@/components/Team';
-import Locations from '@/components/Locations';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -17,9 +16,8 @@ export default function Home() {
         <ThumbnailSection />
         <OurServices />
         <Team />
-        <Awards />
         <Films />
-        <Locations />
+        <Awards />
       </main>
       <Footer />
     </div>

@@ -1,96 +1,107 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ContentGrid from './ContentGrid';
+import { urlFor } from '@/lib/sanity';
+
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+}
+
+interface Film {
+  _id: string;
+  title: string;
+  description: string;
+  category: Category;
+  year: number;
+  imageUrl: string;
+  imageAlt: string;
+  imageRef: string;
+  image: any;
+}
 
 const Films = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [films, setFilms] = useState<Film[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filters = [
-    'All',
-    'Blockbuster & Franchise Hits',
-    'Superheros & Fantasy Epics',
-    'Critically Acclaimed',
-    'Notable'
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch films and categories in parallel
+        const [filmsResponse, categoriesResponse] = await Promise.all([
+          fetch('/api/films'),
+          fetch('/api/categories')
+        ]);
+        
+            const filmsData = await filmsResponse.json();
+            const categoriesData = await categoriesResponse.json();
+        
+        setFilms(filmsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Fallback to mock data
+        setFilms(Array.from({ length: 24 }, (_, i) => ({
+          _id: `film-${i + 1}`,
+          title: `Film ${i + 1}`,
+          description: `Description for Film ${i + 1}`,
+          category: { _id: 'all', name: 'All', slug: 'all' },
+          year: 2024,
+          imageUrl: `/api/placeholder/207/307`,
+          imageAlt: `Film ${i + 1}`,
+          imageRef: '',
+          image: null
+        })));
+        setCategories([{ _id: 'all', name: 'All', slug: 'all' }]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="row">
+            <div className="text-center">
+              <div className="text-2xl">Loading films...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Prepare categories for ContentGrid (add "All" at the beginning)
+  const allCategories = [
+    { id: 'all', name: 'All' },
+    ...categories.map(cat => ({ id: cat._id, name: cat.name }))
   ];
 
-  const films = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    title: `Film ${i + 1}`,
-    image: `/api/placeholder/207/307`
-  }));
-
   return (
-    <section className="py-20">
-      <div className="container mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <h2 className="text-[64px] font-[200] leading-[76.8px] text-[#FF0066] mb-4">
-            Films Led or contributed to by Alibi members
-          </h2>
-        </motion.div>
-
-        {/* Filter Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="flex flex-wrap gap-8 mb-12"
-        >
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`text-[28px] font-[400] leading-[33.6px] transition-colors duration-300 ${
-                activeFilter === filter
-                  ? 'text-black border-b-2 border-[#FF0066] pb-2'
-                  : 'text-black hover:text-[#FF0066]'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Films Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
-        >
-          {films.map((film, index) => (
-            <motion.div
-              key={film.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.05 }}
-              viewport={{ once: true }}
-              className="group cursor-pointer"
-            >
-              <div className="relative h-[307px] overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                  <div className="text-2xl text-gray-500">🎬</div>
-                </div>
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="text-white text-center">
-                    <div className="text-lg font-bold">{film.title}</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+    <ContentGrid
+      title="Films Led or contributed to by Alibi members"
+      categories={allCategories.map(cat => cat.name)}
+      items={films.map(film => {
+        const imageUrl = film.image ? urlFor(film.image).width(207).height(307).url() : `/api/placeholder/207/307`;
+        return {
+          id: film._id,
+          title: film.title,
+          image: imageUrl,
+          description: film.description,
+          category: film.category?.name || 'All'
+        };
+      })}
+      defaultCategory="All"
+    />
   );
 };
 

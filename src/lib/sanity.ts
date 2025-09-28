@@ -1,0 +1,100 @@
+import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
+
+// Sanity client configuration
+export const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  useCdn: true, // Use CDN for faster loading
+  apiVersion: '2024-01-01', // Use current date
+})
+
+// Image URL builder for optimized images
+const builder = imageUrlBuilder(client)
+
+export const urlFor = (source: unknown) => {
+  // @ts-expect-error - Sanity image builder requires specific type
+  return builder.image(source)
+}
+
+// GROQ queries for fetching data
+export const queries = {
+  // Get all films with category data
+  films: `*[_type == "film"] | order(_createdAt desc) {
+    _id,
+    title,
+    description,
+    year,
+    image,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt,
+    "imageRef": image.asset->_ref,
+    category->{
+      _id,
+      name,
+      slug,
+      description,
+      color
+    }
+  }`,
+
+  // Get all categories
+  categories: `*[_type == "category"] | order(name asc) {
+    _id,
+    name,
+    slug,
+    description,
+    color
+  }`,
+
+  // Get categories that have films
+  categoriesWithFilms: `*[_type == "category" && count(*[_type == "film" && references(^._id)]) > 0] | order(name asc) {
+    _id,
+    name,
+    slug,
+    description,
+    color
+  }`,
+
+  // Get all awards
+  awards: `*[_type == "award"] | order(order asc, year desc) {
+    _id,
+    name,
+    year,
+    category,
+    description,
+    count,
+    "imageUrl": icon.asset->url,
+    "imageAlt": icon.alt
+  }`,
+
+  // Get all services
+  services: `*[_type == "service"] | order(order asc) {
+    _id,
+    title,
+    description,
+    features,
+    image,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt
+  }`,
+
+  // Get all addresses
+  addresses: `*[_type == "address"] | order(order asc) {
+    _id,
+    city,
+    address,
+    country
+  }`,
+
+  // Get all team members
+  teamMembers: `*[_type == "teamMember"] | order(order asc) {
+    _id,
+    name,
+    role,
+    bio,
+    image,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt
+  }`
+}

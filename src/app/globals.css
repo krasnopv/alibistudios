@@ -170,6 +170,20 @@ h2 {
       text-decoration-thickness: 2px;
     }
 
+    /* Films filter active state - red stroke */
+    .active-filter {
+      text-decoration: line-through;
+      text-decoration-color: #FF0066;
+      text-decoration-thickness: 2px;
+    }
+
+    /* Films filter hover state - black stroke */
+    .hover-filter:hover {
+      text-decoration: line-through;
+      text-decoration-color: #000000;
+      text-decoration-thickness: 2px;
+    }
+
     /* Services grid staggered margins */
     @media (min-width: 768px) and (max-width: 1023px) {
       .service-card:nth-child(2) {

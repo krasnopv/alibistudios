@@ -1,40 +1,100 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import ServiceCard from './ServiceCard';
+import { urlFor } from '@/lib/sanity';
+
+interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  features: string[];
+  imageUrl: string;
+  imageAlt: string;
+  image: unknown;
+}
 
 const ThumbnailSection = () => {
-  const services = [
-    {
-      title: 'VFX',
-      image: '/api/placeholder/668/372',
-      url: '/services/vfx',
-      description: 'Visual Effects'
-    },
-    {
-      title: 'Immersive',
-      image: '/api/placeholder/668/372',
-      url: '/services/immersive',
-      description: 'Immersive Experiences'
-    },
-    {
-      title: 'Film & Episodic',
-      image: '/api/placeholder/668/372',
-      url: '/services/film',
-      description: 'Film & Episodic Content'
-    },
-    {
-      title: 'Animation',
-      image: '/api/placeholder/668/372',
-      url: '/services/animation',
-      description: 'Animation Services'
-    },
-    {
-      title: 'Media & Generative Art',
-      image: '/api/placeholder/668/372',
-      url: '/services/media',
-      description: 'Media & Generative Art'
-    }
-  ];
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/api/services');
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        // Fallback to mock data
+        setServices([
+          {
+            _id: '1',
+            title: 'VFX',
+            description: 'Visual Effects',
+            features: ['VFX', 'Visual Effects'],
+            imageUrl: '/api/placeholder/668/372',
+            imageAlt: 'VFX',
+            image: null
+          },
+          {
+            _id: '2',
+            title: 'Immersive',
+            description: 'Immersive Experiences',
+            features: ['Immersive', 'Experiences'],
+            imageUrl: '/api/placeholder/668/372',
+            imageAlt: 'Immersive',
+            image: null
+          },
+          {
+            _id: '3',
+            title: 'Film & Episodic',
+            description: 'Film & Episodic Content',
+            features: ['Film', 'Episodic'],
+            imageUrl: '/api/placeholder/668/372',
+            imageAlt: 'Film & Episodic',
+            image: null
+          },
+          {
+            _id: '4',
+            title: 'Animation',
+            description: 'Animation Services',
+            features: ['Animation', 'Services'],
+            imageUrl: '/api/placeholder/668/372',
+            imageAlt: 'Animation',
+            image: null
+          },
+          {
+            _id: '5',
+            title: 'Media & Generative Art',
+            description: 'Media & Generative Art',
+            features: ['Media', 'Generative Art'],
+            imageUrl: '/api/placeholder/668/372',
+            imageAlt: 'Media & Generative Art',
+            image: null
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="services" className="w-full py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="row">
+            <div className="text-center">
+              <div className="text-2xl">Loading services...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="services" className="w-full py-20">
@@ -56,16 +116,19 @@ const ThumbnailSection = () => {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 gap-8">
-          {services.map((service, index) => (
-            <ServiceCard
-              key={service.title}
-              title={service.title}
-              image={service.image}
-              url={service.url}
-              description={service.description}
-              index={index}
-            />
-          ))}
+          {services.map((service, index) => {
+            const imageUrl = service.image ? urlFor(service.image).width(668).height(372).url() : service.imageUrl;
+            return (
+              <ServiceCard
+                key={service._id}
+                title={service.title}
+                image={imageUrl}
+                url={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                description={service.description}
+                index={index}
+              />
+            );
+          })}
         </div>
         </div>
       </div>
