@@ -40,6 +40,7 @@ jobs:
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: 159.69.81.179
+        port: 2219
         username: deployer
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
@@ -60,6 +61,7 @@ jobs:
       uses: appleboy/scp-action@v0.1.7
       with:
         host: 159.69.81.179
+        port: 2219
         username: deployer
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "alibi-app.tar.gz,docker-compose.yml,nginx.conf,Dockerfile"
@@ -69,6 +71,7 @@ jobs:
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: 159.69.81.179
+        port: 2219
         username: deployer
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
