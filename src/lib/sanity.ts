@@ -2,18 +2,16 @@ import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
 // Sanity client configuration
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'srer6l4b'
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
-
-if (!projectId) {
-  throw new Error('Sanity projectId is required')
-}
-
 export const client = createClient({
-  projectId,
-  dataset,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   useCdn: true, // Use CDN for faster loading
-  apiVersion: '2024-01-01', // Use current date
+  apiVersion: '2023-05-03', // Use production API version
+  // Use production API endpoints for GitHub Pages
+  ...(process.env.NEXT_PUBLIC_GITHUB_ACTIONS === 'true' && {
+    apiHost: 'https://srer6l4b.api.sanity.io',
+    cdnHost: 'https://cdn.sanity.io'
+  })
 })
 
 // Image URL builder for optimized images
