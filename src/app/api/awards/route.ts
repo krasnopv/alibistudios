@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { client, queries } from '@/lib/sanity'
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   try {
     const awards = await client.fetch(queries.awards)
