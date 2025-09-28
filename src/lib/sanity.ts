@@ -2,9 +2,16 @@ import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
 // Sanity client configuration
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'srer6l4b'
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+
+if (!projectId) {
+  throw new Error('Sanity projectId is required')
+}
+
 export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  projectId,
+  dataset,
   useCdn: true, // Use CDN for faster loading
   apiVersion: '2024-01-01', // Use current date
 })
