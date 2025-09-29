@@ -81,7 +81,7 @@ const Header = () => {
         {/* Left - Burger Menu */}
         <button 
           onClick={handleMenuToggle}
-          className="p-2 hover:opacity-70 transition-opacity duration-200"
+          className="p-2 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
         >
           <Image 
             src={getAssetPath('menu.svg')} 
@@ -97,22 +97,24 @@ const Header = () => {
 
         {/* Center - Logo */}
         <div className="flex items-center">
-          <Image 
-            src={getAssetPath((hasHero && scrollProgress > 0.8) || !hasHero ? 'logo_black.svg' : 'logo_white.svg')}
-            alt="Alibi Studios" 
-            width={120} 
-            height={40}
-            className="h-10 w-auto transition-all duration-300"
-            style={{
-              filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
-            }}
-          />
+          <a href="/" className="cursor-pointer">
+            <Image 
+              src={getAssetPath((hasHero && scrollProgress > 0.8) || !hasHero ? 'logo_black.svg' : 'logo_white.svg')}
+              alt="Alibi Studios" 
+              width={120} 
+              height={40}
+              className="h-10 w-auto transition-all duration-300"
+              style={{
+                filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
+              }}
+            />
+          </a>
         </div>
 
         {/* Right - Contact */}
         <a 
           href="mailto:hello@alibistudios.com"
-          className="p-2 hover:opacity-70 transition-opacity duration-200"
+          className="p-2 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
         >
           <Image 
             src={getAssetPath('contact.svg')} 
@@ -197,7 +199,7 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Team<br/></div>
                </div>
-               <div className="inline-flex justify-start items-center gap-2.5" style={{ opacity: 0.5 }}>
+               <div className="inline-flex justify-start items-center gap-2.5" style={{ opacity: 0.5, cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
