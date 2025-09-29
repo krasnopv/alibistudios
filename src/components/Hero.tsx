@@ -69,9 +69,15 @@ const Hero = ({
   // Determine what to show based on Sanity data only
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
+  const hasAnyMedia = isSanityVideo || hasPosterOnly;
+
+  // Don't render anything if no media is available
+  if (!hasAnyMedia) {
+    return null;
+  }
 
   return (
-    <section className={`relative w-screen overflow-hidden ${className}`}>
+    <section id="hero" className={`relative w-screen overflow-hidden ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
         {isSanityVideo ? (
