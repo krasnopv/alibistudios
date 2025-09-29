@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getAssetPath } from '@/lib/assets';
 
 const Header = () => {
@@ -98,7 +99,7 @@ const Header = () => {
 
         {/* Center - Logo */}
         <div className="flex items-center">
-          <a href="/" className="cursor-pointer">
+          <Link href="/" className="cursor-pointer">
             <Image 
               src={getAssetPath((hasHero && scrollProgress > 0.8) || !hasHero ? 'logo_black.svg' : 'logo_white.svg')}
               alt="Alibi Studios" 
@@ -109,7 +110,7 @@ const Header = () => {
                 filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
               }}
             />
-          </a>
+          </Link>
         </div>
 
         {/* Right - Contact */}

@@ -146,13 +146,36 @@ export const queries = {
     "seoImageUrl": seoImage.asset->url
   }`,
 
-  // Get all published pages
-  pages: `*[_type == "page" && isPublished == true] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    description,
-    publishedAt,
-    "seoImageUrl": seoImage.asset->url
-  }`
-}
+      // Get all published pages
+      pages: `*[_type == "page" && isPublished == true] | order(publishedAt desc) {
+        _id,
+        title,
+        slug,
+        description,
+        publishedAt,
+        "seoImageUrl": seoImage.asset->url
+      }`,
+
+      // Get all directors
+      directors: `*[_type == "director"] | order(order asc) {
+        _id,
+        name,
+        bio,
+        trophies[]->{
+          _id,
+          name,
+          year,
+          category,
+          "imageUrl": icon.asset->url,
+          "imageAlt": icon.alt
+        },
+        works[]->{
+          _id,
+          title,
+          subtitle,
+          year,
+          "imageUrl": image.asset->url,
+          "imageAlt": image.alt
+        }
+      }`
+    }
