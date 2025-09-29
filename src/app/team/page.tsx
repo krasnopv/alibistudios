@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 import ContentGrid from '@/components/ContentGrid';
 
 interface TeamMember {
@@ -138,7 +137,6 @@ const Team = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -162,7 +160,7 @@ const Team = () => {
         <Hero pageSlug="team" />
         
         {/* Team Content */}
-        <section className="w-full py-20">
+        <section className="w-full pt-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Page Title */}
@@ -171,8 +169,9 @@ const Team = () => {
                   Seasoned industry veterans
                 </h1>
               </div>
-
-              {/* Team Grid */}
+            </div>
+          </div>
+        </section>
               <ContentGrid
                 title=""
                 categories={['All', ...services]}
@@ -196,11 +195,7 @@ const Team = () => {
                   console.log('Team member clicked:', member);
                 }}
               />
-            </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
+        </main>
     </div>
   );
 };
