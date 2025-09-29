@@ -53,11 +53,12 @@ export default {
       validation: Rule => Rule.required().min(1)
     },
     {
-      name: 'service',
-      title: 'Service/Department',
-      type: 'string',
-      validation: Rule => Rule.required(),
+      name: 'services',
+      title: 'Services/Departments',
+      type: 'array',
+      of: [{ type: 'string' }],
       options: {
+        layout: 'tags',
         list: [
           { title: 'Creative Direction', value: 'Creative Direction' },
           { title: 'Production', value: 'Production' },
@@ -66,7 +67,8 @@ export default {
           { title: 'Business Development', value: 'Business Development' },
           { title: 'Operations', value: 'Operations' }
         ]
-      }
+      },
+      validation: Rule => Rule.required().min(1)
     },
     {
       name: 'socialMedia',

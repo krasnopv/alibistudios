@@ -93,7 +93,11 @@ const Team = () => {
   }
 
   // Get unique services for filtering from the service field
-  const services = Array.from(new Set(teamMembers.map(member => member.service)));
+  const services = Array.from(new Set(teamMembers.map(member => member.service).filter(Boolean)));
+  
+  // Debug: Log services and team members to see what we're working with
+  console.log('Team members:', teamMembers);
+  console.log('Services:', services);
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
