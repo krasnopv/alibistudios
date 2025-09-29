@@ -138,7 +138,7 @@ export default function Directors() {
               ) : (
                 <div className="space-y-20">
                   {directors.map((director) => (
-                    <div key={director._id} className="border-b border-gray-200 last:border-b-0 pb-20">
+                    <div key={director._id} className="pb-20">
                       {/* Director Name */}
                       <div className="mb-12">
                         <h2 className="heading_h1 text-center">
