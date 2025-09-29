@@ -82,28 +82,46 @@ const Hero = ({
   // Use Sanity video if available, otherwise fallback to local video
   const videoSrc = heroData?.videoUrl || fallbackVideo;
   const isSanityVideo = heroData?.videoUrl;
+  const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
-      {/* Background Video */}
+      {/* Background Video/Image */}
       <div className="relative w-full">
-        <video
-          src={isSanityVideo ? videoSrc : getAssetPath(videoSrc)}
-          poster={heroData?.posterUrl}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full block"
-          style={{
-            aspectRatio: '16/9',
-            minHeight: '400px',
-            margin: 0,
-            padding: 0,
-            objectFit: 'cover'
-          }}
-          onError={handleVideoError}
-        />
+        {hasPosterOnly ? (
+          // Show only poster image when no video is available
+          <img
+            src={heroData.posterUrl}
+            alt={heroData.title || 'Hero image'}
+            className="w-full block"
+            style={{
+              aspectRatio: '16/9',
+              minHeight: '400px',
+              margin: 0,
+              padding: 0,
+              objectFit: 'cover'
+            }}
+          />
+        ) : (
+          // Show video (with or without poster)
+          <video
+            src={isSanityVideo ? videoSrc : getAssetPath(videoSrc)}
+            poster={heroData?.posterUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full block"
+            style={{
+              aspectRatio: '16/9',
+              minHeight: '400px',
+              margin: 0,
+              padding: 0,
+              objectFit: 'cover'
+            }}
+            onError={handleVideoError}
+          />
+        )}
         
         {/* Hero Content Overlay */}
         {(heroData?.title || heroData?.subtitle) && (
