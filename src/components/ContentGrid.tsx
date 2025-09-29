@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import ScrollableCategories from './ScrollableCategories';
 
@@ -87,47 +87,51 @@ const ContentGrid = ({
           </div>
 
           {/* Content Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-5 xl:gap-5"
-          >
-            {filteredItems.map((item, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-5 xl:gap-5">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={item.id}
+                key={activeFilter}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className="group cursor-pointer"
-                onClick={() => handleItemClick(item)}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="contents"
               >
-                <div className="relative h-[307px] overflow-hidden">
-                  {item.image ? (
-                    <img 
-                      src={item.image} 
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                      <div className="text-2xl text-gray-500">🎬</div>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-white text-center">
-                      <div className="text-lg font-bold">{item.title}</div>
-                      {item.description && (
-                        <div className="text-sm opacity-90 mt-1">{item.description}</div>
+                {filteredItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    className="group cursor-pointer"
+                    onClick={() => handleItemClick(item)}
+                  >
+                    <div className="relative h-[307px] overflow-hidden">
+                      {item.image ? (
+                        <img 
+                          src={item.image} 
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                          <div className="text-2xl text-gray-500">🎬</div>
+                        </div>
                       )}
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="text-white text-center">
+                          <div className="text-lg font-bold">{item.title}</div>
+                          {item.description && (
+                            <div className="text-sm opacity-90 mt-1">{item.description}</div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>
