@@ -9,6 +9,8 @@ interface ContentItem {
   title: string;
   image: string;
   description?: string;
+  subtitle?: string;
+  locations?: string[];
   url?: string;
   category?: string;
   services?: {
@@ -63,8 +65,8 @@ const ContentGrid = ({
   };
 
   return (
-    <section className={`w-full py-20 ${className}`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={`w-full ${className}`}>
+      <div className="container">
         <div className="row">
           {/* Header */}
           <motion.div
@@ -142,6 +144,24 @@ const ContentGrid = ({
                           )}
                         </div>
                       </div>
+                    </div>
+                    
+                    {/* Team Member Information */}
+                    <div className="mt-4 text-center">
+                      <div className="text-lg font-semibold text-black mb-1">
+                        {item.title}
+                      </div>
+                      <div className="text-sm text-gray-600 mb-1">
+                        {item.description}
+                        {item.subtitle && (
+                          <span> - {item.subtitle}</span>
+                        )}
+                      </div>
+                      {item.locations && (
+                        <div className="text-sm text-gray-500">
+                          {item.locations.join(' / ')}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 ))}
