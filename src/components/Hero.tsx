@@ -83,6 +83,15 @@ const Hero = ({
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
   const hasNoSanityMedia = !isSanityVideo && !heroData?.posterUrl;
+  
+  // Debug logging
+  console.log('Hero Debug:', {
+    heroData,
+    isSanityVideo,
+    hasPosterOnly,
+    hasNoSanityMedia,
+    posterUrl: heroData?.posterUrl
+  });
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
