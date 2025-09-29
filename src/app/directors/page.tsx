@@ -36,6 +36,29 @@ export default function Directors() {
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
+  // Function to convert video URLs to embed format
+  const getEmbedUrl = (url: string): string => {
+    // Vimeo URL conversion
+    if (url.includes('vimeo.com/')) {
+      const videoId = url.split('vimeo.com/')[1].split('?')[0];
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+    }
+    
+    // YouTube URL conversion
+    if (url.includes('youtube.com/watch?v=')) {
+      const videoId = url.split('v=')[1].split('&')[0];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+    
+    if (url.includes('youtu.be/')) {
+      const videoId = url.split('youtu.be/')[1].split('?')[0];
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+    
+    // For direct video files, return as is
+    return url;
+  };
+
   useEffect(() => {
     const fetchDirectors = async () => {
       try {
@@ -257,7 +280,7 @@ export default function Directors() {
             </button>
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
-                src={selectedVideo}
+                src={getEmbedUrl(selectedVideo)}
                 className="absolute inset-0 w-full h-full"
                 frameBorder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
