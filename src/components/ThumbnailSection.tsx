@@ -4,6 +4,12 @@ import { useEffect, useState } from 'react';
 import ServiceCard from './ServiceCard';
 // Removed urlFor import to avoid CORS issues
 
+interface ServiceTag {
+  _id: string;
+  name: string;
+  color?: string;
+}
+
 interface Service {
   _id: string;
   title: string;
@@ -12,6 +18,7 @@ interface Service {
   imageUrl: string;
   imageAlt: string;
   image: unknown;
+  tags?: ServiceTag[];
 }
 
 const ThumbnailSection = () => {
@@ -21,7 +28,7 @@ const ThumbnailSection = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch('/api/services');
+        const response = await fetch('/api/homepage-services');
         const data = await response.json();
         setServices(data);
       } catch (error) {

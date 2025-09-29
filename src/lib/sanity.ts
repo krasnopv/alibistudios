@@ -82,7 +82,30 @@ export const queries = {
     url,
     image,
     "imageUrl": image.asset->url,
-    "imageAlt": image.alt
+    "imageAlt": image.alt,
+    tags[]->{
+      _id,
+      name,
+      color
+    },
+    showOnHomepage,
+    homepageOrder
+  }`,
+
+  // Get services for homepage
+  homepageServices: `*[_type == "service" && showOnHomepage == true] | order(homepageOrder asc, order asc) {
+    _id,
+    title,
+    description,
+    url,
+    image,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt,
+    tags[]->{
+      _id,
+      name,
+      color
+    }
   }`,
 
   // Get all addresses
