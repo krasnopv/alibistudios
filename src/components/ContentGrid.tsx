@@ -147,7 +147,7 @@ const ContentGrid = ({
                     </div>
                     
                     {/* Team Member Information */}
-                    <div className="mt-4 text-center">
+                    <div className="mt-4 text-left">
                       <div className="text-lg font-semibold text-black mb-1">
                         {item.title}
                       </div>
