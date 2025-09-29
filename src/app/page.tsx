@@ -12,7 +12,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center">
       <Header />
       <main className="w-full flex flex-col items-center">
-        <Hero videoSrc="clip.mp4" />
+        <Hero pageSlug="home" fallbackVideo="clip.mp4" />
         <ThumbnailSection />
         <OurServices />
         <Team />
