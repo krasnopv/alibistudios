@@ -25,7 +25,7 @@ interface TeamMember {
     icon: string;
   }[];
   bioTitle?: string;
-  bio: string;
+  bio: string | unknown;
 }
 
 const Team = () => {
@@ -155,9 +155,9 @@ const Team = () => {
   console.log('Services:', services);
   console.log('All services from members:', allServices);
 
-  const handleMemberClick = (member: any) => {
+  const handleMemberClick = (member: { id: string | number }) => {
     // Find the full team member data
-    const fullMember = teamMembers.find(m => m._id === member.id);
+    const fullMember = teamMembers.find(m => m._id === String(member.id));
     if (fullMember) {
       setSelectedMember(fullMember);
       setIsOverlayOpen(true);

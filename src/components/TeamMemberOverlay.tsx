@@ -22,7 +22,7 @@ interface TeamMember {
     icon: string;
   }[];
   bioTitle?: string;
-  bio: string;
+  bio: string | unknown;
 }
 
 interface TeamMemberOverlayProps {
@@ -68,14 +68,37 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
     return icons[platform] || '🔗';
   };
 
-  const renderRichText = (bio: string) => {
-    // Simple text rendering for now
-    // In a real implementation, you'd parse rich text from Sanity
-    return bio.split('\n').map((paragraph, index) => (
-      <p key={index} className="mb-4 last:mb-0">
-        {paragraph}
+  const renderRichText = (bio: string | unknown) => {
+    // Handle different bio data types
+    if (typeof bio === 'string') {
+      return bio.split('\n').map((paragraph, index) => (
+        <p key={index} className="mb-4 last:mb-0">
+          {paragraph}
+        </p>
+      ));
+    }
+    
+    // Handle rich text objects from Sanity
+    if (Array.isArray(bio)) {
+      return bio.map((block, index) => {
+        if (block._type === 'block' && block.children) {
+          const text = block.children.map((child: { text: string }) => child.text).join('');
+          return (
+            <p key={index} className="mb-4 last:mb-0">
+              {text}
+            </p>
+          );
+        }
+        return null;
+      }).filter(Boolean);
+    }
+    
+    // Fallback for other data types
+    return (
+      <p className="mb-4 last:mb-0">
+        {String(bio)}
       </p>
-    ));
+    );
   };
 
   return (
