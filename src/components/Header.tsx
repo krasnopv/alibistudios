@@ -264,7 +264,7 @@ const Header = () => {
                    fontWeight: 400,
                  }}>- Film & Episodic<br/></div>
                </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <a href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -272,7 +272,7 @@ const Header = () => {
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Directors</div>
-               </div>
+               </a>
                <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
