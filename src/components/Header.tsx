@@ -8,18 +8,38 @@ const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [hasHero, setHasHero] = useState(true);
 
   useEffect(() => {
+    // Check if Hero section exists
+    const checkForHero = () => {
+      const heroElement = document.getElementById('hero');
+      setHasHero(!!heroElement);
+    };
+
+    // Check on mount and when DOM changes
+    checkForHero();
+    const observer = new MutationObserver(checkForHero);
+    observer.observe(document.body, { childList: true, subtree: true });
+
     const handleScroll = () => {
-      const heroHeight = window.innerHeight; // Hero section height (100vh)
-      const scrollY = window.scrollY;
-      const progress = Math.min(scrollY / heroHeight, 1); // 0 to 1
-      setScrollProgress(progress);
+      if (hasHero) {
+        const heroHeight = window.innerHeight; // Hero section height (100vh)
+        const scrollY = window.scrollY;
+        const progress = Math.min(scrollY / heroHeight, 1); // 0 to 1
+        setScrollProgress(progress);
+      } else {
+        // If no hero, always show solid header
+        setScrollProgress(1);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
+  }, [hasHero]);
 
   const handleMenuToggle = () => {
     if (isMenuOpen) {
@@ -44,9 +64,15 @@ const Header = () => {
     <header 
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        backgroundColor: `rgba(255, 255, 255, ${scrollProgress * 0.95})`,
-        backdropFilter: `blur(${scrollProgress * 12}px)`,
-        boxShadow: scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none'
+        backgroundColor: hasHero 
+          ? `rgba(255, 255, 255, ${scrollProgress * 0.95})`
+          : 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: hasHero 
+          ? `blur(${scrollProgress * 12}px)`
+          : 'blur(12px)',
+        boxShadow: hasHero 
+          ? (scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none')
+          : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
       }}
     >
       <div className="w-full flex justify-center">
@@ -64,7 +90,7 @@ const Header = () => {
             height={24}
             className="w-6 h-6 transition-all duration-300"
             style={{
-              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+              filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
             }}
           />
         </button>
@@ -72,13 +98,13 @@ const Header = () => {
         {/* Center - Logo */}
         <div className="flex items-center">
           <Image 
-            src={getAssetPath(scrollProgress > 0.8 ? 'logo_black.svg' : 'logo_white.svg')}
+            src={getAssetPath((hasHero && scrollProgress > 0.8) || !hasHero ? 'logo_black.svg' : 'logo_white.svg')}
             alt="Alibi Studios" 
             width={120} 
             height={40}
             className="h-10 w-auto transition-all duration-300"
             style={{
-              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+              filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
             }}
           />
         </div>
@@ -95,7 +121,7 @@ const Header = () => {
             height={24}
             className="w-6 h-6 transition-all duration-300"
             style={{
-              filter: scrollProgress > 0.8 ? 'none' : `brightness(0) invert(1)`
+              filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
             }}
           />
         </a>
