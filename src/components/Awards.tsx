@@ -101,10 +101,10 @@ const Awards = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group cursor-pointer"
+                className=""
               >
                 {/* Award Icon */}
-                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4">
                   {award.imageUrl ? (
                     <img 
                       src={award.imageUrl} 
