@@ -70,7 +70,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   };
 
   return (
-    <div className="w-full max-w-6xl">
+    <div className="w-full">
       {services.map((service) => (
         <div key={service._id} className="border-b border-gray-200 last:border-b-0">
           {/* Service Header (Always Visible) */}
@@ -125,7 +125,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                               className="inline-flex items-center px-4 py-1 rounded-full text-[16px] font-[300] leading-[150%] tracking-[0%]"
                               style={{ 
                                 fontFamily: 'Plus Jakarta Sans',
-                                backgroundColor: tag.color || '#F3F4F6',
+                                backgroundColor: '#ffffff',
                                 color: '#374151'
                               }}
                             >
