@@ -86,12 +86,26 @@ const Hero = ({
   
   // Only use fallback video if there's no Sanity data at all
   const videoSrc = isSanityVideo ? heroData.videoUrl : (hasNoSanityMedia ? fallbackVideo : null);
+  
+  // If we have Sanity data but no media, show nothing
+  const shouldShowNothing = heroData && !isSanityVideo && !heroData?.posterUrl;
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
-        {hasPosterOnly ? (
+        {shouldShowNothing ? (
+          // Show nothing when Sanity page has no video or poster
+          <div 
+            className="w-full bg-transparent"
+            style={{
+              aspectRatio: '16/9',
+              minHeight: '400px',
+              margin: 0,
+              padding: 0
+            }}
+          />
+        ) : hasPosterOnly ? (
           // Show only poster image when no video is available
           <img
             src={heroData.posterUrl}
@@ -125,7 +139,7 @@ const Hero = ({
             onError={handleVideoError}
           />
         ) : (
-          // Show placeholder when no media is available
+          // Show placeholder when no Sanity data at all
           <div 
             className="w-full bg-gray-200 flex items-center justify-center"
             style={{
