@@ -29,42 +29,40 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   
   console.log('ServiceAccordion rendering with', services.length, 'services');
 
-  // Function to extract text from rich text objects
-  const getTextFromRichText = (content: unknown): string => {
+  // Function to render rich text objects with proper paragraph structure
+  const renderRichText = (content: unknown): React.ReactNode => {
     if (typeof content === 'string') {
-      return content;
+      return <p>{content}</p>;
     }
     
     if (Array.isArray(content)) {
-      return content
-        .map(block => {
-          if (block && typeof block === 'object' && '_type' in block && block._type === 'block' && 'children' in block && Array.isArray(block.children)) {
-            return block.children
-              .map((child: unknown) => {
-                if (child && typeof child === 'object' && 'text' in child) {
-                  return String(child.text || '');
-                }
-                return '';
-              })
-              .join('');
-          }
-          return '';
-        })
-        .join(' ');
+      return content.map((block, index) => {
+        if (block && typeof block === 'object' && '_type' in block && block._type === 'block' && 'children' in block && Array.isArray(block.children)) {
+          const text = block.children
+            .map((child: unknown) => {
+              if (child && typeof child === 'object' && 'text' in child) {
+                return String(child.text || '');
+              }
+              return '';
+            })
+            .join('');
+          
+          return <p key={index}>{text}</p>;
+        }
+        return null;
+      });
     }
     
     if (content && typeof content === 'object' && 'children' in content && Array.isArray(content.children)) {
-      return content.children
-        .map((child: unknown) => {
-          if (child && typeof child === 'object' && 'text' in child) {
-            return String(child.text || '');
-          }
-          return '';
-        })
-        .join('');
+      return content.children.map((child: unknown, index) => {
+        if (child && typeof child === 'object' && 'text' in child) {
+          return <p key={index}>{String(child.text || '')}</p>;
+        }
+        return null;
+      });
     }
     
-    return String(content || '');
+    return <p>{String(content || '')}</p>;
   };
 
   const toggleService = (serviceId: string) => {
@@ -111,12 +109,12 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Description and Tags (1/3) */}
                     <div className="lg:col-span-1">
-                      <p 
+                      <div 
                         className="text-[20px] font-[400] leading-[150%] tracking-[0%] mb-6"
                         style={{ fontFamily: 'Plus Jakarta Sans' }}
                       >
-                        {getTextFromRichText(service.description)}
-                      </p>
+                        {renderRichText(service.description)}
+                      </div>
                       
                       {/* Tags */}
                       {service.tags && service.tags.length > 0 && (
