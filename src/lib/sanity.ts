@@ -178,5 +178,24 @@ export const queries = {
           "imageUrl": image.asset->url,
           "imageAlt": image.alt
         }
+      }`,
+
+      // Get all team members
+      team: `*[_type == "teamMember"] | order(order asc, _createdAt asc) {
+        _id,
+        fullName,
+        role,
+        industries,
+        locations,
+        service,
+        socialMedia[]{
+          platform,
+          url,
+          icon
+        },
+        bioTitle,
+        bio,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
       }`
     }
