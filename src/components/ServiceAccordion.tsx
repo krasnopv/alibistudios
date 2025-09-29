@@ -76,7 +76,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
           {/* Service Header (Always Visible) */}
           <button
             onClick={() => toggleService(service._id)}
-            className="w-full text-left py-8 px-0 hover:bg-gray-50 transition-colors duration-200"
+            className="w-full text-left py-8 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
           >
             <div className="flex items-center justify-between">
               <h3 className="heading_h1">
