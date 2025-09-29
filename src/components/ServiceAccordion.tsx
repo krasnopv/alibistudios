@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ServiceTag {
   _id: string;
@@ -31,7 +30,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl">
       {services.map((service) => (
         <div key={service._id} className="border-b border-gray-200 last:border-b-0">
           {/* Service Header (Always Visible) */}
@@ -40,18 +39,18 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
             className="w-full text-left py-8 px-0 hover:bg-gray-50 transition-colors duration-200"
           >
             <div className="flex items-center justify-between">
-              <h3 
-                className="text-[40px] font-[250] leading-[120%] tracking-[0%]"
-                style={{ fontFamily: 'Plus Jakarta Sans' }}
-              >
+              <h3 className="heading_h1">
                 {service.title}
               </h3>
               <div className="flex-shrink-0 ml-4">
-                {expandedService === service._id ? (
-                  <ChevronUp className="w-6 h-6 text-gray-600" />
-                ) : (
-                  <ChevronDown className="w-6 h-6 text-gray-600" />
-                )}
+                <motion.div
+                  initial={false}
+                  animate={{ rotate: expandedService === service._id ? 45 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-6 h-6 flex items-center justify-center"
+                >
+                  <span className="text-2xl text-gray-600 font-light">+</span>
+                </motion.div>
               </div>
             </div>
           </button>

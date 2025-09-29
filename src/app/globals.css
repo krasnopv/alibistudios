@@ -271,3 +271,15 @@ h2 {
   color: #FF0066;
   text-align: left; /* Default alignment, can be overridden with Tailwind classes */
 }
+
+/* Heading H1 - Service titles */
+.heading_h1 {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 250;
+  font-style: normal;
+  font-size: 40px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #000000;
+}
