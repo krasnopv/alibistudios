@@ -152,6 +152,7 @@ const Team = () => {
   // Debug: Log services and team members to see what we're working with
   console.log('Team members:', teamMembers);
   console.log('Services:', services);
+  console.log('All services from members:', allServices);
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">

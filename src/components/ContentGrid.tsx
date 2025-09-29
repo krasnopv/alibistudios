@@ -41,15 +41,15 @@ const ContentGrid = ({
   const filteredItems = activeFilter === 'All' 
     ? items 
     : items.filter(item => {
-      // Handle both single category and multiple services
-      if (typeof item.category === 'string') {
-        return item.category === activeFilter;
-      }
-      // For team members with services array, check if any service matches
+      // For team members with services array, check if any service matches (prioritize this)
       if (item.services && Array.isArray(item.services)) {
         const hasMatchingService = item.services.some(service => service.title === activeFilter);
         console.log(`Item ${item.title}: services=${JSON.stringify(item.services.map(s => s.title))}, activeFilter=${activeFilter}, matches=${hasMatchingService}`);
         return hasMatchingService;
+      }
+      // Handle single category as fallback
+      if (typeof item.category === 'string') {
+        return item.category === activeFilter;
       }
       return false;
     });
