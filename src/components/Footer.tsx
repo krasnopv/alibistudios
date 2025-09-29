@@ -81,7 +81,7 @@ const Footer = () => {
             style={{ transform: 'translateY(50%)' }}
           >
             <img 
-              src="./Layer_1.svg" 
+              src="/Layer_1.svg" 
               alt="Layer 1" 
               className="w-full h-auto absolute"
               style={{ marginTop: '-8.5%' }}
