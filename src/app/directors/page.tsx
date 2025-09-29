@@ -159,7 +159,7 @@ export default function Directors() {
                         </div>
 
                         {/* Right Column - Trophies Grid */}
-                        <div className="service-card">
+                        <div className="service-card trophies">
                           {director.trophies && director.trophies.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                               {director.trophies.map((trophy) => (

@@ -289,7 +289,6 @@ h2 {
   color: #000000;
 }
 
-/* Service card with Trophies - remove top margin */
-.service-card {
+.trophies {
   margin-top: 0 !important;
 }
