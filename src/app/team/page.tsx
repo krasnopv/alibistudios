@@ -92,7 +92,7 @@ const Team = () => {
     );
   }
 
-  // Get unique services for filtering
+  // Get unique services for filtering from the service field
   const services = Array.from(new Set(teamMembers.map(member => member.service)));
 
   return (
