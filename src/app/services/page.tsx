@@ -94,11 +94,8 @@ export default function Services() {
         <div className="w-full px-4 py-20">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <div className="text-center mb-16">
-              <h1 
-                className="text-[64px] font-[250] leading-[120%] tracking-[0%]"
-                style={{ fontFamily: 'Plus Jakarta Sans', color: '#FF0066' }}
-              >
+            <div className="mb-16">
+              <h1 className="display_h1 text-center">
                 All under one &apos;Virtual Roof&apos;
               </h1>
             </div>

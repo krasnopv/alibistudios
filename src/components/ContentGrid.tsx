@@ -58,16 +58,7 @@ const ContentGrid = ({
             viewport={{ once: true }}
             className="mb-16"
           >
-            <h1 style={{
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: 250,
-              fontStyle: 'normal',
-              fontSize: '64px',
-              lineHeight: '120%',
-              letterSpacing: '0%',
-              verticalAlign: 'middle',
-              color: '#FF0066'
-            }}>
+            <h1 className="display_h1">
               {title}
             </h1>
             {subtitle && (

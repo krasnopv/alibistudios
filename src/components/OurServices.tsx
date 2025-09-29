@@ -7,16 +7,7 @@ const OurServices = () => {
         <div className="row">
           {/* Title */}
           <div className="mb-4">
-            <h1 style={{
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: 250,
-              fontStyle: 'normal',
-              fontSize: '64px',
-              lineHeight: '120%',
-              letterSpacing: '0%',
-              verticalAlign: 'middle',
-              color: '#FF0066'
-            }}>
+            <h1 className="display_h1">
               Our Services
             </h1>
           </div>

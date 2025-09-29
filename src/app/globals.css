@@ -258,3 +258,15 @@ h2 {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Display H1 - Main page headers */
+.display_h1 {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 250;
+  font-style: normal;
+  font-size: 64px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #FF0066;
+}
