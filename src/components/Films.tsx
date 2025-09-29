@@ -98,7 +98,7 @@ const Films = () => {
               Films Led or contributed to by Alibi members
             </h1>
           </div>
-
+        </div>
           {/* Films Grid */}
           <ContentGrid
             title=""
@@ -115,7 +115,7 @@ const Films = () => {
             })}
             defaultCategory="All"
           />
-        </div>
+        {/* </div> */}
       </div>
     </section>
   );

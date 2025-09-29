@@ -67,8 +67,8 @@ const ContentGrid = ({
   };
 
   return (
-    <section className={`w-full ${className}`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    // <section className={`w-full ${className}`}>
+    //   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Header */}
           <motion.div
@@ -173,8 +173,8 @@ const ContentGrid = ({
             </AnimatePresence>
           </div>
         </div>
-      </div>
-    </section>
+    //   </div>
+    // </section>
   );
 };
 
