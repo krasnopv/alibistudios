@@ -203,13 +203,13 @@ export default function Directors() {
                                 {/* Work Info */}
                                 <div className="flex items-center justify-between">
                                   <div>
-                                    <span className="text-[#FF0066] text-base font-[300] leading-6">
+                                    <div className="text-[#FF0066] text-base font-[300] leading-6">
                                       {work.title}
-                                    </span>
+                                    </div>
                                     {work.subtitle && (
-                                      <span className="text-[#000000] text-base font-[300] leading-6 ml-2">
+                                      <div className="text-[#000000] text-base font-[300] leading-6 mt-1">
                                         {work.subtitle}
-                                      </span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
