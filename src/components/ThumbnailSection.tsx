@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ServiceCard from './ServiceCard';
-import { urlFor } from '@/lib/sanity';
+// Removed urlFor import to avoid CORS issues
 
 interface Service {
   _id: string;
@@ -117,7 +117,7 @@ const ThumbnailSection = () => {
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 gap-8">
           {services.map((service, index) => {
-            const imageUrl = service.image ? urlFor(service.image).width(668).height(372).url() : service.imageUrl;
+            const imageUrl = service.imageUrl;
             return (
               <ServiceCard
                 key={service._id}

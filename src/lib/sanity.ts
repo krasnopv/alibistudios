@@ -7,8 +7,8 @@ export const client = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   useCdn: true, // Use CDN for faster loading
   apiVersion: '2023-05-03', // Use production API version
-  // Use production API endpoints for GitHub Pages
-  ...(process.env.NEXT_PUBLIC_GITHUB_ACTIONS === 'true' && {
+  // Use production API endpoints for server deployment
+  ...(process.env.SERVER_DEPLOY === 'true' && {
     apiHost: 'https://srer6l4b.api.sanity.io',
     cdnHost: 'https://cdn.sanity.io'
   })
