@@ -49,6 +49,19 @@ const Awards = () => {
     fetchAwards();
   }, []);
 
+  if (loading) {
+    return (
+      <section className="w-full py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="row">
+            <div className="text-center">
+              <div className="text-2xl">Loading awards...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full py-20">
@@ -88,10 +101,10 @@ const Awards = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group relative"
+                className=""
               >
                 {/* Award Icon */}
-                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4">
                   {award.imageUrl ? (
                     <img 
                       src={award.imageUrl} 
@@ -103,12 +116,14 @@ const Awards = () => {
                   )}
                 </div>
                 
-                {/* Hover Tooltip */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full bg-black text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-nowrap">
-                  <div className="font-semibold">{award.name}</div>
-                  {award.count && (
-                    <div className="text-gray-300">{award.count}</div>
-                  )}
+                {/* Award Info */}
+                <div className="text-center">
+                  <div className="text-xs font-[400] leading-[18px] text-gray-600 mb-1">
+                    {award.name}
+                  </div>
+                  <div className="text-sm font-[400] leading-[21px] text-black">
+                    {award.count}
+                  </div>
                 </div>
               </motion.div>
             ))}

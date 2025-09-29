@@ -98,6 +98,19 @@ const ThumbnailSection = () => {
     fetchServices();
   }, []);
 
+  if (loading) {
+    return (
+      <section id="services" className="w-full py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="row">
+            <div className="text-center">
+              <div className="text-2xl">Loading services...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // If no services are available, don't render the section
   if (services.length === 0) {
