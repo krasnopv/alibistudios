@@ -91,18 +91,18 @@ const ContentGrid = ({
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeFilter}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="contents"
               >
                 {filteredItems.map((item, index) => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    transition={{ duration: 0.3, delay: index * 0.02, ease: "easeInOut" }}
                     className="group cursor-pointer"
                     onClick={() => handleItemClick(item)}
                   >
