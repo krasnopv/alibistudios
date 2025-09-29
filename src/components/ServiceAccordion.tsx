@@ -24,6 +24,8 @@ interface ServiceAccordionProps {
 
 const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   const [expandedService, setExpandedService] = useState<string | null>(null);
+  
+  console.log('ServiceAccordion rendering with', services.length, 'services');
 
   const toggleService = (serviceId: string) => {
     setExpandedService(expandedService === serviceId ? null : serviceId);

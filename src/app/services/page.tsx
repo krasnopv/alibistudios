@@ -29,6 +29,8 @@ export default function Services() {
       try {
         const response = await fetch('/api/services');
         const data = await response.json();
+        console.log('Services fetched:', data.length, 'services');
+        console.log('Services data:', data);
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
