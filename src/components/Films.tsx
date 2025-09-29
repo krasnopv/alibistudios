@@ -73,8 +73,8 @@ const Films = () => {
       <section className="w-full py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="row">
-            <div className="text-center">
-              <div className="text-2xl">Loading films...</div>
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
             </div>
           </div>
         </div>
