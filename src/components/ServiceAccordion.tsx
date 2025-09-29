@@ -23,7 +23,9 @@ interface ServiceAccordionProps {
 }
 
 const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
-  const [expandedService, setExpandedService] = useState<string | null>(null);
+  const [expandedService, setExpandedService] = useState<string | null>(
+    services.length > 0 ? services[0]._id : null
+  );
   
   console.log('ServiceAccordion rendering with', services.length, 'services');
 
@@ -138,7 +140,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
 
                     {/* Right Column - Service Image (2/3) */}
                     <div className="lg:col-span-2">
-                      <div className="relative w-full h-[400px] lg:h-[500px] rounded-lg overflow-hidden">
+                      <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden">
                         <img
                           src={service.imageUrl}
                           alt={service.imageAlt}
