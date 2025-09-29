@@ -142,16 +142,20 @@ const Header = () => {
             onClick={handleMenuClose}
           />
           {/* Sidebar */}
-          <div className={`absolute top-0 left-0 bg-white transform ${
-            isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
-          }`} style={{
-            display: 'flex',
-            width: '428px',
-            height: '1140px',
-            padding: '24px 40px 40px 40px',
-            flexDirection: 'column',
-            alignItems: 'flex-end'
-          }}>
+          <div 
+            className={`absolute top-0 left-0 bg-white transform ${
+              isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
+            }`} 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              display: 'flex',
+              width: '428px',
+              height: '1140px',
+              padding: '24px 40px 40px 40px',
+              flexDirection: 'column',
+              alignItems: 'flex-end'
+            }}
+          >
             {/* Close Button */}
             <div style={{
               display: 'flex',
