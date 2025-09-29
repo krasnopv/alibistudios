@@ -144,9 +144,9 @@ export default function Directors() {
                       </div>
 
                       {/* Bio Section */}
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                      <div className="grid md:grid-cols-2 gap-8 mb-16">
                         {/* Left Column - Biography */}
-                        <div className="lg:col-span-1">
+                        <div className="service-card">
                           <div 
                             className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
                             style={{ fontFamily: 'Plus Jakarta Sans' }}
@@ -156,7 +156,7 @@ export default function Directors() {
                         </div>
 
                         {/* Right Column - Trophies Grid */}
-                        <div className="lg:col-span-2">
+                        <div className="service-card">
                           {director.trophies && director.trophies.length > 0 && (
                             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                               {director.trophies.map((trophy) => (
