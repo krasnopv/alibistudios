@@ -11,6 +11,10 @@ interface ContentItem {
   description?: string;
   url?: string;
   category?: string;
+  services?: {
+    _id: string;
+    title: string;
+  }[];
 }
 
 interface ContentGridProps {
@@ -36,7 +40,17 @@ const ContentGrid = ({
 
   const filteredItems = activeFilter === 'All' 
     ? items 
-    : items.filter(item => item.category === activeFilter);
+    : items.filter(item => {
+      // Handle both single category and multiple services
+      if (typeof item.category === 'string') {
+        return item.category === activeFilter;
+      }
+      // For team members with services array, check if any service matches
+      if (item.services && Array.isArray(item.services)) {
+        return item.services.some(service => service.title === activeFilter);
+      }
+      return false;
+    });
 
   const handleItemClick = (item: ContentItem) => {
     if (onItemClick) {

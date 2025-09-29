@@ -188,6 +188,10 @@ export const queries = {
         industries,
         locations,
         service,
+        services[]->{
+          _id,
+          title
+        },
         socialMedia[]{
           platform,
           url,

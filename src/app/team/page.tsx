@@ -15,6 +15,10 @@ interface TeamMember {
   industries: string[];
   locations: string[];
   service: string;
+  services: {
+    _id: string;
+    title: string;
+  }[];
   socialMedia: {
     platform: string;
     url: string;
@@ -47,6 +51,10 @@ const Team = () => {
             industries: ['Film', 'Advertising'],
             locations: ['London, UK', 'New York, USA'],
             service: 'Creative Direction',
+            services: [
+              { _id: 'service-1', title: 'Creative Direction' },
+              { _id: 'service-2', title: 'Brand Strategy' }
+            ],
             socialMedia: [
               { platform: 'LinkedIn', url: 'https://linkedin.com/in/johnsmith', icon: 'linkedin' },
               { platform: 'Twitter', url: 'https://twitter.com/johnsmith', icon: 'twitter' }
@@ -63,6 +71,10 @@ const Team = () => {
             industries: ['Television', 'Documentary'],
             locations: ['Los Angeles, USA'],
             service: 'Production',
+            services: [
+              { _id: 'service-3', title: 'Production' },
+              { _id: 'service-4', title: 'Project Management' }
+            ],
             socialMedia: [
               { platform: 'Instagram', url: 'https://instagram.com/sarahj', icon: 'instagram' }
             ],
@@ -78,6 +90,10 @@ const Team = () => {
             industries: ['Film', 'Television'],
             locations: ['Vancouver, Canada'],
             service: 'Post Production',
+            services: [
+              { _id: 'service-5', title: 'Post Production' },
+              { _id: 'service-6', title: 'VFX' }
+            ],
             socialMedia: [
               { platform: 'LinkedIn', url: 'https://linkedin.com/in/mikechen', icon: 'linkedin' }
             ],
@@ -93,6 +109,10 @@ const Team = () => {
             industries: ['Advertising', 'Digital'],
             locations: ['New York, USA'],
             service: 'Marketing',
+            services: [
+              { _id: 'service-7', title: 'Marketing' },
+              { _id: 'service-8', title: 'Digital Strategy' }
+            ],
             socialMedia: [
               { platform: 'LinkedIn', url: 'https://linkedin.com/in/emmawilson', icon: 'linkedin' },
               { platform: 'Twitter', url: 'https://twitter.com/emmawilson', icon: 'twitter' }
@@ -123,8 +143,11 @@ const Team = () => {
     );
   }
 
-  // Get unique services for filtering from the service field
-  const services = Array.from(new Set(teamMembers.map(member => member.service).filter(Boolean)));
+  // Get unique services for filtering from the services field (array of service references)
+  const allServices = teamMembers.flatMap(member => 
+    member.services ? member.services.map(service => service.title) : []
+  );
+  const services = Array.from(new Set(allServices)).filter(Boolean);
   
   // Debug: Log services and team members to see what we're working with
   console.log('Team members:', teamMembers);
@@ -157,12 +180,13 @@ const Team = () => {
                   title: member.fullName,
                   image: member.imageUrl,
                   description: member.role,
-                  category: member.service,
+                  category: member.services ? member.services.map(service => service.title).join(', ') : member.service,
                   subtitle: member.industries.join(', '),
                   locations: member.locations,
                   socialMedia: member.socialMedia,
                   bioTitle: member.bioTitle,
-                  bio: member.bio
+                  bio: member.bio,
+                  services: member.services
                 }))}
                 defaultCategory="All"
                 onItemClick={(member) => {
