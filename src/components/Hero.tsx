@@ -89,6 +89,16 @@ const Hero = ({
   
   // If we have Sanity data but no media, show nothing
   const shouldShowNothing = heroData && !isSanityVideo && !heroData?.posterUrl;
+  
+  // Debug logging
+  console.log('Hero Debug:', {
+    heroData,
+    isSanityVideo,
+    hasPosterOnly,
+    hasNoSanityMedia,
+    shouldShowNothing,
+    videoSrc
+  });
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
