@@ -201,14 +201,16 @@ export default function Directors() {
                                     alt={work.imageAlt}
                                     className="w-full h-full object-cover"
                                   />
-                                  {/* Play Icon - Hidden on Hover */}
-                                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                                    <img
-                                      src="/play.svg"
-                                      alt="Play video"
-                                      className="w-[43px] h-[50px]"
-                                    />
-                                  </div>
+                                  {/* Play Icon - Only show if URL exists */}
+                                  {work.url && (
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                                      <img
+                                        src="/play.svg"
+                                        alt="Play video"
+                                        className="w-[43px] h-[50px]"
+                                      />
+                                    </div>
+                                  )}
                                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <div className="text-white text-center">
                                       <div className="text-2xl font-bold mb-2">{work.title}</div>
