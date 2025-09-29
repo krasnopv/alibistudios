@@ -158,7 +158,7 @@ export default function Directors() {
                         {/* Right Column - Trophies Grid */}
                         <div className="service-card">
                           {director.trophies && director.trophies.length > 0 && (
-                            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                               {director.trophies.map((trophy) => (
                                 <div key={trophy._id} className="text-center">
                                   <div className="w-16 h-16 mx-auto mb-2 bg-white rounded-lg flex items-center justify-center shadow-sm">
