@@ -49,19 +49,6 @@ const Awards = () => {
     fetchAwards();
   }, []);
 
-  if (loading) {
-    return (
-      <section className="w-full py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="row">
-            <div className="text-center">
-              <div className="text-2xl">Loading awards...</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="w-full py-20">
