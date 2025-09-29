@@ -181,8 +181,8 @@ export default function Directors() {
                       {director.works && director.works.length > 0 && (
                         <div>
                           <div className="grid md:grid-cols-2 gap-8">
-                            {director.works.map((work, index) => (
-                              <div key={work._id} className="group cursor-pointer">
+                            {director.works.map((work) => (
+                              <div key={work._id} className="group cursor-pointer service-card">
                                 {/* Work Image */}
                                 <div className="relative h-[372px] overflow-hidden mb-6">
                                   <img
