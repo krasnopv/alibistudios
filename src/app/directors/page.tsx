@@ -194,23 +194,12 @@ export default function Directors() {
                                   />
                                   {/* Play Icon - Always Visible */}
                                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <div 
-                                      className="w-[43px] h-[49px] bg-white flex items-center justify-center"
+                                    <img
+                                      src="/play.svg"
+                                      alt="Play video"
+                                      className="w-[43px] h-[50px]"
                                       style={{ opacity: 1 }}
-                                    >
-                                      <svg 
-                                        width="20" 
-                                        height="20" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none"
-                                        className="ml-1"
-                                      >
-                                        <path 
-                                          d="M8 5v14l11-7z" 
-                                          fill="#000000"
-                                        />
-                                      </svg>
-                                    </div>
+                                    />
                                   </div>
                                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <div className="text-white text-center">
