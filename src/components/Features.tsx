@@ -7,8 +7,7 @@ import {
   Smartphone, 
   Globe, 
   Lock, 
-  BarChart3,
-  CheckCircle
+  BarChart3
 } from 'lucide-react';
 
 const Features = () => {

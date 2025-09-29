@@ -7,7 +7,6 @@ import { getAssetPath } from '@/lib/assets';
 const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
@@ -33,12 +32,10 @@ const Header = () => {
 
   const handleMenuClose = () => {
     if (isMenuOpen) {
-      setIsAnimating(true);
       // Allow slide-out animation to complete before hiding
       setTimeout(() => {
         setIsMenuOpen(false);
         setShowSidebar(false);
-        setIsAnimating(false);
       }, 400);
     }
   };

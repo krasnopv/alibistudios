@@ -13,7 +13,6 @@ interface Address {
 
 const Footer = () => {
   const [locations, setLocations] = useState<Address[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -62,8 +61,6 @@ const Footer = () => {
             country: 'es'
           }
         ]);
-      } finally {
-        setLoading(false);
       }
     };
 

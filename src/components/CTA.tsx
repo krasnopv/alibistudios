@@ -19,7 +19,7 @@ const CTA = () => {
             Ready to Transform Your Digital Presence?
           </h2>
           <p className="text-xl mb-12 max-w-3xl mx-auto opacity-90">
-            Let's discuss your project and create something amazing together. 
+            Let&apos;s discuss your project and create something amazing together. 
             Get a free consultation and discover how we can help your business grow.
           </p>
 

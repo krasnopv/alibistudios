@@ -30,7 +30,7 @@ const About = () => {
               dedicated to creating exceptional web experiences that drive business growth.
             </p>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              With over 5 years of experience in the industry, we've helped hundreds of 
+              With over 5 years of experience in the industry, we&apos;ve helped hundreds of 
               businesses transform their digital presence and achieve their goals through 
               innovative web solutions.
             </p>

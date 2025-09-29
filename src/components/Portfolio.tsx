@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { ExternalLink, Github, Eye } from 'lucide-react';
-import Image from 'next/image';
 
 const Portfolio = () => {
   const projects = [
@@ -77,7 +76,7 @@ const Portfolio = () => {
             Our Portfolio
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Explore our recent projects and see how we've helped businesses 
+            Explore our recent projects and see how we&apos;ve helped businesses 
             achieve their digital goals.
           </p>
         </motion.div>

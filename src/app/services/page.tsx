@@ -9,7 +9,7 @@ export default function Services() {
       <main className="w-[1440px] flex flex-col items-center">
         {/* Hero with different video */}
         <Hero 
-          videoSrc="services-video.mp4" 
+          pageSlug="services" 
           className="mb-8"
         />
         

@@ -87,7 +87,7 @@ const ContactForm = () => {
           Get In Touch
         </h3>
         <p className="text-gray-600">
-          Ready to start your project? Send us a message and we'll get back to you within 24 hours.
+          Ready to start your project? Send us a message and we&apos;ll get back to you within 24 hours.
         </p>
       </div>
 
@@ -187,7 +187,7 @@ const ContactForm = () => {
             className="flex items-center text-green-600 bg-green-50 p-4 rounded-lg"
           >
             <CheckCircle className="w-5 h-5 mr-2" />
-            <span>Message sent successfully! We'll get back to you soon.</span>
+            <span>Message sent successfully! We&apos;ll get back to you soon.</span>
           </motion.div>
         )}
 

@@ -9,7 +9,7 @@ export default function Portfolio() {
       <main className="w-[1440px] flex flex-col items-center">
         {/* Hero with portfolio video */}
         <Hero 
-          videoSrc="portfolio-showreel.mp4" 
+          pageSlug="portfolio" 
           className="mb-8"
         />
         

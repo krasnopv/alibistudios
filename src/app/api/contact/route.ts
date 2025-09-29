@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { env } from '@/config/env';
 
 export async function POST(request: NextRequest) {
   try {

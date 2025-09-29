@@ -109,7 +109,7 @@ export function generateStructuredData({
     contactType: 'customer service',
     email: 'hello@alibi.com'
   }
-}: any = {}) {
+}: Record<string, unknown> = {}) {
   const baseStructuredData = {
     '@context': 'https://schema.org',
     '@type': type,

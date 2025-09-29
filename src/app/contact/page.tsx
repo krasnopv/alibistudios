@@ -14,10 +14,10 @@ export default function ContactPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Let's Work Together
+                Let&apos;s Work Together
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Ready to bring your ideas to life? We'd love to hear about your project 
+                Ready to bring your ideas to life? We&apos;d love to hear about your project 
                 and discuss how we can help you achieve your goals.
               </p>
             </div>

@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAssetPath } from '@/lib/assets';
-import { client, queries } from '@/lib/sanity';
 
 interface HeroVideo {
   videoUrl: string;
@@ -23,7 +21,6 @@ const Hero = ({
   // Handle root slug - convert '/' to 'home'
   const actualSlug = pageSlug === '/' ? 'home' : pageSlug;
   const [heroData, setHeroData] = useState<HeroVideo | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -45,18 +42,10 @@ const Hero = ({
             });
           }
         } else {
-          // Use direct Sanity call for production
-          const pageData = await client.fetch(`*[_type == "page" && slug.current == "${actualSlug}"][0] {
-            heroVideo,
-            heroVideoPoster,
-            heroTitle,
-            heroSubtitle,
-            "videoUrl": heroVideo.asset->url,
-            "posterUrl": heroVideoPoster.asset->url
-          }`);
-          
-          // Always set heroData if we have a page, even without video
-          if (pageData) {
+          // For production, also use API route to avoid CORS issues
+          const response = await fetch(`/api/pages/${actualSlug}`);
+          if (response.ok) {
+            const pageData = await response.json();
             setHeroData({
               videoUrl: pageData.videoUrl || '',
               posterUrl: pageData.posterUrl,
@@ -67,8 +56,6 @@ const Hero = ({
         }
       } catch (error) {
         console.error('Error fetching hero data:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -82,7 +69,6 @@ const Hero = ({
   // Determine what to show based on Sanity data only
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
-  const hasNoSanityMedia = !isSanityVideo && !heroData?.posterUrl;
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
