@@ -180,13 +180,13 @@ const Team = () => {
                   title: member.fullName,
                   image: member.imageUrl,
                   description: member.role,
-                  category: member.services ? member.services.map(service => service.title).join(', ') : member.service,
+                  category: member.service, // Keep the single service field for display
                   subtitle: member.industries.join(', '),
                   locations: member.locations,
                   socialMedia: member.socialMedia,
                   bioTitle: member.bioTitle,
                   bio: member.bio,
-                  services: member.services
+                  services: member.services // Pass services array for filtering
                 }))}
                 defaultCategory="All"
                 onItemClick={(member) => {

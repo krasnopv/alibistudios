@@ -47,7 +47,9 @@ const ContentGrid = ({
       }
       // For team members with services array, check if any service matches
       if (item.services && Array.isArray(item.services)) {
-        return item.services.some(service => service.title === activeFilter);
+        const hasMatchingService = item.services.some(service => service.title === activeFilter);
+        console.log(`Item ${item.title}: services=${JSON.stringify(item.services.map(s => s.title))}, activeFilter=${activeFilter}, matches=${hasMatchingService}`);
+        return hasMatchingService;
       }
       return false;
     });
