@@ -36,14 +36,13 @@ const Hero = ({
           const response = await fetch(`/api/pages/${pageSlug}`);
           if (response.ok) {
             const pageData = await response.json();
-            if (pageData.heroVideo) {
-              setHeroData({
-                videoUrl: pageData.heroVideo.asset?.url || '',
-                posterUrl: pageData.heroVideoPoster?.asset?.url,
-                title: pageData.heroTitle,
-                subtitle: pageData.heroSubtitle
-              });
-            }
+            // Set heroData even if no video (to show poster or placeholder)
+            setHeroData({
+              videoUrl: pageData.videoUrl || '',
+              posterUrl: pageData.posterUrl,
+              title: pageData.heroTitle,
+              subtitle: pageData.heroSubtitle
+            });
           }
         } else {
           // Use direct Sanity call for production
@@ -56,9 +55,10 @@ const Hero = ({
             "posterUrl": heroVideoPoster.asset->url
           }`);
           
-          if (pageData?.videoUrl) {
+          if (pageData) {
+            // Set heroData even if no video (to show poster or placeholder)
             setHeroData({
-              videoUrl: pageData.videoUrl,
+              videoUrl: pageData.videoUrl || '',
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle
