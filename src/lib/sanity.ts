@@ -157,7 +157,7 @@ export const queries = {
       }`,
 
       // Get all directors
-      directors: `*[_type == "director"] | order(order asc) {
+      directors: `*[_type == "director"] | order(order asc, _createdAt asc) {
         _id,
         name,
         bio,
