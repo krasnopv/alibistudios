@@ -180,23 +180,39 @@ export default function Directors() {
                       {/* Director's Works */}
                       {director.works && director.works.length > 0 && (
                         <div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {director.works.map((work) => (
+                          <div className="grid md:grid-cols-2 gap-8">
+                            {director.works.map((work, index) => (
                               <div key={work._id} className="group cursor-pointer">
-                                <div className="relative h-64 overflow-hidden rounded-lg mb-4">
+                                {/* Work Image */}
+                                <div className="relative h-[372px] overflow-hidden mb-6">
                                   <img
                                     src={work.imageUrl}
                                     alt={work.imageAlt}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    className="w-full h-full object-cover"
                                   />
-                                  <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <span className="text-white text-lg font-semibold">View</span>
+                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <div className="text-white text-center">
+                                      <div className="text-2xl font-bold mb-2">{work.title}</div>
+                                      {work.subtitle && (
+                                        <div className="text-sm opacity-90">{work.subtitle}</div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
-                                <div className="text-center">
-                                  <h4 className="text-lg font-semibold text-black mb-1">{work.title}</h4>
-                                  <p className="text-sm text-gray-600 mb-1">{work.subtitle}</p>
-                                  <p className="text-xs text-gray-500">{work.year}</p>
+
+                                {/* Work Info */}
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <span className="text-[#FF0066] text-base font-[300] leading-6">
+                                      {work.title}
+                                    </span>
+                                    <span className="text-black text-base font-[300] leading-6 ml-2">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                    <span className="text-black text-xl font-[400] leading-[30px]">
+                                      →
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             ))}
