@@ -13,13 +13,11 @@ interface HeroVideo {
 
 interface HeroProps {
   pageSlug?: string;
-  fallbackVideo?: string;
   className?: string;
 }
 
 const Hero = ({ 
   pageSlug = 'home',
-  fallbackVideo = 'clip.mp4',
   className = '' 
 }: HeroProps) => {
   const [heroData, setHeroData] = useState<HeroVideo | null>(null);
@@ -79,60 +77,19 @@ const Hero = ({
     console.error('Video failed to load');
   };
 
-  // Determine what to show based on Sanity data
+  // Determine what to show based on Sanity data only
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
   const hasNoSanityMedia = !isSanityVideo && !heroData?.posterUrl;
-  
-  // Only use fallback video if there's no Sanity data at all
-  const videoSrc = isSanityVideo ? heroData.videoUrl : (hasNoSanityMedia ? fallbackVideo : null);
-  
-  // If we have Sanity data but no media, show nothing
-  const shouldShowNothing = heroData && !isSanityVideo && !heroData?.posterUrl;
-  
-  // Debug logging
-  console.log('Hero Debug:', {
-    heroData,
-    isSanityVideo,
-    hasPosterOnly,
-    hasNoSanityMedia,
-    shouldShowNothing,
-    videoSrc
-  });
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
-        {shouldShowNothing ? (
-          // Show nothing when Sanity page has no video or poster
-          <div 
-            className="w-full bg-transparent"
-            style={{
-              aspectRatio: '16/9',
-              minHeight: '400px',
-              margin: 0,
-              padding: 0
-            }}
-          />
-        ) : hasPosterOnly ? (
-          // Show only poster image when no video is available
-          <img
-            src={heroData.posterUrl}
-            alt={heroData.title || 'Hero image'}
-            className="w-full block"
-            style={{
-              aspectRatio: '16/9',
-              minHeight: '400px',
-              margin: 0,
-              padding: 0,
-              objectFit: 'cover'
-            }}
-          />
-        ) : videoSrc ? (
-          // Show video (with or without poster)
+        {isSanityVideo ? (
+          // Show Sanity video
           <video
-            src={isSanityVideo ? videoSrc : getAssetPath(videoSrc)}
+            src={heroData.videoUrl}
             poster={heroData?.posterUrl}
             autoPlay
             loop
@@ -148,22 +105,31 @@ const Hero = ({
             }}
             onError={handleVideoError}
           />
+        ) : hasPosterOnly ? (
+          // Show Sanity poster image
+          <img
+            src={heroData.posterUrl}
+            alt={heroData.title || 'Hero image'}
+            className="w-full block"
+            style={{
+              aspectRatio: '16/9',
+              minHeight: '400px',
+              margin: 0,
+              padding: 0,
+              objectFit: 'cover'
+            }}
+          />
         ) : (
-          // Show placeholder when no Sanity data at all
+          // Show nothing when no Sanity media
           <div 
-            className="w-full bg-gray-200 flex items-center justify-center"
+            className="w-full bg-transparent"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
               margin: 0,
               padding: 0
             }}
-          >
-            <div className="text-gray-500 text-center">
-              <div className="text-4xl mb-2">🎬</div>
-              <div className="text-lg">No hero media available</div>
-            </div>
-          </div>
+          />
         )}
         
         {/* Hero Content Overlay */}
