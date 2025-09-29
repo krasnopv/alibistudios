@@ -36,10 +36,10 @@ const Hero = ({
           const response = await fetch(`/api/pages/${pageSlug}`);
           if (response.ok) {
             const pageData = await response.json();
-            // Set heroData even if no video (to show poster or placeholder)
+            // Always set heroData if we have a page, even without video
             setHeroData({
-              videoUrl: pageData.videoUrl || '',
-              posterUrl: pageData.posterUrl,
+              videoUrl: pageData.heroVideo?.asset?.url || '',
+              posterUrl: pageData.heroVideoPoster?.asset?.url,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle
             });
@@ -55,8 +55,8 @@ const Hero = ({
             "posterUrl": heroVideoPoster.asset->url
           }`);
           
+          // Always set heroData if we have a page, even without video
           if (pageData) {
-            // Set heroData even if no video (to show poster or placeholder)
             setHeroData({
               videoUrl: pageData.videoUrl || '',
               posterUrl: pageData.posterUrl,
