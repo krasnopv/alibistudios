@@ -79,7 +79,7 @@ export const queries = {
     _id,
     title,
     description,
-    features,
+    url,
     image,
     "imageUrl": image.asset->url,
     "imageAlt": image.alt

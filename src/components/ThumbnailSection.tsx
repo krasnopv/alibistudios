@@ -8,7 +8,7 @@ interface Service {
   _id: string;
   title: string;
   description: string;
-  features: string[];
+  url?: string;
   imageUrl: string;
   imageAlt: string;
   image: unknown;
@@ -32,7 +32,7 @@ const ThumbnailSection = () => {
             _id: '1',
             title: 'VFX',
             description: 'Visual Effects',
-            features: ['VFX', 'Visual Effects'],
+            url: '/services/vfx',
             imageUrl: '/api/placeholder/668/372',
             imageAlt: 'VFX',
             image: null
@@ -41,7 +41,7 @@ const ThumbnailSection = () => {
             _id: '2',
             title: 'Immersive',
             description: 'Immersive Experiences',
-            features: ['Immersive', 'Experiences'],
+            url: '/services/immersive',
             imageUrl: '/api/placeholder/668/372',
             imageAlt: 'Immersive',
             image: null
@@ -50,7 +50,7 @@ const ThumbnailSection = () => {
             _id: '3',
             title: 'Film & Episodic',
             description: 'Film & Episodic Content',
-            features: ['Film', 'Episodic'],
+            url: '/services/film-episodic',
             imageUrl: '/api/placeholder/668/372',
             imageAlt: 'Film & Episodic',
             image: null
@@ -59,7 +59,7 @@ const ThumbnailSection = () => {
             _id: '4',
             title: 'Animation',
             description: 'Animation Services',
-            features: ['Animation', 'Services'],
+            url: '/services/animation',
             imageUrl: '/api/placeholder/668/372',
             imageAlt: 'Animation',
             image: null
@@ -68,7 +68,7 @@ const ThumbnailSection = () => {
             _id: '5',
             title: 'Media & Generative Art',
             description: 'Media & Generative Art',
-            features: ['Media', 'Generative Art'],
+            url: '/services/media-generative-art',
             imageUrl: '/api/placeholder/668/372',
             imageAlt: 'Media & Generative Art',
             image: null
@@ -123,7 +123,7 @@ const ThumbnailSection = () => {
                 key={service._id}
                 title={service.title}
                 image={imageUrl}
-                url={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                url={service.url || `/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
                 description={service.description}
                 index={index}
               />

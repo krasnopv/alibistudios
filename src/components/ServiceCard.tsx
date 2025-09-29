@@ -33,9 +33,11 @@ const ServiceCard = ({
     >
       {/* Service Image */}
       <div className="relative h-[372px] overflow-hidden mb-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-          <div className="text-4xl text-gray-500">🎬</div>
-        </div>
+        <img 
+          src={getAssetPath(image)} 
+          alt={title}
+          className="w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <div className="text-white text-center">
             <div className="text-2xl font-bold mb-2">{title}</div>
