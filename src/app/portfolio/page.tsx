@@ -1,6 +1,5 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 
 export default function Portfolio() {
   return (
@@ -33,8 +32,7 @@ export default function Portfolio() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
-}
+          </main>
+        </div>
+      );
+    }

@@ -269,4 +269,5 @@ h2 {
   letter-spacing: 0%;
   vertical-align: middle;
   color: #FF0066;
+  text-align: left; /* Default alignment, can be overridden with Tailwind classes */
 }

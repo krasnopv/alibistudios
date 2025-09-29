@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 import ServiceAccordion from '@/components/ServiceAccordion';
 
 interface ServiceTag {
@@ -111,7 +110,6 @@ export default function Services() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

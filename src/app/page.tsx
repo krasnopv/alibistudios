@@ -5,7 +5,6 @@ import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
 import Team from '@/components/Team';
-import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
         <Films />
         <Awards />
       </main>
-      <Footer />
-    </div>
-  );
-}
+        </div>
+      );
+    }
