@@ -20,6 +20,7 @@ interface DirectorWork {
   imageUrl: string;
   imageAlt: string;
   year: number;
+  url?: string; // External URL for video
 }
 
 interface Director {
@@ -33,6 +34,7 @@ interface Director {
 export default function Directors() {
   const [directors, setDirectors] = useState<Director[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDirectors = async () => {
@@ -178,7 +180,11 @@ export default function Directors() {
                         <div>
                           <div className="grid md:grid-cols-2 gap-8">
                             {director.works.map((work) => (
-                              <div key={work._id} className="group cursor-pointer service-card">
+                              <div 
+                                key={work._id} 
+                                className="group cursor-pointer service-card"
+                                onClick={() => work.url && setSelectedVideo(work.url)}
+                              >
                                 {/* Work Image */}
                                 <div className="relative h-[372px] overflow-hidden mb-6">
                                   <img
@@ -186,6 +192,26 @@ export default function Directors() {
                                     alt={work.imageAlt}
                                     className="w-full h-full object-cover"
                                   />
+                                  {/* Play Icon - Always Visible */}
+                                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <div 
+                                      className="w-[43px] h-[49px] bg-white flex items-center justify-center"
+                                      style={{ opacity: 1 }}
+                                    >
+                                      <svg 
+                                        width="20" 
+                                        height="20" 
+                                        viewBox="0 0 24 24" 
+                                        fill="none"
+                                        className="ml-1"
+                                      >
+                                        <path 
+                                          d="M8 5v14l11-7z" 
+                                          fill="#000000"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </div>
                                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <div className="text-white text-center">
                                       <div className="text-2xl font-bold mb-2">{work.title}</div>
@@ -222,6 +248,29 @@ export default function Directors() {
           </div>
         </section>
       </main>
+      
+      {/* Video Overlay */}
+      {selectedVideo && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl">
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300"
+            >
+              ✕
+            </button>
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                src={selectedVideo}
+                className="absolute inset-0 w-full h-full"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
