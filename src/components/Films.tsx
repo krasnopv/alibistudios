@@ -33,14 +33,31 @@ const Films = () => {
   useEffect(() => {
         const fetchData = async () => {
           try {
-            // Fetch films and categories directly from Sanity
-            const [filmsData, categoriesData] = await Promise.all([
-              client.fetch(queries.films),
-              client.fetch(queries.categories)
-            ]);
-        
-        setFilms(filmsData);
-        setCategories(categoriesData);
+            // Use API routes for local development, direct Sanity calls for production
+            const isLocalDev = process.env.NODE_ENV === 'development';
+            
+            if (isLocalDev) {
+              // Use API routes for local development (avoids CORS issues)
+              const [filmsResponse, categoriesResponse] = await Promise.all([
+                fetch('/api/films'),
+                fetch('/api/categories')
+              ]);
+              
+              const filmsData = await filmsResponse.json();
+              const categoriesData = await categoriesResponse.json();
+              
+              setFilms(filmsData);
+              setCategories(categoriesData);
+            } else {
+              // Use direct Sanity calls for production deployment
+              const [filmsData, categoriesData] = await Promise.all([
+                client.fetch(queries.films),
+                client.fetch(queries.categories)
+              ]);
+              
+              setFilms(filmsData);
+              setCategories(categoriesData);
+            }
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback to mock data
