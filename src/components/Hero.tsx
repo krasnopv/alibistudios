@@ -38,8 +38,8 @@ const Hero = ({
             const pageData = await response.json();
             // Always set heroData if we have a page, even without video
             setHeroData({
-              videoUrl: pageData.heroVideo?.asset?.url || '',
-              posterUrl: pageData.heroVideoPoster?.asset?.url,
+              videoUrl: pageData.videoUrl || '',
+              posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle
             });
