@@ -206,12 +206,11 @@ export default function Directors() {
                                     <span className="text-[#FF0066] text-base font-[300] leading-6">
                                       {work.title}
                                     </span>
-                                    <span className="text-black text-base font-[300] leading-6 ml-2">
-                                      &nbsp;&nbsp;&nbsp;&nbsp;
-                                    </span>
-                                    <span className="text-black text-xl font-[400] leading-[30px]">
-                                      →
-                                    </span>
+                                    {work.subtitle && (
+                                      <span className="text-[#000000] text-base font-[300] leading-6 ml-2">
+                                        {work.subtitle}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                               </div>
