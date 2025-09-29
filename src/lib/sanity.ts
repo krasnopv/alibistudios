@@ -93,7 +93,7 @@ export const queries = {
   }`,
 
   // Get services for homepage
-  homepageServices: `*[_type == "service" && showOnHomepage == true] | order(homepageOrder asc, order asc) {
+  homepageServices: `*[_type == "service" && defined(showOnHomepage) && showOnHomepage == true] | order(homepageOrder asc, order asc) {
     _id,
     title,
     description,

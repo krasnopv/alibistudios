@@ -30,10 +30,19 @@ const ThumbnailSection = () => {
       try {
         const response = await fetch('/api/homepage-services');
         const data = await response.json();
-        setServices(data);
+        
+        console.log('Homepage services API response:', data);
+        
+        // Only set services if we have data, otherwise show empty array
+        if (data && data.length > 0) {
+          setServices(data);
+        } else {
+          console.log('No services found for homepage, hiding section');
+          setServices([]);
+        }
       } catch (error) {
         console.error('Error fetching services:', error);
-        // Fallback to mock data
+        // Only use fallback data if there's an actual error, not empty results
         setServices([
           {
             _id: '1',
@@ -101,6 +110,11 @@ const ThumbnailSection = () => {
         </div>
       </section>
     );
+  }
+
+  // If no services are available, don't render the section
+  if (services.length === 0) {
+    return null;
   }
 
   return (
