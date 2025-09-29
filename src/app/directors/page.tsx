@@ -160,16 +160,12 @@ export default function Directors() {
                           {director.trophies && director.trophies.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                               {director.trophies.map((trophy) => (
-                                <div key={trophy._id} className="text-center">
-                                  <div className="w-16 h-16 mx-auto mb-2 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                    <img
-                                      src={trophy.imageUrl}
-                                      alt={trophy.imageAlt}
-                                      className="w-12 h-12 object-contain"
-                                    />
-                                  </div>
-                                  <div className="text-xs text-gray-600">{trophy.name}</div>
-                                  <div className="text-xs text-gray-500">{trophy.year}</div>
+                                <div key={trophy._id} className="w-full">
+                                  <img
+                                    src={trophy.imageUrl}
+                                    alt={trophy.imageAlt}
+                                    className="w-full h-auto object-contain"
+                                  />
                                 </div>
                               ))}
                             </div>
