@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ContentGrid from './ContentGrid';
-import { urlFor } from '@/lib/sanity';
+import { urlFor, client, queries } from '@/lib/sanity';
 
 interface Category {
   _id: string;
@@ -33,14 +33,11 @@ const Films = () => {
   useEffect(() => {
         const fetchData = async () => {
           try {
-            // Fetch films and categories in parallel
-            const [filmsResponse, categoriesResponse] = await Promise.all([
-              fetch('/api/films'),
-              fetch('/api/categories')
+            // Fetch films and categories directly from Sanity
+            const [filmsData, categoriesData] = await Promise.all([
+              client.fetch(queries.films),
+              client.fetch(queries.categories)
             ]);
-            
-            const filmsData = await filmsResponse.json();
-            const categoriesData = await categoriesResponse.json();
         
         setFilms(filmsData);
         setCategories(categoriesData);
@@ -53,6 +50,7 @@ const Films = () => {
           description: `Description for Film ${i + 1}`,
           category: { _id: 'all', name: 'All', slug: 'all' },
           year: 2024,
+          displayOrder: i + 1,
           imageUrl: `/api/placeholder/207/307`,
           imageAlt: `Film ${i + 1}`,
           imageRef: '',
