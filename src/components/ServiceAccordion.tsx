@@ -111,12 +111,12 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Description and Tags (1/3) */}
                     <div className="lg:col-span-1">
-                      <div 
+                      <p 
                         className="text-[20px] font-[400] leading-[150%] tracking-[0%] mb-6"
                         style={{ fontFamily: 'Plus Jakarta Sans' }}
                       >
                         {getTextFromRichText(service.description)}
-                      </div>
+                      </p>
                       
                       {/* Tags */}
                       {service.tags && service.tags.length > 0 && (
