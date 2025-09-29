@@ -20,6 +20,8 @@ const Hero = ({
   pageSlug = 'home',
   className = '' 
 }: HeroProps) => {
+  // Handle root slug - convert '/' to 'home'
+  const actualSlug = pageSlug === '/' ? 'home' : pageSlug;
   const [heroData, setHeroData] = useState<HeroVideo | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +33,7 @@ const Hero = ({
         
         if (isLocalDev) {
           // Use API route for local development
-          const response = await fetch(`/api/pages/${pageSlug}`);
+          const response = await fetch(`/api/pages/${actualSlug}`);
           if (response.ok) {
             const pageData = await response.json();
             // Always set heroData if we have a page, even without video
@@ -44,7 +46,7 @@ const Hero = ({
           }
         } else {
           // Use direct Sanity call for production
-          const pageData = await client.fetch(`*[_type == "page" && slug.current == "${pageSlug}"][0] {
+          const pageData = await client.fetch(`*[_type == "page" && slug.current == "${actualSlug}"][0] {
             heroVideo,
             heroVideoPoster,
             heroTitle,
@@ -71,7 +73,7 @@ const Hero = ({
     };
 
     fetchHeroData();
-  }, [pageSlug]);
+  }, [actualSlug]);
 
   const handleVideoError = () => {
     console.error('Video failed to load');
