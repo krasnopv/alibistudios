@@ -18,7 +18,7 @@ interface Film {
   description: string;
   category: Category;
   year: number;
-  displayOrder?: number;
+  order?: number;
   imageUrl: string;
   imageAlt: string;
   imageRef: string;
@@ -67,7 +67,7 @@ const Films = () => {
           description: `Description for Film ${i + 1}`,
           category: { _id: 'all', name: 'All', slug: 'all' },
           year: 2024,
-          displayOrder: i + 1,
+          order: i + 1,
           imageUrl: `/api/placeholder/207/307`,
           imageAlt: `Film ${i + 1}`,
           imageRef: '',
