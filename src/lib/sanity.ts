@@ -102,5 +102,34 @@ export const queries = {
     image,
     "imageUrl": image.asset->url,
     "imageAlt": image.alt
+  }`,
+
+  // Get page by slug
+  pageBySlug: (slug: string) => `*[_type == "page" && slug.current == "${slug}"][0] {
+    _id,
+    title,
+    slug,
+    description,
+    heroVideo,
+    heroVideoPoster,
+    heroTitle,
+    heroSubtitle,
+    content,
+    seoImage,
+    publishedAt,
+    isPublished,
+    "videoUrl": heroVideo.asset->url,
+    "posterUrl": heroVideoPoster.asset->url,
+    "seoImageUrl": seoImage.asset->url
+  }`,
+
+  // Get all published pages
+  pages: `*[_type == "page" && isPublished == true] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    description,
+    publishedAt,
+    "seoImageUrl": seoImage.asset->url
   }`
 }
