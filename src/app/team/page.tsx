@@ -68,6 +68,37 @@ const Team = () => {
             ],
             bioTitle: 'Production Expert',
             bio: 'Sarah specializes in documentary production and has won multiple awards.'
+          },
+          {
+            _id: '3',
+            fullName: 'Mike Chen',
+            imageUrl: '/api/placeholder/300/300',
+            imageAlt: 'Mike Chen',
+            role: 'VFX Supervisor',
+            industries: ['Film', 'Television'],
+            locations: ['Vancouver, Canada'],
+            service: 'Post Production',
+            socialMedia: [
+              { platform: 'LinkedIn', url: 'https://linkedin.com/in/mikechen', icon: 'linkedin' }
+            ],
+            bioTitle: 'VFX Expert',
+            bio: 'Mike is a VFX supervisor with expertise in visual effects and post-production.'
+          },
+          {
+            _id: '4',
+            fullName: 'Emma Wilson',
+            imageUrl: '/api/placeholder/300/300',
+            imageAlt: 'Emma Wilson',
+            role: 'Marketing Manager',
+            industries: ['Advertising', 'Digital'],
+            locations: ['New York, USA'],
+            service: 'Marketing',
+            socialMedia: [
+              { platform: 'LinkedIn', url: 'https://linkedin.com/in/emmawilson', icon: 'linkedin' },
+              { platform: 'Twitter', url: 'https://twitter.com/emmawilson', icon: 'twitter' }
+            ],
+            bioTitle: 'Marketing Strategist',
+            bio: 'Emma leads marketing initiatives and brand development for the company.'
           }
         ]);
       } finally {
