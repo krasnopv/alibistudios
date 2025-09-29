@@ -25,11 +25,12 @@ export const urlFor = (source: unknown) => {
 // GROQ queries for fetching data
 export const queries = {
   // Get all films with category data
-  films: `*[_type == "film"] | order(_createdAt desc) {
+  films: `*[_type == "film"] | order(displayOrder asc, _createdAt desc) {
     _id,
     title,
     description,
     year,
+    displayOrder,
     image,
     "imageUrl": image.asset->url,
     "imageAlt": image.alt,

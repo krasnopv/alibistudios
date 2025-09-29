@@ -18,6 +18,7 @@ interface Film {
   description: string;
   category: Category;
   year: number;
+  displayOrder?: number;
   imageUrl: string;
   imageAlt: string;
   imageRef: string;
