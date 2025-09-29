@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import ScrollableCategories from './ScrollableCategories';
 
 interface ContentItem {
   id: string | number;
@@ -85,28 +86,14 @@ const ContentGrid = ({
             )}
           </motion.div>
 
-          {/* Filter Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap gap-8 mb-12"
-          >
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`text-[28px] font-[400] leading-[33.6px] transition-all duration-300 cursor-pointer ${
-                  activeFilter === category
-                    ? 'text-black active-filter'
-                    : 'text-black hover:text-black hover-filter'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </motion.div>
+          {/* Scrollable Categories */}
+          <div className="mb-12">
+            <ScrollableCategories
+              categories={categories}
+              activeCategory={activeFilter}
+              onCategoryChange={setActiveFilter}
+            />
+          </div>
 
           {/* Content Grid */}
           <motion.div
