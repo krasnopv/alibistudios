@@ -14,7 +14,7 @@ interface ServiceTag {
 interface Service {
   _id: string;
   title: string;
-  description: string;
+  description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
   tags: ServiceTag[];

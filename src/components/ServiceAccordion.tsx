@@ -12,7 +12,7 @@ interface ServiceTag {
 interface Service {
   _id: string;
   title: string;
-  description: string;
+  description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
   tags: ServiceTag[];
@@ -26,6 +26,44 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   const [expandedService, setExpandedService] = useState<string | null>(null);
   
   console.log('ServiceAccordion rendering with', services.length, 'services');
+
+  // Function to extract text from rich text objects
+  const getTextFromRichText = (content: unknown): string => {
+    if (typeof content === 'string') {
+      return content;
+    }
+    
+    if (Array.isArray(content)) {
+      return content
+        .map(block => {
+          if (block && typeof block === 'object' && '_type' in block && block._type === 'block' && 'children' in block && Array.isArray(block.children)) {
+            return block.children
+              .map((child: unknown) => {
+                if (child && typeof child === 'object' && 'text' in child) {
+                  return String(child.text || '');
+                }
+                return '';
+              })
+              .join('');
+          }
+          return '';
+        })
+        .join(' ');
+    }
+    
+    if (content && typeof content === 'object' && 'children' in content && Array.isArray(content.children)) {
+      return content.children
+        .map((child: unknown) => {
+          if (child && typeof child === 'object' && 'text' in child) {
+            return String(child.text || '');
+          }
+          return '';
+        })
+        .join('');
+    }
+    
+    return String(content || '');
+  };
 
   const toggleService = (serviceId: string) => {
     setExpandedService(expandedService === serviceId ? null : serviceId);
@@ -75,7 +113,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                         className="text-[20px] font-[400] leading-[150%] tracking-[0%] mb-6"
                         style={{ fontFamily: 'Plus Jakarta Sans' }}
                       >
-                        {service.description}
+                        {getTextFromRichText(service.description)}
                       </div>
                       
                       {/* Tags */}
