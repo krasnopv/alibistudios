@@ -89,21 +89,35 @@ const Films = () => {
   ];
 
   return (
-    <ContentGrid
-      title="Films Led or contributed to by Alibi members"
-      categories={allCategories.map(cat => cat.name)}
-      items={films.map(film => {
-        const imageUrl = film.imageUrl || `/api/placeholder/207/307`;
-        return {
-          id: film._id,
-          title: film.title,
-          image: imageUrl,
-          description: film.description,
-          category: film.category?.name || 'All'
-        };
-      })}
-      defaultCategory="All"
-    />
+    <section className="w-full py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="row">
+          {/* Header */}
+          <div className="mb-16">
+            <h1 className="display_h1">
+              Films Led or contributed to by Alibi members
+            </h1>
+          </div>
+
+          {/* Films Grid */}
+          <ContentGrid
+            title=""
+            categories={allCategories.map(cat => cat.name)}
+            items={films.map(film => {
+              const imageUrl = film.imageUrl || `/api/placeholder/207/307`;
+              return {
+                id: film._id,
+                title: film.title,
+                image: imageUrl,
+                description: film.description,
+                category: film.category?.name || 'All'
+              };
+            })}
+            defaultCategory="All"
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 
