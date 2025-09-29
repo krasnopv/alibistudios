@@ -1,22 +1,8 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === 'production';
-const isGHPages = process.env.GITHUB_ACTIONS === 'true';
-const isServerDeploy = process.env.SERVER_DEPLOY === 'true';
-
 const nextConfig: NextConfig = {
-  // GitHub Pages configuration (only for production builds)
-  ...(isGHPages && {
-    output: 'export',
-    distDir: 'docs',
-    basePath: '/alibistudios',
-    assetPrefix: '/alibistudios/',
-  }),
-  
   // Server deployment configuration
-  ...(isServerDeploy && {
-    output: 'standalone',
-  }),
+  output: 'standalone',
   
   // Common configuration
   trailingSlash: true,
@@ -24,29 +10,12 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   
-  // Disable strict linting for GitHub Pages build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
   
-  // Image optimization (disabled for static export)
-  // images: {
-  //   formats: ['image/webp', 'image/avif'],
-  //   deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-  //   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  //   minimumCacheTTL: 60,
-  // },
-  
   // Experimental features for better performance
   experimental: {
-    // optimizeCss: true, // Disabled for static export
     scrollRestoration: true,
   },
   

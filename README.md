@@ -1,11 +1,11 @@
 # Alibi - Modern Web Solutions
 
-A modern, responsive website built with Next.js 15, TypeScript, and Tailwind CSS, featuring CMS integration with Contentful and optimized for performance and SEO.
+A modern, responsive website built with Next.js 15, TypeScript, and Tailwind CSS, featuring CMS integration with Sanity and optimized for performance and SEO.
 
 ## 🚀 Features
 
 - **Modern Design**: Clean, responsive design with smooth animations
-- **CMS Integration**: Contentful CMS for easy content management
+- **CMS Integration**: Sanity CMS for easy content management
 - **Performance Optimized**: Fast loading with Next.js optimizations
 - **SEO Ready**: Complete SEO setup with sitemap and meta tags
 - **TypeScript**: Full type safety throughout the application
@@ -20,7 +20,7 @@ A modern, responsive website built with Next.js 15, TypeScript, and Tailwind CSS
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
-- **CMS**: Contentful
+- **CMS**: Sanity
 - **Icons**: Lucide React
 - **Fonts**: Inter & Poppins (Google Fonts)
 
@@ -44,10 +44,10 @@ A modern, responsive website built with Next.js 15, TypeScript, and Tailwind CSS
 3. **Set up environment variables**
    Create a `.env.local` file in the root directory:
    ```env
-   # Contentful CMS Configuration
-   CONTENTFUL_SPACE_ID=your_contentful_space_id
-   CONTENTFUL_ACCESS_TOKEN=your_contentful_access_token
-   CONTENTFUL_PREVIEW_ACCESS_TOKEN=your_contentful_preview_token
+   # Sanity CMS Configuration
+   NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
+   NEXT_PUBLIC_SANITY_DATASET=production
+   SANITY_API_TOKEN=your_sanity_api_token
    
    # Site Configuration
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -72,17 +72,18 @@ pnpm dev
 
 ## 🎨 Content Management
 
-This project uses Contentful as a headless CMS. To set up content management:
+This project uses Sanity as a headless CMS. To set up content management:
 
-1. **Create a Contentful account** at [contentful.com](https://contentful.com)
-2. **Create a new space** in Contentful
+1. **Create a Sanity account** at [sanity.io](https://sanity.io)
+2. **Create a new project** in Sanity
 3. **Set up content types**:
-   - Blog Post
+   - Film
+   - Award
    - Service
-   - Project
+   - Address
    - Team Member
-4. **Add your space ID and access token** to `.env.local`
-5. **Start creating content** in the Contentful web app
+4. **Add your project ID and API token** to `.env.local`
+5. **Start creating content** in the Sanity Studio
 
 ## 📁 Project Structure
 
@@ -104,81 +105,64 @@ src/
 ├── config/              # Configuration files
 │   └── env.ts           # Environment variables
 ├── lib/                 # Utility libraries
-│   ├── contentful.ts    # Contentful integration
+│   ├── sanity.ts        # Sanity integration
 │   └── seo.ts           # SEO utilities
 └── types/               # TypeScript type definitions
 ```
 
 ## 🚀 Deployment
 
-### GitHub Pages (Static Export)
+### Server Deployment with Docker
 
-This project is configured for GitHub Pages deployment with static export.
+This project is configured for server deployment using Docker and GitHub Actions.
 
 #### Prerequisites
-- GitHub repository
-- GitHub Actions enabled
+- Server with Docker installed
+- SSH access to the server
+- GitHub repository with Actions enabled
 
 #### Setup Steps
 
-1. **Enable GitHub Pages**
-   - Go to your repository Settings
-   - Navigate to "Pages" section
-   - Set Source to "GitHub Actions"
+1. **Configure Server**
+   - Install Docker and Docker Compose on your server
+   - Set up SSH key authentication
+   - Create deployment directory: `/opt/alibi`
 
-2. **Deploy to GitHub Pages**
+2. **Configure GitHub Secrets**
+   Add the following secrets to your GitHub repository:
+   - `SERVER_SSH_KEY`: Private SSH key for server access
+   - `SANITY_API_TOKEN`: Sanity API token for CMS access
+
+3. **Deploy to Server**
    ```bash
    # Push to main branch (triggers automatic deployment)
    git add .
-   git commit -m "Deploy to GitHub Pages"
+   git commit -m "Deploy to server"
    git push origin main
-   ```
-
-3. **Manual Build (Optional)**
-   ```bash
-   # Build for GitHub Pages
-   npm run build:gh-pages
-   
-   # The build output will be in the 'docs' folder
-   # You can then commit and push the docs folder
    ```
 
 #### Configuration Details
 
-The project uses conditional configuration for GitHub Pages:
-- **Local Development**: `npm run dev` (port 3001)
-- **GitHub Pages Build**: Automatic via GitHub Actions
-- **Output Directory**: `docs/` (configured in `next.config.ts`)
-- **Base Path**: `/alibistudios` (your repository name)
+The project uses Docker for deployment:
+- **Build**: Next.js standalone build in Docker container
+- **Runtime**: Node.js server on port 3000 (mapped to 3100)
+- **Reverse Proxy**: Nginx configuration for domain routing
+- **CMS**: Sanity integration with environment variables
 
-#### Environment Variables for GitHub Pages
+#### Environment Variables
 
-No environment variables needed for static export. The build process:
-1. Automatically detects GitHub Actions environment
-2. Switches to static export mode
-3. Builds to `docs/` directory
-4. Deploys to GitHub Pages
+Required environment variables for server deployment:
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`: Your Sanity project ID
+- `NEXT_PUBLIC_SANITY_DATASET`: Your Sanity dataset (usually 'production')
+- `SANITY_API_TOKEN`: Sanity API token for content fetching
 
 #### Troubleshooting
 
 If deployment fails:
 1. Check GitHub Actions logs in your repository
-2. Ensure the workflow file exists in `.github/workflows/deploy.yml`
-3. Verify the repository name matches the `basePath` in `next.config.ts`
-
-### Vercel (Alternative)
-
-1. **Connect your repository** to Vercel
-2. **Add environment variables** in Vercel dashboard
-3. **Deploy automatically** on every push
-
-### Other Platforms
-
-The project can be deployed to any platform that supports Next.js:
-- Netlify
-- AWS Amplify
-- Railway
-- DigitalOcean App Platform
+2. Verify SSH key is correctly configured
+3. Ensure server has Docker and Docker Compose installed
+4. Check that all required environment variables are set
 
 ## 🔧 Customization
 
@@ -193,7 +177,7 @@ Update the color scheme in `src/app/globals.css`:
 ```
 
 ### Content Types
-Modify content types in `src/lib/contentful.ts` to match your Contentful setup.
+Modify content types in `src/lib/sanity.ts` to match your Sanity setup.
 
 ### SEO
 Update SEO settings in `src/lib/seo.ts` for your specific needs.
@@ -230,5 +214,5 @@ If you have any questions or need help, please:
 - [Next.js](https://nextjs.org/) for the amazing framework
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS
 - [Framer Motion](https://www.framer.com/motion/) for smooth animations
-- [Contentful](https://contentful.com/) for the headless CMS
+- [Sanity](https://sanity.io/) for the headless CMS
 - [Lucide](https://lucide.dev/) for the beautiful icons
