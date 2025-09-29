@@ -90,25 +90,27 @@ export default function Services() {
         />
         
         {/* Services content */}
-        <div className="w-full px-4 py-20">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-16">
-              <h1 className="display_h1 text-center">
-                All under one &apos;Virtual Roof&apos;
-              </h1>
-            </div>
-
-            {/* Services Accordion */}
-            {loading ? (
-              <div className="flex justify-center items-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
+        <section className="w-full py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="row">
+              {/* Header */}
+              <div className="mb-16">
+                <h1 className="display_h1 text-center">
+                  All under one &apos;Virtual Roof&apos;
+                </h1>
               </div>
-            ) : (
-              <ServiceAccordion services={services} />
-            )}
+
+              {/* Services Accordion */}
+              {loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
+                </div>
+              ) : (
+                <ServiceAccordion services={services} />
+              )}
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );
