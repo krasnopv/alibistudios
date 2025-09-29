@@ -8,9 +8,15 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
-    const page = await client.fetch(queries.pageBySlug(params.slug))
+    console.log('Fetching page with slug:', params.slug)
+    const query = queries.pageBySlug(params.slug)
+    console.log('GROQ query:', query)
+    
+    const page = await client.fetch(query)
+    console.log('Fetched page data:', page)
     
     if (!page) {
+      console.log('No page found for slug:', params.slug)
       return NextResponse.json({ error: 'Page not found' }, { status: 404 })
     }
     
