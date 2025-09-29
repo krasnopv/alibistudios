@@ -288,3 +288,8 @@ h2 {
   vertical-align: middle;
   color: #000000;
 }
+
+/* Service card with Trophies - remove top margin */
+.service-card {
+  margin-top: 0 !important;
+}
