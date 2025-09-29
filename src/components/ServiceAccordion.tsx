@@ -32,7 +32,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   // Function to render rich text objects with proper paragraph structure
   const renderRichText = (content: unknown): React.ReactNode => {
     if (typeof content === 'string') {
-      return <p className="mb-4">{content}</p>;
+      return <p>{content}</p>;
     }
     
     if (Array.isArray(content)) {
@@ -47,7 +47,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
             })
             .join('');
           
-          return <p key={index} className="mb-4">{text}</p>;
+          return <p key={index}>{text}</p>;
         }
         return null;
       });
@@ -56,13 +56,13 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
     if (content && typeof content === 'object' && 'children' in content && Array.isArray(content.children)) {
       return content.children.map((child: unknown, index) => {
         if (child && typeof child === 'object' && 'text' in child) {
-          return <p key={index} className="mb-4">{String(child.text || '')}</p>;
+          return <p key={index}>{String(child.text || '')}</p>;
         }
         return null;
       });
     }
     
-    return <p className="mb-4">{String(content || '')}</p>;
+    return <p>{String(content || '')}</p>;
   };
 
   const toggleService = (serviceId: string) => {
