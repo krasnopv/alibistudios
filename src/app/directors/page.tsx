@@ -27,7 +27,7 @@ interface Director {
   name: string;
   bio: string | unknown; // Can be string or rich text object
   trophies?: Trophy[]; // Optional - can be null or undefined
-  works: DirectorWork[];
+  works?: DirectorWork[]; // Optional - can be null or undefined
 }
 
 export default function Directors() {
@@ -157,7 +157,7 @@ export default function Directors() {
 
                         {/* Right Column - Trophies Grid */}
                         <div className="lg:col-span-2">
-                          {director.trophies && director.trophies.length > 0 ? (
+                          {director.trophies && director.trophies.length > 0 && (
                             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                               {director.trophies.map((trophy) => (
                                 <div key={trophy._id} className="text-center">
@@ -173,41 +173,36 @@ export default function Directors() {
                                 </div>
                               ))}
                             </div>
-                          ) : (
-                            <div className="text-center text-gray-500 py-8">
-                              <p>No awards available</p>
-                            </div>
                           )}
                         </div>
                       </div>
 
                       {/* Director's Works */}
-                      <div>
-                        <h3 className="text-2xl font-semibold mb-8 text-center" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                          Director&apos;s Works
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                          {director.works.map((work) => (
-                            <div key={work._id} className="group cursor-pointer">
-                              <div className="relative h-64 overflow-hidden rounded-lg mb-4">
-                                <img
-                                  src={work.imageUrl}
-                                  alt={work.imageAlt}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                  <span className="text-white text-lg font-semibold">View</span>
+                      {director.works && director.works.length > 0 && (
+                        <div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {director.works.map((work) => (
+                              <div key={work._id} className="group cursor-pointer">
+                                <div className="relative h-64 overflow-hidden rounded-lg mb-4">
+                                  <img
+                                    src={work.imageUrl}
+                                    alt={work.imageAlt}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  />
+                                  <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <span className="text-white text-lg font-semibold">View</span>
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <h4 className="text-lg font-semibold text-black mb-1">{work.title}</h4>
+                                  <p className="text-sm text-gray-600 mb-1">{work.subtitle}</p>
+                                  <p className="text-xs text-gray-500">{work.year}</p>
                                 </div>
                               </div>
-                              <div className="text-center">
-                                <h4 className="text-lg font-semibold text-black mb-1">{work.title}</h4>
-                                <p className="text-sm text-gray-600 mb-1">{work.subtitle}</p>
-                                <p className="text-xs text-gray-500">{work.year}</p>
-                              </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   ))}
                 </div>
