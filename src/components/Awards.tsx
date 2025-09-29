@@ -17,6 +17,7 @@ interface Award {
 const Awards = () => {
   const [awards, setAwards] = useState<Award[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeAward, setActiveAward] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAwards = async () => {
@@ -101,7 +102,8 @@ const Awards = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className=""
+                className="group cursor-pointer"
+                onClick={() => setActiveAward(activeAward === award._id ? null : award._id)}
               >
                 {/* Award Icon */}
                 <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4">
@@ -116,8 +118,10 @@ const Awards = () => {
                   )}
                 </div>
                 
-                {/* Award Info */}
-                <div className="text-center">
+                {/* Award Info - Hidden by default, shown on hover/click */}
+                <div className={`text-center transition-opacity duration-300 ${
+                  activeAward === award._id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                }`}>
                   <div className="text-xs font-[400] leading-[18px] text-gray-600 mb-1">
                     {award.name}
                   </div>
