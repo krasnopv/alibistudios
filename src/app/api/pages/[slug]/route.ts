@@ -5,18 +5,19 @@ export const dynamic = 'force-static'
 
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    console.log('Fetching page with slug:', params.slug)
-    const query = queries.pageBySlug(params.slug)
+    const { slug } = await params
+    console.log('Fetching page with slug:', slug)
+    const query = queries.pageBySlug(slug)
     console.log('GROQ query:', query)
     
     const page = await client.fetch(query)
     console.log('Fetched page data:', page)
     
     if (!page) {
-      console.log('No page found for slug:', params.slug)
+      console.log('No page found for slug:', slug)
       return NextResponse.json({ error: 'Page not found' }, { status: 404 })
     }
     
