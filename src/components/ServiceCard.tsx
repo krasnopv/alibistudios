@@ -34,7 +34,7 @@ const ServiceCard = ({
       {/* Service Image */}
       <div className="relative h-[372px] overflow-hidden mb-6">
         <img 
-          src={getAssetPath(image)} 
+          src={image.startsWith('http') ? image : getAssetPath(image)} 
           alt={title}
           className="w-full h-full object-cover"
         />
