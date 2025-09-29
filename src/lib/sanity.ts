@@ -174,6 +174,7 @@ export const queries = {
           title,
           subtitle,
           year,
+          url,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt
         }

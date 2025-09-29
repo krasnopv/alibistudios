@@ -183,7 +183,15 @@ export default function Directors() {
                               <div 
                                 key={work._id} 
                                 className="group cursor-pointer service-card"
-                                onClick={() => work.url && setSelectedVideo(work.url)}
+                                onClick={() => {
+                                  console.log('Work clicked:', work);
+                                  console.log('Work URL:', work.url);
+                                  if (work.url) {
+                                    setSelectedVideo(work.url);
+                                  } else {
+                                    console.log('No URL found for work:', work.title);
+                                  }
+                                }}
                               >
                                 {/* Work Image */}
                                 <div className="relative h-[372px] overflow-hidden mb-6">
