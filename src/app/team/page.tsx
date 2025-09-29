@@ -190,6 +190,7 @@ const Team = () => {
                   services: member.services // Pass services array for filtering
                 }))}
                 defaultCategory="All"
+                showMemberInfo={true}
                 onItemClick={(member) => {
                   // Handle team member click - could open overlay
                   console.log('Team member clicked:', member);

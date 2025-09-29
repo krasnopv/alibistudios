@@ -27,6 +27,7 @@ interface ContentGridProps {
   defaultCategory?: string;
   onItemClick?: (item: ContentItem) => void;
   className?: string;
+  showMemberInfo?: boolean;
 }
 
 const ContentGrid = ({
@@ -36,7 +37,8 @@ const ContentGrid = ({
   items,
   defaultCategory = 'All',
   onItemClick,
-  className = ''
+  className = '',
+  showMemberInfo = false
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
 
@@ -146,23 +148,25 @@ const ContentGrid = ({
                       </div>
                     </div>
                     
-                    {/* Team Member Information */}
-                    <div className="mt-4 text-left">
-                      <div className="text-lg font-semibold text-black mb-1">
-                        {item.title}
-                      </div>
-                      <div className="text-sm text-gray-600 mb-1">
-                        {item.description}
-                        {item.subtitle && (
-                          <span> - {item.subtitle}</span>
+                    {/* Team Member Information - Only show if showMemberInfo is true */}
+                    {showMemberInfo && (
+                      <div className="mt-4 text-left">
+                        <div className="text-lg font-semibold text-black mb-1">
+                          {item.title}
+                        </div>
+                        <div className="text-sm text-gray-600 mb-1">
+                          {item.description}
+                          {item.subtitle && (
+                            <span> - {item.subtitle}</span>
+                          )}
+                        </div>
+                        {item.locations && (
+                          <div className="text-sm text-gray-500">
+                            {item.locations.join(' / ')}
+                          </div>
                         )}
                       </div>
-                      {item.locations && (
-                        <div className="text-sm text-gray-500">
-                          {item.locations.join(' / ')}
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </motion.div>
                 ))}
               </motion.div>
