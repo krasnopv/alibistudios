@@ -88,10 +88,10 @@ const Awards = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className=""
+                className="group relative"
               >
                 {/* Award Icon */}
-                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4">
+                <div className="h-[119px] bg-[#F8F9FA] opacity-60 flex items-center justify-center mb-4 group-hover:opacity-100 transition-opacity duration-300">
                   {award.imageUrl ? (
                     <img 
                       src={award.imageUrl} 
@@ -100,6 +100,14 @@ const Awards = () => {
                     />
                   ) : (
                     <div className="text-4xl text-gray-400">🏆</div>
+                  )}
+                </div>
+                
+                {/* Hover Tooltip */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full bg-black text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-nowrap">
+                  <div className="font-semibold">{award.name}</div>
+                  {award.count && (
+                    <div className="text-gray-300">{award.count}</div>
                   )}
                 </div>
               </motion.div>
