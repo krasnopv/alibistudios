@@ -79,10 +79,13 @@ const Hero = ({
     console.error('Video failed to load');
   };
 
-  // Use Sanity video if available, otherwise fallback to local video
-  const videoSrc = heroData?.videoUrl || fallbackVideo;
+  // Determine what to show based on Sanity data
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
+  const hasNoSanityMedia = !isSanityVideo && !heroData?.posterUrl;
+  
+  // Only use fallback video if there's no Sanity data at all
+  const videoSrc = isSanityVideo ? heroData.videoUrl : (hasNoSanityMedia ? fallbackVideo : null);
 
   return (
     <section className={`relative w-screen overflow-hidden ${className}`}>
@@ -102,7 +105,7 @@ const Hero = ({
               objectFit: 'cover'
             }}
           />
-        ) : (
+        ) : videoSrc ? (
           // Show video (with or without poster)
           <video
             src={isSanityVideo ? videoSrc : getAssetPath(videoSrc)}
@@ -121,6 +124,22 @@ const Hero = ({
             }}
             onError={handleVideoError}
           />
+        ) : (
+          // Show placeholder when no media is available
+          <div 
+            className="w-full bg-gray-200 flex items-center justify-center"
+            style={{
+              aspectRatio: '16/9',
+              minHeight: '400px',
+              margin: 0,
+              padding: 0
+            }}
+          >
+            <div className="text-gray-500 text-center">
+              <div className="text-4xl mb-2">🎬</div>
+              <div className="text-lg">No hero media available</div>
+            </div>
+          </div>
         )}
         
         {/* Hero Content Overlay */}
