@@ -198,7 +198,7 @@ const Team = () => {
                   image: member.imageUrl,
                   description: member.role,
                   category: member.service, // Keep the single service field for display
-                  subtitle: member.industries.join(', '),
+                  subtitle: member.industries.join(' / '),
                   locations: member.locations,
                   socialMedia: member.socialMedia,
                   bioTitle: member.bioTitle,

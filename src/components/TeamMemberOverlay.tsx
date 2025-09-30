@@ -204,7 +204,11 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                       className="body_bold"
                       style={{ marginBottom: 'calc(var(--spacing) * 6)' }}
                     >
-                      {member.bioTitle || member.role}
+                      {member.bioTitle && member.bioTitle.trim().length > 0
+                        ? member.bioTitle
+                        : (member.industries && member.industries.length > 0
+                            ? member.industries.join(' / ')
+                            : member.role)}
                     </h3>
                     <div className="prose prose-gray max-w-none">
                       {renderRichText(member.bio)}
