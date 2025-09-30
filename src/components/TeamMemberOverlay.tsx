@@ -153,7 +153,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
             >
               <X 
                 className="text-gray-600"
-                size={24}
+                size={21}
                 style={{
                   fontWeight: 300,
                   lineHeight: '120%'
