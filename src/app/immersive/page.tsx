@@ -166,10 +166,10 @@ const Immersive = () => {
                             className="w-full h-full object-cover rounded-lg"
                           />
                         </div>
-                        <h3 className="heading_h1 mb-2">
+                        <h3 className="body_gerular mb-2">
                           {project.title}
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="body_regular">
                           {project.subtitle}
                         </p>
                       </div>
