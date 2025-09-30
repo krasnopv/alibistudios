@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import ProjectOverlay from '@/components/ProjectOverlay';
 
 interface Project {
   _id: string;
   title: string;
+  slug: string;
   subtitle: string;
   description: string | unknown;
   fullTitle: string;
@@ -38,8 +38,6 @@ interface Project {
 const Immersive = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -49,48 +47,7 @@ const Immersive = () => {
         setProjects(data);
       } catch (error) {
         console.error('Error fetching projects:', error);
-        // Fallback to mock data
-        setProjects([
-          {
-            _id: '1',
-            title: 'Virtual Reality Experience',
-            subtitle: 'Immersive storytelling',
-            description: 'A groundbreaking VR experience that transports users into a new dimension of storytelling.',
-            fullTitle: 'The Future of Storytelling: Virtual Reality Experience',
-            credits: [
-              { role: 'Director', person: 'John Smith' },
-              { role: 'Producer', person: 'Sarah Johnson', award: { _id: 'award-1', name: 'Best VR Production' } }
-            ],
-            images: [
-              { _id: 'img-1', imageUrl: '/api/placeholder/600/400', imageAlt: 'VR Experience 1' },
-              { _id: 'img-2', imageUrl: '/api/placeholder/600/400', imageAlt: 'VR Experience 2' }
-            ],
-            relatedProjects: [
-              { _id: '2', title: 'AR Installation', subtitle: 'Interactive art', imageUrl: '/api/placeholder/300/200', imageAlt: 'AR Installation' }
-            ],
-            imageUrl: '/api/placeholder/400/300',
-            imageAlt: 'Virtual Reality Experience'
-          },
-          {
-            _id: '2',
-            title: 'AR Installation',
-            subtitle: 'Interactive art',
-            description: 'An augmented reality installation that blends digital and physical worlds.',
-            fullTitle: 'Digital Dreams: AR Installation',
-            credits: [
-              { role: 'Artist', person: 'Mike Chen' },
-              { role: 'Technician', person: 'Emma Wilson' }
-            ],
-            images: [
-              { _id: 'img-3', imageUrl: '/api/placeholder/600/400', imageAlt: 'AR Installation 1' }
-            ],
-            relatedProjects: [
-              { _id: '1', title: 'Virtual Reality Experience', subtitle: 'Immersive storytelling', imageUrl: '/api/placeholder/300/200', imageAlt: 'VR Experience' }
-            ],
-            imageUrl: '/api/placeholder/400/300',
-            imageAlt: 'AR Installation'
-          }
-        ]);
+        setProjects([]);
       } finally {
         setLoading(false);
       }
@@ -99,18 +56,12 @@ const Immersive = () => {
     fetchProjects();
   }, []);
 
-  const handleProjectClick = (project: { id: string | number }) => {
-    const fullProject = projects.find(p => p._id === String(project.id));
-    if (fullProject) {
-      setSelectedProject(fullProject);
-      setIsOverlayOpen(true);
-    }
+  const handleProjectClick = (project: { id: string | number; slug?: string }) => {
+    // Redirect to project page using slug
+    const slug = project.slug || project.id;
+    window.location.href = `/immersive/${slug}`;
   };
 
-  const handleCloseOverlay = () => {
-    setIsOverlayOpen(false);
-    setSelectedProject(null);
-  };
 
   if (loading) {
     return (
@@ -157,20 +108,20 @@ const Immersive = () => {
                     <div key={project._id} className={`${colSpan} ${order}`}>
                       <div 
                         className="service-card cursor-pointer"
-                        onClick={() => handleProjectClick({ id: project._id })}
+                        onClick={() => handleProjectClick({ id: project._id, slug: project.slug })}
                       >
                         <div className="aspect-[4/3] mb-4">
                           <img
                             src={project.imageUrl}
                             alt={project.imageAlt}
-                            className="w-full h-full object-cover rounded-lg"
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <h3 className="body_gerular mb-2">
                           {project.title}
                         </h3>
                         <p className="body_regular">
-                          {project.subtitle}
+                          {project.subtitle} <span className="text-xl">→</span>
                         </p>
                       </div>
                     </div>
@@ -181,13 +132,6 @@ const Immersive = () => {
           </div>
         </section>
       </main>
-      
-      {/* Project Overlay */}
-      <ProjectOverlay
-        project={selectedProject}
-        isOpen={isOverlayOpen}
-        onClose={handleCloseOverlay}
-      />
     </div>
   );
 };

@@ -3,13 +3,16 @@ import { client } from '@/lib/sanity';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const projects = await client.fetch(`
-      *[_type == "project" && featured == true] | order(order asc, _createdAt asc) {
+    const { id } = await params;
+    const project = await client.fetch(`
+      *[_type == "project" && _id == $id][0] {
         _id,
         title,
-        "slug": slug.current,
         subtitle,
         description,
         fullTitle,
@@ -43,11 +46,15 @@ export async function GET() {
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       }
-    `);
+    `, { id });
 
-    return NextResponse.json(projects);
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(project);
   } catch (error) {
-    console.error('Error fetching projects:', error);
-    return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
+    console.error('Error fetching project:', error);
+    return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
 }

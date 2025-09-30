@@ -12,6 +12,16 @@ export default defineType({
       validation: (Rule) => Rule.required()
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required()
+    }),
+    defineField({
       name: 'subtitle',
       title: 'Subtitle',
       type: 'string',
@@ -115,6 +125,38 @@ export default defineType({
           ]
         }
       ]
+    }),
+    defineField({
+      name: 'videoTrailer',
+      title: 'Video Trailer',
+      type: 'object',
+      fields: [
+        {
+          name: 'url',
+          title: 'Video URL',
+          type: 'url',
+          description: 'YouTube, Vimeo, or direct video URL',
+          validation: (Rule) => Rule.required()
+        },
+        {
+          name: 'thumbnail',
+          title: 'Thumbnail Image',
+          type: 'image',
+          options: {
+            hotspot: true
+          },
+          fields: [
+            {
+              name: 'alt',
+              title: 'Alt Text',
+              type: 'string',
+              description: 'Alternative text for accessibility'
+            }
+          ],
+          validation: (Rule) => Rule.required()
+        }
+      ],
+      description: 'Video trailer for the project'
     }),
     defineField({
       name: 'images',
