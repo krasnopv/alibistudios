@@ -157,20 +157,20 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                     <img
                       src={member.imageUrl}
                       alt={member.imageAlt}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
                   {/* Social Media Icons */}
                   {member.socialMedia && member.socialMedia.length > 0 && (
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-3 justify-center">
                       {member.socialMedia.map((social, index) => (
                         <a
                           key={index}
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors"
+                          className="w-10 h-10 flex items-center justify-center transition-colors hover:opacity-70"
                           title={social.platform}
                         >
                           {getSocialIcon(social.platform)}
@@ -184,31 +184,17 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 <div className="w-2/3">
                   {/* Basic Info */}
                   <div className="mb-6">
-                    <h2 className="text-3xl font-bold text-black mb-2">
+                    <h2 className="heading_h3 mb-2">
                       {member.fullName}
                     </h2>
-                    <p className="text-xl text-gray-600 mb-4">
+                    <p className="body_small mb-6">
                       {member.role}
                     </p>
-                    
-                    {/* Industries */}
-                    <div className="mb-4">
-                      <p className="text-gray-700">
-                        {member.industries.join(' / ')}
-                      </p>
-                    </div>
-
-                    {/* Locations */}
-                    <div className="mb-6">
-                      <p className="text-gray-700">
-                        {member.locations.join(' / ')}
-                      </p>
-                    </div>
                   </div>
 
                   {/* Bio Section */}
                   <div>
-                    <h3 className="text-2xl font-bold text-black mb-4">
+                    <h3 className="body_bold mb-4">
                       {member.bioTitle || member.role}
                     </h3>
                     <div className="prose prose-gray max-w-none">
