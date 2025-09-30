@@ -194,7 +194,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
 
                   {/* Bio Section */}
                   <div>
-                    <h3 className="body_bold mb-4">
+                    <h3 className="body_bold mb-6">
                       {member.bioTitle || member.role}
                     </h3>
                     <div className="prose prose-gray max-w-none">
