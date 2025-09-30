@@ -185,7 +185,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center justify-center transition-colors hover:opacity-70"
-                          style={{ width: '32px', height: '32px' }}
+                          style={{ width: '55px', height: '55px' }}
                           title={social.platform}
                         >
                           {getSocialIcon(social.platform)}
