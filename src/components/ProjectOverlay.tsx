@@ -2,12 +2,14 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface Project {
   _id: string;
   title: string;
   subtitle: string;
-  description: string;
+  description: string | unknown;
   fullTitle: string;
   credits: {
     role: string;
@@ -58,6 +60,29 @@ const ProjectOverlay = ({ project, isOpen, onClose }: ProjectOverlayProps) => {
   }, [isOpen, onClose]);
 
   if (!project) return null;
+
+  const renderRichText = (description: string | unknown) => {
+    // Handle string description
+    if (typeof description === 'string') {
+      return description.split('\n').map((paragraph, index) => (
+        <p key={index} className="mb-4 last:mb-0">
+          {paragraph}
+        </p>
+      ));
+    }
+    
+    // Handle Sanity Portable Text
+    if (Array.isArray(description)) {
+      return <BlockContent blocks={description} serializers={serializers} />;
+    }
+    
+    // Fallback for other data types
+    return (
+      <p className="mb-4 last:mb-0">
+        {String(description)}
+      </p>
+    );
+  };
 
   return (
     <AnimatePresence>
@@ -116,9 +141,9 @@ const ProjectOverlay = ({ project, isOpen, onClose }: ProjectOverlayProps) => {
                   </h2>
                   
                   <div className="mb-6">
-                    <p className="body_small mb-4">
-                      {project.description}
-                    </p>
+                    <div className="prose prose-gray max-w-none">
+                      {renderRichText(project.description)}
+                    </div>
                   </div>
 
                   {/* Credits */}

@@ -9,7 +9,7 @@ interface Project {
   _id: string;
   title: string;
   subtitle: string;
-  description: string;
+  description: string | unknown;
   fullTitle: string;
   credits: {
     role: string;
