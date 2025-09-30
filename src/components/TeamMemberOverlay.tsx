@@ -184,7 +184,8 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 flex items-center justify-center transition-colors hover:opacity-70"
+                          className="flex items-center justify-center transition-colors hover:opacity-70"
+                          style={{ width: '32px', height: '32px' }}
                           title={social.platform}
                         >
                           {getSocialIcon(social.platform)}
@@ -201,17 +202,17 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                     <h2 className="heading_h3 mb-2">
                       {member.fullName}
                     </h2>
-                    <p 
-                      className="body_small"
-                      style={{ marginBottom: 'calc(var(--spacing) * 6)' }}
-                    >
+                    <p className="body_small">
                       {member.role}
                     </p>
                   </div>
 
                   {/* Bio Section */}
                   <div>
-                    <h3 className="body_bold mb-6">
+                    <h3
+                      className="body_bold"
+                      style={{ marginBottom: 'calc(var(--spacing) * 6)' }}
+                    >
                       {member.bioTitle || member.role}
                     </h3>
                     <div className="prose prose-gray max-w-none">
