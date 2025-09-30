@@ -142,7 +142,13 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 z-10 flex items-center justify-center transition-opacity hover:opacity-70"
+              style={{
+                width: '31px',
+                height: '27px',
+                padding: '5px',
+                gap: '10px'
+              }}
             >
               <span className="text-gray-600 text-xl">×</span>
             </button>
