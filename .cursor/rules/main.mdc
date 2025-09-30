@@ -6,3 +6,4 @@ alwaysApply: true
 
 - Don't run build after styles changes or minor code changes!
 - Force git commit after new files added or after files structure changed.
+- Commit to git ONLY if previous build was success!

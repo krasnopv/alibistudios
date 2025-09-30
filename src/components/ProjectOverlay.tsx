@@ -136,7 +136,7 @@ const ProjectOverlay = ({ project, isOpen, onClose }: ProjectOverlayProps) => {
               <div className="flex gap-8 mb-8">
                 {/* Left Column - Project Info (1/3) */}
                 <div className="w-1/3">
-                  <h2 className="heading_h3 mb-4">
+                  <h2 className="body_regular mb-4" style={{ color: '#FF0066' }}>
                     {project.fullTitle}
                   </h2>
                   
@@ -206,7 +206,7 @@ const ProjectOverlay = ({ project, isOpen, onClose }: ProjectOverlayProps) => {
                         <h4 className="font-semibold text-sm mb-1">
                           {relatedProject.title}
                         </h4>
-                        <p className="text-xs text-gray-600">
+                        <p className="body_regular text-xs">
                           {relatedProject.subtitle}
                         </p>
                       </div>
