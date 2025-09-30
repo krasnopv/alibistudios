@@ -201,7 +201,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                     <h2 className="heading_h3 mb-2">
                       {member.fullName}
                     </h2>
-                    <p className="body_small mb-6">
+                    <p className="body_small mb-8">
                       {member.role}
                     </p>
                   </div>
