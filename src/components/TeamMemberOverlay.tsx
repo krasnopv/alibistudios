@@ -2,6 +2,16 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
+import { 
+  Linkedin, 
+  Twitter, 
+  Instagram, 
+  Facebook, 
+  Youtube, 
+  ExternalLink,
+  Github,
+  Globe
+} from 'lucide-react';
 
 interface TeamMember {
   _id: string;
@@ -54,18 +64,19 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
   if (!member) return null;
 
   const getSocialIcon = (platform: string) => {
-    const icons: { [key: string]: string } = {
-      'LinkedIn': '💼',
-      'Twitter': '🐦',
-      'Instagram': '📷',
-      'Facebook': '📘',
-      'YouTube': '📺',
-      'Vimeo': '🎬',
-      'Behance': '🎨',
-      'Dribbble': '🏀',
-      'IMDB': '🎭'
+    const icons: { [key: string]: React.ComponentType<{ className?: string }> } = {
+      'LinkedIn': Linkedin,
+      'Twitter': Twitter,
+      'Instagram': Instagram,
+      'Facebook': Facebook,
+      'YouTube': Youtube,
+      'Vimeo': Youtube, // Using Youtube icon for Vimeo
+      'Behance': Github, // Using Github icon for Behance
+      'Dribbble': Globe, // Using Globe icon for Dribbble
+      'IMDB': ExternalLink // Using ExternalLink icon for IMDB
     };
-    return icons[platform] || '🔗';
+    const IconComponent = icons[platform] || ExternalLink;
+    return <IconComponent className="w-5 h-5" />;
   };
 
   const renderRichText = (bio: string | unknown) => {
@@ -136,81 +147,72 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
 
             <div className="p-8">
               {/* Header */}
-              <div className="flex flex-col md:flex-row gap-8 mb-8">
-                {/* Image */}
-                <div className="flex-shrink-0">
-                  <img
-                    src={member.imageUrl}
-                    alt={member.imageAlt}
-                    className="w-48 h-48 object-cover rounded-lg"
-                  />
-                </div>
-
-                {/* Basic Info */}
-                <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-black mb-2">
-                    {member.fullName}
-                  </h2>
-                  <p className="text-xl text-gray-600 mb-4">
-                    {member.role}
-                  </p>
-                  
-                  {/* Industries */}
-                  <div className="mb-4">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                      Industries
-                    </h3>
-                    <p className="text-gray-700">
-                      {member.industries.join(' / ')}
-                    </p>
+              <div className="flex gap-8 mb-8">
+                {/* Left Column - Image and Social Media (1/3) */}
+                <div className="w-1/3 flex flex-col">
+                  {/* Image with 5:6 ratio */}
+                  <div className="w-full aspect-[5/6] mb-6">
+                    <img
+                      src={member.imageUrl}
+                      alt={member.imageAlt}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
                   </div>
 
-                  {/* Locations */}
-                  <div className="mb-4">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                      Locations
-                    </h3>
-                    <p className="text-gray-700">
-                      {member.locations.join(' / ')}
-                    </p>
-                  </div>
-
-                  {/* Social Media */}
+                  {/* Social Media Icons */}
                   {member.socialMedia && member.socialMedia.length > 0 && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                        Social Media
-                      </h3>
-                      <div className="flex flex-wrap gap-3">
-                        {member.socialMedia.map((social, index) => (
-                          <a
-                            key={index}
-                            href={social.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                          >
-                            <span className="text-lg">
-                              {getSocialIcon(social.platform)}
-                            </span>
-                            <span className="text-sm font-medium">
-                              {social.platform}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
+                    <div className="flex flex-wrap gap-3">
+                      {member.socialMedia.map((social, index) => (
+                        <a
+                          key={index}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors"
+                          title={social.platform}
+                        >
+                          {getSocialIcon(social.platform)}
+                        </a>
+                      ))}
                     </div>
                   )}
                 </div>
-              </div>
 
-              {/* Bio Section */}
-              <div>
-                <h3 className="text-2xl font-bold text-black mb-4">
-                  {member.bioTitle || member.role}
-                </h3>
-                <div className="prose prose-gray max-w-none">
-                  {renderRichText(member.bio)}
+                {/* Right Column - All Text Content (2/3) */}
+                <div className="w-2/3">
+                  {/* Basic Info */}
+                  <div className="mb-6">
+                    <h2 className="text-3xl font-bold text-black mb-2">
+                      {member.fullName}
+                    </h2>
+                    <p className="text-xl text-gray-600 mb-4">
+                      {member.role}
+                    </p>
+                    
+                    {/* Industries */}
+                    <div className="mb-4">
+                      <p className="text-gray-700">
+                        {member.industries.join(' / ')}
+                      </p>
+                    </div>
+
+                    {/* Locations */}
+                    <div className="mb-6">
+                      <p className="text-gray-700">
+                        {member.locations.join(' / ')}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bio Section */}
+                  <div>
+                    <h3 className="text-2xl font-bold text-black mb-4">
+                      {member.bioTitle || member.role}
+                    </h3>
+                    <div className="prose prose-gray max-w-none">
+                      {renderRichText(member.bio)}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
