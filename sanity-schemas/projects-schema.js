@@ -151,6 +151,13 @@ export default defineType({
       description: 'Select related projects to show at the bottom'
     }),
     defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Show this project on the immersive page',
+      initialValue: false
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
