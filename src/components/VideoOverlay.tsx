@@ -56,7 +56,7 @@ const VideoOverlay = ({ videoUrl, onClose }: VideoOverlayProps) => {
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4" 
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+      style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
       onClick={onClose}
     >
       <div 
@@ -65,7 +65,7 @@ const VideoOverlay = ({ videoUrl, onClose }: VideoOverlayProps) => {
       >
         <button
           onClick={onClose}
-          className="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300 transition-colors duration-200 z-10"
+          className="absolute -top-10 right-0 text-black text-2xl hover:text-gray-600 transition-colors duration-200 z-10"
           aria-label="Close video"
         >
           ✕

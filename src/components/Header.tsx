@@ -62,13 +62,20 @@ const Header = () => {
     }
   };
 
+  const scrollToFooter = () => {
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header 
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
         backgroundColor: hasHero 
-          ? `rgba(255, 255, 255, ${scrollProgress * 0.95})`
-          : 'rgba(255, 255, 255, 0.95)',
+          ? `rgba(255, 255, 255, ${scrollProgress * 0.8})`
+          : 'rgba(255, 255, 255, 0.8)',
         backdropFilter: hasHero 
           ? `blur(${scrollProgress * 12}px)`
           : 'blur(12px)',
@@ -114,8 +121,8 @@ const Header = () => {
         </div>
 
         {/* Right - Contact */}
-        <a 
-          href="mailto:hello@alibistudios.com"
+        <button 
+          onClick={scrollToFooter}
           className="p-2 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
         >
           <Image 
@@ -128,7 +135,7 @@ const Header = () => {
               filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
             }}
           />
-        </a>
+        </button>
           </div>
         </div>
       </div>
