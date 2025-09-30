@@ -201,7 +201,10 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                     <h2 className="heading_h3 mb-2">
                       {member.fullName}
                     </h2>
-                    <p className="body_small mb-8">
+                    <p 
+                      className="body_small"
+                      style={{ marginBottom: 'calc(var(--spacing) * 6)' }}
+                    >
                       {member.role}
                     </p>
                   </div>
