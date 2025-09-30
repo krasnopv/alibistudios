@@ -177,7 +177,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
 
                   {/* Social Media Icons */}
                   {member.socialMedia && member.socialMedia.length > 0 && (
-                    <div className="flex flex-wrap gap-3 justify-center">
+                    <div className="flex flex-wrap gap-6 justify-center">
                       {member.socialMedia.map((social, index) => (
                         <a
                           key={index}
@@ -185,7 +185,6 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center justify-center transition-colors hover:opacity-70"
-                          style={{ padding: '12px' }}
                           title={social.platform}
                         >
                           {getSocialIcon(social.platform)}
