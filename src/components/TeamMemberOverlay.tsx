@@ -78,7 +78,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
       'IMDB': FaImdb
     };
     const IconComponent = icons[platform] || FaExternalLinkAlt;
-    return <IconComponent className="w-5 h-5" />;
+    return <IconComponent size={32} />;
   };
 
   const renderRichText = (bio: string | unknown) => {
@@ -188,9 +188,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                           style={{ padding: '12px' }}
                           title={social.platform}
                         >
-                          <div style={{ width: '32px', height: '32px' }}>
-                            {getSocialIcon(social.platform)}
-                          </div>
+                          {getSocialIcon(social.platform)}
                         </a>
                       ))}
                     </div>
