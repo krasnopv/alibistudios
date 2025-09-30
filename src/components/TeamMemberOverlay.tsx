@@ -78,6 +78,36 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
       'IMDB': FaImdb
     };
     const IconComponent = icons[platform] || FaExternalLinkAlt;
+    
+    // Special styling for IMDb
+    if (platform === 'IMDB') {
+      return (
+        <div 
+          style={{
+            width: '32px',
+            height: '32px',
+            border: '1px solid #000000',
+            backgroundColor: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '2px'
+          }}
+        >
+          <span 
+            style={{
+              color: '#000000',
+              fontSize: '8px',
+              fontWeight: 'bold',
+              fontFamily: 'Arial, sans-serif'
+            }}
+          >
+            IMDb
+          </span>
+        </div>
+      );
+    }
+    
     return <IconComponent size={32} />;
   };
 
