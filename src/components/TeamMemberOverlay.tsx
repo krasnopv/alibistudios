@@ -150,7 +150,21 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 gap: '10px'
               }}
             >
-              <span className="text-gray-600 text-xl">×</span>
+              <span 
+                className="text-gray-600"
+                style={{
+                  fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif',
+                  fontWeight: 300,
+                  fontStyle: 'normal',
+                  fontSize: '24px',
+                  lineHeight: '120%',
+                  letterSpacing: '0%',
+                  textAlign: 'center',
+                  verticalAlign: 'middle'
+                }}
+              >
+                ×
+              </span>
             </button>
 
             <div className="p-8">
