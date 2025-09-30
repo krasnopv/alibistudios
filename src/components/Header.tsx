@@ -201,15 +201,6 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Team<br/></div>
                </Link>
-               <Link href="/immersive" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>Immersive<br/></div>
-               </Link>
                <div className="inline-flex justify-start items-center gap-2.5" style={{ opacity: 0.5, cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
@@ -237,7 +228,7 @@ const Header = () => {
                    fontWeight: 400,
                  }}>- Animation<br/></div>
                </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <Link href="/immersive" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -245,7 +236,7 @@ const Header = () => {
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>- Immersive<br/></div>
-               </div>
+               </Link>
                <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
