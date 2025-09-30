@@ -14,7 +14,6 @@ import {
   FaImdb,
   FaExternalLinkAlt
 } from 'react-icons/fa';
-import { X } from 'lucide-react';
 
 interface TeamMember {
   _id: string;
@@ -151,12 +150,13 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 gap: '10px'
               }}
             >
-              <X 
-                className="text-gray-600"
-                size={21}
+              <img
+                src="/menu.svg"
+                alt="Close"
+                className="w-5 h-5"
                 style={{
-                  fontWeight: 300,
-                  lineHeight: '120%'
+                  filter: 'brightness(0) saturate(100%)',
+                  color: '#000000'
                 }}
               />
             </button>
