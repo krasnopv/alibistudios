@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
+import BlockContent from '@sanity/block-content-to-react';
 import { 
   FaLinkedin, 
   FaTwitter, 
@@ -12,9 +13,9 @@ import {
   FaBehance,
   FaDribbble,
   FaImdb,
-  FaExternalLinkAlt,
-  FaTimes
+  FaExternalLinkAlt
 } from 'react-icons/fa';
+import { serializers } from '@/lib/serializers';
 
 interface TeamMember {
   _id: string;
@@ -83,7 +84,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
   };
 
   const renderRichText = (bio: string | unknown) => {
-    // Handle different bio data types
+    // Handle string bio
     if (typeof bio === 'string') {
       return bio.split('\n').map((paragraph, index) => (
         <p key={index} className="mb-4 last:mb-0">
@@ -92,19 +93,9 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
       ));
     }
     
-    // Handle rich text objects from Sanity
+    // Handle Sanity Portable Text
     if (Array.isArray(bio)) {
-      return bio.map((block, index) => {
-        if (block._type === 'block' && block.children) {
-          const text = block.children.map((child: { text: string }) => child.text).join('');
-          return (
-            <p key={index} className="mb-4 last:mb-0">
-              {text}
-            </p>
-          );
-        }
-        return null;
-      }).filter(Boolean);
+      return <BlockContent blocks={bio} serializers={serializers} />;
     }
     
     // Fallback for other data types
@@ -151,11 +142,13 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 gap: '10px'
               }}
             >
-              <FaTimes 
-                className="w-5 h-5 text-gray-600"
+              <img
+                src="/x.svg"
+                alt="Close"
+                className="w-5 h-5"
                 style={{
-                  fontWeight: 300,
-                  lineHeight: '120%'
+                  filter: 'brightness(0) saturate(100%)',
+                  color: '#000000'
                 }}
               />
             </button>
