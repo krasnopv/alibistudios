@@ -151,7 +151,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
               }}
             >
               <img
-                src="/menu.svg"
+                src="/x.svg"
                 alt="Close"
                 className="w-5 h-5"
                 style={{
