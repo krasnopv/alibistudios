@@ -185,10 +185,12 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center justify-center transition-colors hover:opacity-70"
-                          style={{ width: '55px', height: '55px' }}
+                          style={{ padding: '12px' }}
                           title={social.platform}
                         >
-                          {getSocialIcon(social.platform)}
+                          <div style={{ width: '32px', height: '32px' }}>
+                            {getSocialIcon(social.platform)}
+                          </div>
                         </a>
                       ))}
                     </div>
