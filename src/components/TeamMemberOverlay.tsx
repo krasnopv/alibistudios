@@ -14,6 +14,7 @@ import {
   FaImdb,
   FaExternalLinkAlt
 } from 'react-icons/fa';
+import { X } from 'lucide-react';
 
 interface TeamMember {
   _id: string;
@@ -150,21 +151,14 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 gap: '10px'
               }}
             >
-              <span 
+              <X 
                 className="text-gray-600"
+                size={24}
                 style={{
-                  fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif',
                   fontWeight: 300,
-                  fontStyle: 'normal',
-                  fontSize: '24px',
-                  lineHeight: '120%',
-                  letterSpacing: '0%',
-                  textAlign: 'center',
-                  verticalAlign: 'middle'
+                  lineHeight: '120%'
                 }}
-              >
-                ×
-              </span>
+              />
             </button>
 
             <div className="p-8">
