@@ -3,15 +3,17 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { 
-  Linkedin, 
-  Twitter, 
-  Instagram, 
-  Facebook, 
-  Youtube, 
-  ExternalLink,
-  Github,
-  Globe
-} from 'lucide-react';
+  FaLinkedin, 
+  FaTwitter, 
+  FaInstagram, 
+  FaFacebook, 
+  FaYoutube, 
+  FaVimeo,
+  FaBehance,
+  FaDribbble,
+  FaImdb,
+  FaExternalLinkAlt
+} from 'react-icons/fa';
 
 interface TeamMember {
   _id: string;
@@ -65,17 +67,17 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
 
   const getSocialIcon = (platform: string) => {
     const icons: { [key: string]: React.ComponentType<{ className?: string }> } = {
-      'LinkedIn': Linkedin,
-      'Twitter': Twitter,
-      'Instagram': Instagram,
-      'Facebook': Facebook,
-      'YouTube': Youtube,
-      'Vimeo': Youtube, // Using Youtube icon for Vimeo
-      'Behance': Github, // Using Github icon for Behance
-      'Dribbble': Globe, // Using Globe icon for Dribbble
-      'IMDB': ExternalLink // Using ExternalLink icon for IMDB
+      'LinkedIn': FaLinkedin,
+      'Twitter': FaTwitter,
+      'Instagram': FaInstagram,
+      'Facebook': FaFacebook,
+      'YouTube': FaYoutube,
+      'Vimeo': FaVimeo,
+      'Behance': FaBehance,
+      'Dribbble': FaDribbble,
+      'IMDB': FaImdb
     };
-    const IconComponent = icons[platform] || ExternalLink;
+    const IconComponent = icons[platform] || FaExternalLinkAlt;
     return <IconComponent className="w-5 h-5" />;
   };
 
