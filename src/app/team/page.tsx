@@ -102,7 +102,7 @@ const Team = () => {
             <div className="row">
               {/* Page Title */}
               <div className="mb-16">
-                <h1 className="display_h1 text-center">
+                <h1 className="display_h1 brand-color text-center">
                   Seasoned industry veterans
                 </h1>
               </div>

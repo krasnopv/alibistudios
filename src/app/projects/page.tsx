@@ -52,7 +52,7 @@ const ProjectsPage = () => {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
       <main className="w-full flex flex-col items-center">
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Title */}

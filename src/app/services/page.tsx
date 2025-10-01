@@ -55,12 +55,12 @@ export default function Services() {
         />
         
         {/* Services content */}
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Header */}
               <div className="mb-16">
-                <h1 className="display_h1 text-center">
+                <h1 className="display_h1 brand-color text-center">
                   All under one &apos;Virtual Roof&apos;
                 </h1>
               </div>

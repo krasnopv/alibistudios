@@ -56,7 +56,7 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative grid grid-cols-6 gap-8 py-8 z-10"
+            className="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-8 py-8 z-10"
             style={{ backgroundColor: '#F8F9FA' }}
           >
             {locations.map((location, index) => (

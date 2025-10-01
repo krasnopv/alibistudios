@@ -54,7 +54,7 @@ const ThumbnailSection = () => {
 
   if (loading) {
     return (
-      <section id="services" className="w-full py-20">
+      <section id="services" className="w-full">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="row">
             <div className="flex justify-center items-center py-20">
@@ -72,21 +72,14 @@ const ThumbnailSection = () => {
   }
 
   return (
-    <section id="services" className="w-full py-20">
+    <section id="services" className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}
           <div className="text-center mb-16">
-          <h2 style={{
-            color: '#000',
-            fontFamily: 'Plus Jakarta Sans',
-            fontSize: '40px',
-            fontStyle: 'normal',
-            fontWeight: 250,
-            lineHeight: '120%'
-          }}>
+          <h6 className="display_h6">
             An elite group of award-winning artists<br />all under one &apos;Virtual Roof&apos;
-          </h2>
+          </h6>
         </div>
 
         {/* Services Grid */}

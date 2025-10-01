@@ -38,7 +38,7 @@ const Awards = () => {
 
   if (loading) {
     return (
-      <section className="w-full py-20">
+      <section className="w-full">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="row">
             <div className="flex justify-center items-center py-20">
@@ -51,7 +51,7 @@ const Awards = () => {
   }
 
   return (
-    <section className="w-full py-20">
+    <section className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Header */}
@@ -62,21 +62,12 @@ const Awards = () => {
             viewport={{ once: true }}
             className="mb-16"
           >
-            <h1 className="display_h1">
+            <h1 className="display_h1 brand-color">
               Awards & Recognition
             </h1>
-            <p style={{
-              fontFamily: 'Plus Jakarta Sans',
-              fontWeight: 250,
-              fontStyle: 'normal',
-              fontSize: '40px',
-              lineHeight: '120%',
-              letterSpacing: '0%',
-              verticalAlign: 'middle',
-              color: '#000000'
-            }}>
+            <h6 className="display_h6">
               Personal Achievements and contributions
-            </p>
+            </h6>
           </motion.div>
 
           {/* Awards Grid */}

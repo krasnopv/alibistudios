@@ -136,7 +136,7 @@ export const queries = {
     slug,
     description,
     heroVideo,
-    heroVideoPoster,
+    image,
     heroTitle,
     heroSubtitle,
     content,
@@ -144,7 +144,7 @@ export const queries = {
     publishedAt,
     isPublished,
     "videoUrl": heroVideo.asset->url,
-    "posterUrl": heroVideoPoster.asset->url,
+    "posterUrl": image.asset->url,
     "seoImageUrl": seoImage.asset->url
   }`,
 

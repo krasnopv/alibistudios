@@ -15,8 +15,6 @@ export async function GET(
         title,
         subtitle,
         description,
-        subtitleHtml,
-        descriptionHtml,
         url,
         features,
         "imageUrl": image.asset->url,

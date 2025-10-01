@@ -58,7 +58,7 @@ const Films = () => {
 
   if (loading) {
     return (
-      <section className="w-full py-20">
+      <section className="w-full">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="row">
             <div className="flex justify-center items-center py-20">
@@ -77,12 +77,12 @@ const Films = () => {
   ];
 
   return (
-    <section className="w-full py-20">
+    <section className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Header */}
           <div className="mb-16">
-            <h1 className="display_h1">
+            <h1 className="display_h1 brand-color">
               Films Led or contributed to by Alibi members
             </h1>
           </div>

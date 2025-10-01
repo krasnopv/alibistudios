@@ -78,7 +78,7 @@ const ContentGrid = ({
             viewport={{ once: true }}
             className="mb-16"
           >
-            <h1 className="display_h1">
+            <h1 className="display_h1 brand-color">
               {title}
             </h1>
             {subtitle && (

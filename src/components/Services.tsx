@@ -32,7 +32,7 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20">
+    <section>
       <div className="container mx-auto">
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

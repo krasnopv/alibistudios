@@ -12,6 +12,12 @@
   --radius: 0rem;
 }
 
+/* Global section padding */
+section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -86,6 +92,16 @@ p {
   vertical-align: middle;
   color: #000000;
   text-align: left;
+}
+
+/* Mobile styles for .display_h6 - same as .heading_h4 */
+@media (max-width: 768px) {
+  .display_h6 {
+    font-weight: 300;
+    font-style: Light;
+    font-size: 24px;
+    line-height: 120%;
+  }
 }
 
 .body_regular {
@@ -343,6 +359,11 @@ h2 {
   display: none;
 }
 
+/* Brand Color */
+.brand-color {
+  color: #FF0066;
+}
+
 /* Display H1 - Main page headers */
 .display_h1 {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -352,8 +373,14 @@ h2 {
   line-height: 120%;
   letter-spacing: 0%;
   vertical-align: middle;
-  color: #FF0066;
   text-align: left; /* Default alignment, can be overridden with Tailwind classes */
+}
+
+/* Mobile styles for .display_h1 - same as .heading_h1 */
+@media (max-width: 768px) {
+  .display_h1 {
+    font-size: 40px;
+  }
 }
 
 /* Heading H1 - Service titles */

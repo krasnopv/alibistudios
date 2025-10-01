@@ -132,7 +132,7 @@ const ProjectPage = () => {
         <Header />
         <main className="w-full flex flex-col items-center">
           <div className="flex justify-center items-center py-20">
-            <h1 className="display_h1">Project not found</h1>
+            <h1 className="display_h1 brand-color">Project not found</h1>
           </div>
         </main>
       </div>
@@ -144,7 +144,7 @@ const ProjectPage = () => {
       <Header />
       <main className="w-full flex flex-col items-center">
         {/* Project Content */}
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Main Content */}

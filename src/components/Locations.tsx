@@ -37,7 +37,7 @@ const Locations = () => {
   ];
 
   return (
-    <section className="py-20">
+    <section>
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

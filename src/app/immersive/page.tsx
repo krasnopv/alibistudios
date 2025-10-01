@@ -84,12 +84,12 @@ const Immersive = () => {
         <Hero pageSlug="immersive" />
         
         {/* Immersive Content */}
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Header */}
               <div className="mb-16">
-                <h1 className="display_h1 text-center mb-6">
+                <h1 className="display_h1 brand-color text-center mb-6">
                   Immersive Experiences
                 </h1>
                 <p className="display_h6 text-center">

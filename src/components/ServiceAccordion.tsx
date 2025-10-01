@@ -80,9 +80,9 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
             className="w-full text-left py-8 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
           >
             <div className="flex items-center justify-between">
-              <h3 className="heading_h1">
+              <h1 className="heading_h1">
                 {service.title}
-              </h3>
+              </h1>
               <div className="flex-shrink-0 ml-4">
                 <motion.div
                   initial={false}

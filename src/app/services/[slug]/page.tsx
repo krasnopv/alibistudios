@@ -14,8 +14,6 @@ interface Service {
   slug: string;
   subtitle: string | unknown;
   description: string | unknown;
-  subtitleHtml?: string;
-  descriptionHtml?: string;
   url?: string;
   features?: string[];
   imageUrl?: string;
@@ -140,7 +138,7 @@ const ServicePage = () => {
         <Header />
         <main className="w-full flex flex-col items-center">
           <div className="flex justify-center items-center py-20">
-            <h1 className="display_h1">Service not found</h1>
+            <h1 className="display_h1 brand-color">Service not found</h1>
           </div>
         </main>
       </div>
@@ -151,21 +149,39 @@ const ServicePage = () => {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
       <main className="w-full flex flex-col items-center">
-        {/* Hero */}
-        <Hero pageSlug="services" />
+        {/* Hero with service image */}
+        {service && (
+          <section className="relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh]">
+            <div className="relative w-full">
+              <img
+                src={service.imageUrl}
+                alt={service.imageAlt || service.title}
+                className="w-full block landscape:max-h-[75vh]"
+                style={{
+                  aspectRatio: '16/9',
+                  minHeight: '400px',
+                  maxHeight: '75vh',
+                  margin: 0,
+                  padding: 0,
+                  objectFit: 'cover'
+                }}
+              />
+            </div>
+          </section>
+        )}
         
         {/* Service Content */}
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Header */}
               <div className="mb-16">
-                <h1 className="display_h1 text-center mb-6">
+                <h1 className="display_h1 brand-color text-center mb-6">
                   {service.title}
                 </h1>
-                <div className="display_h6 text-center">
-                  {service.subtitleHtml ? renderRichText(service.subtitleHtml) : renderRichText(service.subtitle)}
-                </div>
+                <h6 className="display_h6 text-center">
+                  {renderRichText(service.subtitle)}
+                </h6>
               </div>
 
               {/* Service Grid - Chess Layout */}

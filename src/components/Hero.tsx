@@ -33,9 +33,10 @@ const Hero = ({
           const response = await fetch(`/api/pages/${actualSlug}`);
           if (response.ok) {
             const pageData = await response.json();
+            console.log('Hero data for', actualSlug, ':', pageData);
             // Always set heroData if we have a page, even without video
             setHeroData({
-              videoUrl: pageData.videoUrl || '',
+              videoUrl: pageData.videoUrl || null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle
@@ -46,8 +47,9 @@ const Hero = ({
           const response = await fetch(`/api/pages/${actualSlug}`);
           if (response.ok) {
             const pageData = await response.json();
+            console.log('Hero data for', actualSlug, ':', pageData);
             setHeroData({
-              videoUrl: pageData.videoUrl || '',
+              videoUrl: pageData.videoUrl || null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle
@@ -70,6 +72,14 @@ const Hero = ({
   const isSanityVideo = heroData?.videoUrl;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
   const hasAnyMedia = isSanityVideo || hasPosterOnly;
+  
+  console.log('Hero render for', actualSlug, ':', {
+    videoUrl: heroData?.videoUrl,
+    posterUrl: heroData?.posterUrl,
+    isSanityVideo,
+    hasPosterOnly,
+    hasAnyMedia
+  });
 
   // Don't render anything if no media is available
   if (!hasAnyMedia) {
@@ -77,7 +87,7 @@ const Hero = ({
   }
 
   return (
-    <section id="hero" className={`relative w-screen overflow-hidden ${className}`}>
+    <section id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
         {isSanityVideo ? (
@@ -89,10 +99,11 @@ const Hero = ({
             loop
             muted
             playsInline
-            className="w-full block"
+            className="w-full block landscape:max-h-[75vh]"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
+              maxHeight: '75vh',
               margin: 0,
               padding: 0,
               objectFit: 'cover'
@@ -104,10 +115,11 @@ const Hero = ({
           <img
             src={heroData.posterUrl}
             alt={heroData.title || 'Hero image'}
-            className="w-full block"
+            className="w-full block landscape:max-h-[75vh]"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
+              maxHeight: '75vh',
               margin: 0,
               padding: 0,
               objectFit: 'cover'
@@ -116,10 +128,11 @@ const Hero = ({
         ) : (
           // Show nothing when no Sanity media
           <div 
-            className="w-full bg-transparent"
+            className="w-full bg-transparent landscape:max-h-[75vh]"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
+              maxHeight: '75vh',
               margin: 0,
               padding: 0
             }}

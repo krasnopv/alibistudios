@@ -10,6 +10,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [hasHero, setHasHero] = useState(true);
+  const [featuredServices, setFeaturedServices] = useState<Array<{_id: string; title: string; slug: string}>>([]);
 
   useEffect(() => {
     // Check if Hero section exists
@@ -42,6 +43,21 @@ const Header = () => {
     };
   }, [hasHero]);
 
+  useEffect(() => {
+    // Fetch featured services
+    const fetchFeaturedServices = async () => {
+      try {
+        const response = await fetch('/api/homepage-services');
+        const data = await response.json();
+        setFeaturedServices(data);
+      } catch (error) {
+        console.error('Error fetching featured services:', error);
+      }
+    };
+
+    fetchFeaturedServices();
+  }, []);
+
   const handleMenuToggle = () => {
     if (isMenuOpen) {
       handleMenuClose();
@@ -67,6 +83,8 @@ const Header = () => {
     if (footer) {
       footer.scrollIntoView({ behavior: 'smooth' });
     }
+    // Close sidebar after scrolling
+    handleMenuClose();
   };
 
   return (
@@ -84,9 +102,8 @@ const Header = () => {
           : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
       }}
     >
-      <div className="w-full flex justify-center">
-        <div className="container h-14 py-2.5 px-4 sm:px-6 lg:px-8">
-          <div className="row flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 py-2.5">
+        <div className="flex items-center justify-between w-full">
         {/* Left - Burger Menu */}
         <button 
           onClick={handleMenuToggle}
@@ -136,7 +153,6 @@ const Header = () => {
             }}
           />
         </button>
-          </div>
         </div>
       </div>
 
@@ -217,60 +233,17 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Our Work<br/></div>
                </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- VFX<br/></div>
-               </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Animation<br/></div>
-               </div>
-               <Link href="/immersive" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Immersive<br/></div>
-               </Link>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Gaming<br/></div>
-               </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Media & Generative Art<br/></div>
-               </div>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Film & Episodic<br/></div>
-               </div>
+               {featuredServices.map((service) => (
+                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+                   <div className="justify-center" style={{
+                     color: '#000',
+                     fontFamily: 'Plus Jakarta Sans',
+                     fontSize: '28px',
+                     fontStyle: 'normal',
+                     fontWeight: 400,
+                   }}>- {service.title}<br/></div>
+                 </Link>
+               ))}
                <a href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
@@ -280,7 +253,7 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Directors</div>
                </a>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={scrollToFooter}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',

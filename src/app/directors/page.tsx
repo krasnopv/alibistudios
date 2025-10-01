@@ -103,12 +103,12 @@ export default function Directors() {
         />
         
         {/* Directors content */}
-        <section className="w-full py-20">
+        <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               {/* Header */}
               <div className="mb-16">
-                <h1 className="display_h1 text-center">
+                <h1 className="display_h1 brand-color text-center">
                   Directing Tomorrow&apos;s Visual World
                 </h1>
               </div>
@@ -124,9 +124,9 @@ export default function Directors() {
                     <div key={director._id} className="pb-20">
                       {/* Director Name */}
                       <div className="mb-12">
-                        <h2 className="heading_h1 text-center">
+                        <h1 className="heading_h1">
                           {director.name}
-                        </h2>
+                        </h1>
                       </div>
 
                       {/* Bio Section */}
