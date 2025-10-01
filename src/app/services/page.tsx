@@ -14,6 +14,7 @@ interface ServiceTag {
 interface Service {
   _id: string;
   title: string;
+  slug: string;
   description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
@@ -34,45 +35,7 @@ export default function Services() {
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
-        // Fallback to mock data
-        setServices([
-          {
-            _id: '1',
-            title: 'VFX Services',
-            description: 'Professional visual effects for film and television. Our team of experienced artists creates stunning visual effects that bring your creative vision to life.',
-            imageUrl: '/api/placeholder/600/400',
-            imageAlt: 'VFX Services',
-            tags: [
-              { _id: '1', name: 'Film', color: '#FF0066' },
-              { _id: '2', name: 'Television', color: '#3B82F6' },
-              { _id: '3', name: 'Commercial', color: '#10B981' }
-            ]
-          },
-          {
-            _id: '2',
-            title: 'Animation',
-            description: 'High-quality animation services for all media. From 2D to 3D animation, we deliver exceptional results that captivate audiences.',
-            imageUrl: '/api/placeholder/600/400',
-            imageAlt: 'Animation Services',
-            tags: [
-              { _id: '4', name: '2D Animation', color: '#F59E0B' },
-              { _id: '5', name: '3D Animation', color: '#8B5CF6' },
-              { _id: '6', name: 'Motion Graphics', color: '#EF4444' }
-            ]
-          },
-          {
-            _id: '3',
-            title: 'Immersive Experiences',
-            description: 'Cutting-edge immersive and VR experiences. We create virtual worlds that engage and inspire users through innovative technology.',
-            imageUrl: '/api/placeholder/600/400',
-            imageAlt: 'Immersive Experiences',
-            tags: [
-              { _id: '7', name: 'VR', color: '#06B6D4' },
-              { _id: '8', name: 'AR', color: '#84CC16' },
-              { _id: '9', name: 'Interactive', color: '#F97316' }
-            ]
-          }
-        ]);
+        setServices([]);
       } finally {
         setLoading(false);
       }

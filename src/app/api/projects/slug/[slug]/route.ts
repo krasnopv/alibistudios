@@ -9,6 +9,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
+    
     const project = await client.fetch(`
       *[_type == "project" && slug.current == $slug][0] {
         _id,
@@ -16,9 +17,18 @@ export async function GET(
         subtitle,
         description,
         fullTitle,
-        credits[]{
+        videoTrailer {
+          type,
+          url,
+          videoFile,
+          "videoFileUrl": videoFile.asset->url,
+          thumbnail,
+          "thumbnailUrl": thumbnail.asset->url,
+          "thumbnailAlt": thumbnail.alt
+        },
+        credits[] {
           role,
-          person{
+          person {
             type,
             teamMember->{
               fullName,
@@ -31,14 +41,7 @@ export async function GET(
             name
           }
         },
-        videoTrailer{
-          type,
-          url,
-          "videoFileUrl": videoFile.asset->url,
-          "thumbnailUrl": thumbnail.asset->url,
-          "thumbnailAlt": thumbnail.alt
-        },
-        images[]{
+        images[] {
           _id,
           "imageUrl": asset->url,
           "imageAlt": alt
@@ -47,9 +50,16 @@ export async function GET(
           _id,
           title,
           subtitle,
+          image,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt
         },
+        services[]->{
+          _id,
+          title,
+          "slug": slug.current
+        },
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       }
@@ -59,6 +69,7 @@ export async function GET(
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
+    console.log('Project fetched:', project.title, 'slug:', slug);
     return NextResponse.json(project);
   } catch (error) {
     console.error('Error fetching project:', error);

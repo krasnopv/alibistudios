@@ -46,20 +46,8 @@ const Films = () => {
             setCategories(categoriesData);
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Fallback to mock data
-        setFilms(Array.from({ length: 24 }, (_, i) => ({
-          _id: `film-${i + 1}`,
-          title: `Film ${i + 1}`,
-          description: `Description for Film ${i + 1}`,
-          category: { _id: 'all', name: 'All', slug: 'all' },
-          year: 2024,
-          order: i + 1,
-          imageUrl: `/api/placeholder/207/307`,
-          imageAlt: `Film ${i + 1}`,
-          imageRef: '',
-          image: null
-        })));
-        setCategories([{ _id: 'all', name: 'All', slug: 'all' }]);
+        setFilms([]);
+        setCategories([]);
       } finally {
         setLoading(false);
       }

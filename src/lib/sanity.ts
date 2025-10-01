@@ -78,6 +78,7 @@ export const queries = {
   services: `*[_type == "service"] | order(order asc) {
     _id,
     title,
+    "slug": slug.current,
     description,
     url,
     image,
@@ -88,14 +89,15 @@ export const queries = {
       name,
       color
     },
-    showOnHomepage,
-    homepageOrder
+    featured,
+    featuredOrder
   }`,
 
   // Get services for homepage
-  homepageServices: `*[_type == "service" && defined(showOnHomepage) && showOnHomepage == true] | order(homepageOrder asc, order asc) {
+  homepageServices: `*[_type == "service" && defined(featured) && featured == true] | order(featuredOrder asc, order asc) {
     _id,
     title,
+    "slug": slug.current,
     description,
     url,
     image,

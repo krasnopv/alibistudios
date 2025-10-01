@@ -48,6 +48,11 @@ interface Project {
     imageUrl: string;
     imageAlt: string;
   }[];
+  services?: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
   imageUrl: string;
   imageAlt: string;
 }
@@ -148,9 +153,15 @@ const ProjectPage = () => {
                 <div className="w-1/3">
                   {/* Back Link */}
                   <div className="mb-12">
-                    <Link href="/immersive" className="body_regular text-black hover:text-[#FF0066] transition-colors">
-                      <span className="text-[#FF0066] text-3xl">←</span> Immersive Experiences
-                    </Link>
+                    {project.services && project.services.length > 0 ? (
+                      <Link href={`/services/${project.services[0].slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                        <span className="text-[#FF0066] text-3xl">←</span> {project.services[0].title}
+                      </Link>
+                    ) : (
+                      <Link href="/projects" className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                        <span className="text-[#FF0066] text-3xl">←</span> All Projects
+                      </Link>
+                    )}
                   </div>
 
                   {/* Full Title */}

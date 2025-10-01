@@ -190,7 +190,7 @@ const Header = () => {
             
             {/* Menu Items */}
              <div className="flex flex-col justify-start items-start">
-               <a href="/services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <Link href="/services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -198,7 +198,7 @@ const Header = () => {
                    fontStyle: 'normal',
                    fontWeight: 400
                  }}>Services<br/></div>
-               </a>
+               </Link>
                <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',

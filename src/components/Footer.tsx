@@ -22,45 +22,7 @@ const Footer = () => {
         setLocations(data);
       } catch (error) {
         console.error('Error fetching addresses:', error);
-        // Fallback to mock data
-        setLocations([
-          {
-            _id: '1',
-            city: 'Los Angeles',
-            address: '360E 2nd suite 800\nLos Angeles CA 90012\nU.S.A',
-            country: 'us'
-          },
-          {
-            _id: '2',
-            city: 'London/Bristol',
-            address: 'Royal Talbot Building,\n2 Victoria St, Redcliffe\nBristol, BS16BN, UK',
-            country: 'uk'
-          },
-          {
-            _id: '3',
-            city: 'Paris',
-            address: '8 Rue Godillot,\n93400 Saint-Ouen-sur-Seine\nFrance',
-            country: 'fr'
-          },
-          {
-            _id: '4',
-            city: 'Helsinki',
-            address: 'Muonamiehentie 11\n00390 Helsinki\nFinland',
-            country: 'fi'
-          },
-          {
-            _id: '5',
-            city: 'Montreal',
-            address: '2 rue de Souilly,\nLorraine, Quebec\nCanada J6Z3Y5',
-            country: 'ca'
-          },
-          {
-            _id: '6',
-            city: 'Barcelona',
-            address: 'BAv. de Francesc Cambó 17, P1\n08003 Barcelona\nSpain',
-            country: 'es'
-          }
-        ]);
+        setLocations([]);
       }
     };
 

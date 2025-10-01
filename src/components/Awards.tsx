@@ -27,21 +27,7 @@ const Awards = () => {
         setAwards(data);
       } catch (error) {
         console.error('Error fetching awards:', error);
-        // Fallback to mock data
-        setAwards([
-          { _id: '1', name: 'OSCARS', count: 'x 2', year: 2024, category: 'oscars' },
-          { _id: '2', name: 'Visual Effects Society Awards', count: 'x 2', year: 2024, category: 'ves' },
-          { _id: '3', name: 'Emmys', count: 'x 2', year: 2024, category: 'emmys' },
-          { _id: '4', name: 'BAFTA', count: '', year: 2024, category: 'bafta' },
-          { _id: '5', name: 'Rose d\'Or', count: 'x 2', year: 2024, category: 'rose-dor' },
-          { _id: '6', name: 'Royal Television Society', count: 'x 2', year: 2024, category: 'rts' },
-          { _id: '7', name: 'Creative Circle Awards', count: 'x 2', year: 2024, category: 'creative-circle' },
-          { _id: '8', name: 'British Arrows', count: '2023', year: 2023, category: 'british-arrows' },
-          { _id: '9', name: 'Clio', count: '2023', year: 2023, category: 'clio' },
-          { _id: '10', name: 'LIA', count: '2022', year: 2022, category: 'lia' },
-          { _id: '11', name: 'NYX Game Award', count: '', year: 2024, category: 'nyx' },
-          { _id: '12', name: 'Webby', count: '', year: 2024, category: 'webby' }
-        ]);
+        setAwards([]);
       } finally {
         setLoading(false);
       }

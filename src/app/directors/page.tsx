@@ -47,24 +47,7 @@ export default function Directors() {
         setDirectors(data);
       } catch (error) {
         console.error('Error fetching directors:', error);
-        // Fallback to mock data
-        setDirectors([
-          {
-            _id: '1',
-            name: 'John Director',
-            bio: 'Award-winning director with over 20 years of experience in film and television. Known for innovative storytelling and visual excellence.',
-            trophies: [
-              { _id: '1', name: 'Oscar', year: 2023, category: 'Best Director', imageUrl: '/api/placeholder/60/60', imageAlt: 'Oscar' },
-              { _id: '2', name: 'Emmy', year: 2022, category: 'Outstanding Director', imageUrl: '/api/placeholder/60/60', imageAlt: 'Emmy' },
-              { _id: '3', name: 'Golden Globe', year: 2021, category: 'Best Director', imageUrl: '/api/placeholder/60/60', imageAlt: 'Golden Globe' }
-            ],
-            works: [
-              { _id: '1', title: 'The Great Film', subtitle: 'Feature Film', imageUrl: '/api/placeholder/300/200', imageAlt: 'The Great Film', year: 2023 },
-              { _id: '2', title: 'Epic Series', subtitle: 'TV Series', imageUrl: '/api/placeholder/300/200', imageAlt: 'Epic Series', year: 2022 },
-              { _id: '3', title: 'Short Story', subtitle: 'Short Film', imageUrl: '/api/placeholder/300/200', imageAlt: 'Short Story', year: 2021 }
-            ]
-          }
-        ]);
+        setDirectors([]);
       } finally {
         setLoading(false);
       }

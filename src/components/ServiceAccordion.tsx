@@ -12,6 +12,7 @@ interface ServiceTag {
 interface Service {
   _id: string;
   title: string;
+  slug: string;
   description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
@@ -118,7 +119,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                       
                       {/* Tags */}
                       {service.tags && service.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 mb-6">
                           {service.tags.map((tag) => (
                             <span
                               key={tag._id}
@@ -134,6 +135,15 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                           ))}
                         </div>
                       )}
+
+                      {/* Learn More Link */}
+                      <a 
+                        href={`/services/${service.slug}`}
+                        className="inline-flex items-center text-[#FF0066] hover:underline transition-colors duration-200"
+                        style={{ fontFamily: 'Plus Jakarta Sans' }}
+                      >
+                        Learn more →
+                      </a>
                     </div>
 
                     {/* Right Column - Service Image (2/3) */}

@@ -49,17 +49,12 @@ const ServiceCard = ({
       </div>
 
       {/* Service Info */}
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="text-[#FF0066] text-base font-[300] leading-6">
-            {title}
-          </span>
-          <span className="text-black text-base font-[300] leading-6 ml-2">
-            &nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-          <span className="text-black text-xl font-[400] leading-[30px]">
-            →
-          </span>
+      <div className="flex flex-col">
+        <div className="text-[#FF0066] text-base font-[300] leading-6">
+          {title}
+        </div>
+        <div className="text-black text-xl font-[400] leading-[30px] mt-1">
+          →
         </div>
       </div>
     </motion.div>

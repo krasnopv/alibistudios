@@ -6,45 +6,19 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const projects = await client.fetch(`
-      *[_type == "project" && featured == true] | order(order asc, _createdAt asc) {
+      *[_type == "project"] | order(order asc) {
         _id,
         title,
-        "slug": slug.current,
         subtitle,
-        description,
-        fullTitle,
-        credits[]{
-          role,
-          person{
-            type,
-            teamMember->{
-              fullName,
-              name
-            },
-            manualName
-          },
-          award->{
-            _id,
-            name
-          }
-        },
-        images[]{
-          _id,
-          "imageUrl": asset->url,
-          "imageAlt": alt
-        },
-        relatedProjects[]->{
-          _id,
-          title,
-          subtitle,
-          "imageUrl": image.asset->url,
-          "imageAlt": image.alt
-        },
+        "slug": slug.current,
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       }
     `);
 
+    console.log('Projects fetched:', projects.length, 'projects');
+    console.log('Projects data:', JSON.stringify(projects, null, 2));
     return NextResponse.json(projects);
   } catch (error) {
     console.error('Error fetching projects:', error);

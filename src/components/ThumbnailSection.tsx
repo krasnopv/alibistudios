@@ -13,6 +13,7 @@ interface ServiceTag {
 interface Service {
   _id: string;
   title: string;
+  slug: string;
   description: string;
   url?: string;
   imageUrl: string;
@@ -42,54 +43,7 @@ const ThumbnailSection = () => {
         }
       } catch (error) {
         console.error('Error fetching services:', error);
-        // Only use fallback data if there's an actual error, not empty results
-        setServices([
-          {
-            _id: '1',
-            title: 'VFX',
-            description: 'Visual Effects',
-            url: '/services/vfx',
-            imageUrl: '/api/placeholder/668/372',
-            imageAlt: 'VFX',
-            image: null
-          },
-          {
-            _id: '2',
-            title: 'Immersive',
-            description: 'Immersive Experiences',
-            url: '/services/immersive',
-            imageUrl: '/api/placeholder/668/372',
-            imageAlt: 'Immersive',
-            image: null
-          },
-          {
-            _id: '3',
-            title: 'Film & Episodic',
-            description: 'Film & Episodic Content',
-            url: '/services/film-episodic',
-            imageUrl: '/api/placeholder/668/372',
-            imageAlt: 'Film & Episodic',
-            image: null
-          },
-          {
-            _id: '4',
-            title: 'Animation',
-            description: 'Animation Services',
-            url: '/services/animation',
-            imageUrl: '/api/placeholder/668/372',
-            imageAlt: 'Animation',
-            image: null
-          },
-          {
-            _id: '5',
-            title: 'Media & Generative Art',
-            description: 'Media & Generative Art',
-            url: '/services/media-generative-art',
-            imageUrl: '/api/placeholder/668/372',
-            imageAlt: 'Media & Generative Art',
-            image: null
-          }
-        ]);
+        setServices([]);
       } finally {
         setLoading(false);
       }
@@ -144,7 +98,7 @@ const ThumbnailSection = () => {
                 key={service._id}
                 title={service.title}
                 image={imageUrl}
-                url={service.url || `/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
+                url={service.slug ? `/services/${service.slug}` : `/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
                 description={service.description}
                 index={index}
               />
