@@ -39,7 +39,7 @@ const ProjectsPage = () => {
     return (
       <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
         <Header />
-        <main className="w-full flex flex-col items-center">
+        <main className="w-full flex flex-col items-center no-hero">
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
           </div>
@@ -51,7 +51,7 @@ const ProjectsPage = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
+      <main className="w-full flex flex-col items-center no-hero">
         <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">

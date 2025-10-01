@@ -55,7 +55,7 @@ const Team = () => {
     return (
       <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
         <Header />
-        <main className="w-full flex flex-col items-center">
+        <main className="w-full flex flex-col items-center no-hero">
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
           </div>
@@ -92,7 +92,7 @@ const Team = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
+      <main className="w-full flex flex-col items-center no-hero">
         {/* Hero with team video */}
         <Hero pageSlug="team" />
         

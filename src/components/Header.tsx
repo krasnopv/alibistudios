@@ -88,20 +88,21 @@ const Header = () => {
   };
 
   return (
-    <header 
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        backgroundColor: hasHero 
-          ? `rgba(255, 255, 255, ${scrollProgress * 0.8})`
-          : 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: hasHero 
-          ? `blur(${scrollProgress * 12}px)`
-          : 'blur(12px)',
-        boxShadow: hasHero 
-          ? (scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none')
-          : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-      }}
-    >
+    <>
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          backgroundColor: hasHero 
+            ? `rgba(255, 255, 255, ${scrollProgress * 0.8})`
+            : 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: hasHero 
+            ? `blur(${scrollProgress * 12}px)`
+            : 'blur(12px)',
+          boxShadow: hasHero 
+            ? (scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none')
+            : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}
+      >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 py-2.5">
         <div className="flex items-center justify-between w-full">
         {/* Left - Burger Menu */}
@@ -155,27 +156,32 @@ const Header = () => {
         </button>
         </div>
       </div>
+    </header>
 
-      {/* Sidebar Menu Overlay */}
-      {showSidebar && (
-        <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
-          <div 
-            className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-              isMenuOpen ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={handleMenuClose}
-          />
-          {/* Sidebar */}
-          <div className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-screen md:h-[1140px] ${
+    {/* Sidebar Menu Overlay - Outside header for full screen coverage */}
+    {showSidebar && (
+      <div className="fixed inset-0 z-50">
+        {/* Backdrop */}
+        <div 
+          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 z-10 ${
+            isMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={handleMenuClose}
+        />
+        {/* Sidebar */}
+        <div 
+          className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-screen md:h-[1140px] z-20 ${
             isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
-          }`} style={{
+          }`} 
+          style={{
             display: 'flex',
             padding: '24px 40px 40px 40px',
             flexDirection: 'column',
             alignItems: 'flex-end'
-          }}>
-            {/* Close Button */}
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close Button */}
             <div style={{
               display: 'flex',
               height: '50px',
@@ -264,7 +270,7 @@ const Header = () => {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };
 

@@ -18,6 +18,11 @@ section {
   padding-bottom: 2rem;
 }
 
+/* Pages without Hero sections need padding-top on main */
+main.no-hero {
+  padding-top: 56px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

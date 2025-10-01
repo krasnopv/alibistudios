@@ -7,7 +7,7 @@ export default function ContactPage() {
     <div className="min-h-screen">
       <Header />
       
-      <main className="pt-16">
+      <main className="no-hero">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-blue-50 to-purple-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
