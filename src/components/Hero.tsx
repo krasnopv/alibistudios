@@ -87,7 +87,7 @@ const Hero = ({
   }
 
   return (
-    <section id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
+    <div id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
         {isSanityVideo ? (
@@ -142,7 +142,7 @@ const Hero = ({
         {/* Hero Content Overlay */}
         {(heroData?.title || heroData?.subtitle) && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="text-center text-white px-4">
+            <div className="text-center text-white">
               {heroData.title && (
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">
                   {heroData.title}
@@ -157,7 +157,7 @@ const Hero = ({
             </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 

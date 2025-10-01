@@ -167,12 +167,10 @@ const Header = () => {
             onClick={handleMenuClose}
           />
           {/* Sidebar */}
-          <div className={`absolute top-0 left-0 bg-white transform ${
+          <div className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-screen md:h-[1140px] ${
             isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
           }`} style={{
             display: 'flex',
-            width: '428px',
-            height: '1140px',
             padding: '24px 40px 40px 40px',
             flexDirection: 'column',
             alignItems: 'flex-end'
