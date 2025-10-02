@@ -25,7 +25,17 @@ export async function GET(
           subtitle,
           "slug": slug.current,
           "imageUrl": image.asset->url,
-          "imageAlt": image.alt
+          "imageAlt": image.alt,
+          subServices[]->{
+            _id,
+            title,
+            "slug": slug.current
+          }
+        },
+        subServices[]->{
+          _id,
+          title,
+          "slug": slug.current
         }
       }
     `, { slug });

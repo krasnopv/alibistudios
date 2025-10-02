@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ServiceCard from './ServiceCard';
+import ServicesGrid from './ServicesGrid';
 // Removed urlFor import to avoid CORS issues
 
 interface ServiceTag {
@@ -76,28 +76,14 @@ const ThumbnailSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}
-          <div className="text-center mb-16">
-          <h6 className="display_h6">
-            An elite group of award-winning artists<br />all under one &apos;Virtual Roof&apos;
-          </h6>
-        </div>
+            <div className="text-center mb-16">
+            <h6 className="display_h6">
+              An elite group of award-winning artists<br />all under one &apos;Virtual Roof&apos;
+            </h6>
+          </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {services.map((service, index) => {
-            const imageUrl = service.imageUrl;
-            return (
-              <ServiceCard
-                key={service._id}
-                title={service.title}
-                image={imageUrl}
-                url={service.slug ? `/services/${service.slug}` : `/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`}
-                description={service.description}
-                index={index}
-              />
-            );
-          })}
-        </div>
+        <ServicesGrid gridData={services} schemaUrl="services" />
         </div>
       </div>
     </section>

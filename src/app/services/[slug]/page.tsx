@@ -5,8 +5,16 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import ScrollableCategories from '@/components/ScrollableCategories';
+import ServicesGrid from '@/components/ServicesGrid';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
+
+interface SubService {
+  _id: string;
+  title: string;
+  slug: string;
+}
 
 interface Service {
   _id: string;
@@ -25,7 +33,9 @@ interface Service {
     slug: string;
     imageUrl: string;
     imageAlt: string;
+    subServices?: SubService[];
   }[];
+  subServices?: SubService[];
 }
 
 const ServicePage = () => {
@@ -33,6 +43,7 @@ const ServicePage = () => {
   const serviceSlug = params.slug;
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const renderRichText = (content: string | unknown) => {
     // Handle null/undefined
@@ -184,34 +195,29 @@ const ServicePage = () => {
                 </h6>
               </div>
 
-              {/* Service Grid - Chess Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {service.projects && service.projects.map((project, index) => {
-                  const isEven = index % 2 === 0;
-                  const colSpan = 'md:col-span-1';
-                  const order = isEven ? 'md:order-1' : 'md:order-2';
-                  
-                  return (
-                    <div key={project._id} className={`${colSpan} ${order}`}>
-                      <Link href={`/projects/${project.slug}`} className="service-card cursor-pointer block">
-                        <div className="aspect-[4/3] mb-4">
-                          <img
-                            src={project.imageUrl}
-                            alt={project.imageAlt}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <h3 className="body_gerular mb-2">
-                          {project.title}
-                        </h3>
-                        <p className="body_regular">
-                          {project.subtitle} <span className="text-xl">→</span>
-                        </p>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Categories Filter */}
+              {service.subServices && service.subServices.length > 0 && (
+                <div className="mb-12">
+                  <ScrollableCategories
+                    categories={['All', ...service.subServices.map(sub => sub.title)]}
+                    activeCategory={activeCategory}
+                    onCategoryChange={setActiveCategory}
+                  />
+                </div>
+              )}
+
+              {/* Projects Grid */}
+              {service.projects && service.projects.length > 0 && (
+                <ServicesGrid 
+                  gridData={service.projects.filter(project => {
+                    if (activeCategory === 'All') return true;
+                    // Check if project has the selected subService
+                    return project.subServices?.some(sub => sub.title === activeCategory);
+                  })}
+                  schemaUrl="projects"
+                  gridCols="md:grid-cols-2"
+                />
+              )}
             </div>
           </div>
         </section>

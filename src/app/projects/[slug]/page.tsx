@@ -192,10 +192,15 @@ const ProjectPage = () => {
                               <div>
                                 <span className="text-sm">{typeof credit.role === 'string' ? credit.role : String(credit.role)}</span>
                                 <p className="font-semibold text-sm text-gray-600">
-                                  {credit.person.type === 'teamMember' 
-                                    ? (credit.person.teamMember?.fullName || credit.person.teamMember?.name || 'Unknown Team Member')
-                                    : (credit.person.manualName || 'Unknown Person')
-                                  }
+                                  {credit.people && credit.people.map((person, personIndex) => {
+                                    const personName = person.type === 'teamMember' 
+                                      ? person.teamMember?.fullName
+                                      : person.manualName;
+                                    
+                                    return personIndex === 0 
+                                      ? personName 
+                                      : ` and ${personName}`;
+                                  }).join('')}
                                 </p>
                               </div>
                             </div>

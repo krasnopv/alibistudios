@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, MotionValue } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
+import { ArrowRight } from 'lucide-react';
 
 interface ServiceCardProps {
   title: string;
@@ -9,6 +10,7 @@ interface ServiceCardProps {
   url: string;
   description?: string;
   index?: number;
+  parallaxY?: MotionValue<number> | number;
 }
 
 const ServiceCard = ({ 
@@ -16,7 +18,8 @@ const ServiceCard = ({
   image, 
   url, 
   description, 
-  index = 0 
+  index = 0,
+  parallaxY
 }: ServiceCardProps) => {
   const handleClick = () => {
     window.location.href = url;
@@ -24,10 +27,7 @@ const ServiceCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.1 }}
-      viewport={{ once: true }}
+      style={{ y: parallaxY }}
       className="group cursor-pointer service-card"
       onClick={handleClick}
     >
@@ -53,8 +53,13 @@ const ServiceCard = ({
         <div className="text-[#FF0066] text-base font-[300] leading-6">
           {title}
         </div>
-        <div className="text-black text-xl font-[400] leading-[30px] mt-1">
-          →
+        <div className="flex items-center mt-1">
+          {description && (
+            <div className="text-gray-600 text-sm font-[300] leading-5 mr-2">
+              {description}
+            </div>
+          )}
+          <ArrowRight className="text-black w-4 h-4" />
         </div>
       </div>
     </motion.div>

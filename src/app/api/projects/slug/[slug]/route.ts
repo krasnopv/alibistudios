@@ -28,11 +28,10 @@ export async function GET(
         },
         credits[] {
           role,
-          person {
+          people[] {
             type,
             teamMember->{
-              fullName,
-              name
+              fullName
             },
             manualName
           },

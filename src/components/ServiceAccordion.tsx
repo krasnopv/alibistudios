@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface ServiceTag {
+interface SubService {
   _id: string;
-  name: string;
-  color?: string;
+  title: string;
+  slug: string;
 }
 
 interface Service {
@@ -16,7 +16,7 @@ interface Service {
   description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
-  tags: ServiceTag[];
+  subServices: SubService[];
 }
 
 interface ServiceAccordionProps {
@@ -117,21 +117,22 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                         {renderRichText(service.description)}
                       </div>
                       
-                      {/* Tags */}
-                      {service.tags && service.tags.length > 0 && (
+                      {/* Sub Services */}
+                      {service.subServices && service.subServices.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-6">
-                          {service.tags.map((tag) => (
-                            <span
-                              key={tag._id}
-                              className="inline-flex items-center px-4 py-1 rounded-full text-[16px] font-[300] leading-[150%] tracking-[0%]"
+                          {service.subServices.map((subService) => (
+                            <a
+                              key={subService._id}
+                              href={`/services/${subService.slug}`}
+                              className="inline-flex items-center px-4 py-1 rounded-full text-[16px] font-[300] leading-[150%] tracking-[0%] hover:bg-[#FF0066] hover:text-white transition-colors duration-200"
                               style={{ 
                                 fontFamily: 'Plus Jakarta Sans',
                                 backgroundColor: '#ffffff',
                                 color: '#374151'
                               }}
                             >
-                              {tag.name}
-                            </span>
+                              {subService.title}
+                            </a>
                           ))}
                         </div>
                       )}

@@ -84,10 +84,10 @@ export const queries = {
     image,
     "imageUrl": image.asset->url,
     "imageAlt": image.alt,
-    tags[]->{
+    subServices[]->{
       _id,
-      name,
-      color
+      title,
+      "slug": slug.current
     },
     featured,
     featuredOrder

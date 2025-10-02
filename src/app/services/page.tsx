@@ -5,10 +5,10 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ServiceAccordion from '@/components/ServiceAccordion';
 
-interface ServiceTag {
+interface SubService {
   _id: string;
-  name: string;
-  color?: string;
+  title: string;
+  slug: string;
 }
 
 interface Service {
@@ -18,7 +18,7 @@ interface Service {
   description: string | unknown; // Can be string or rich text object
   imageUrl: string;
   imageAlt: string;
-  tags: ServiceTag[];
+  subServices: SubService[];
 }
 
 export default function Services() {
