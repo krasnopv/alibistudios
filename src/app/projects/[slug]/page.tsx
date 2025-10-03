@@ -148,8 +148,130 @@ const ProjectPage = () => {
         <section className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
-              {/* Main Content */}
-              <div className="flex gap-8 mb-8">
+              {/* Mobile Layout */}
+              <div className="flex flex-col md:hidden gap-6 mb-8">
+                {/* Back Link */}
+                <div>
+                  {project.services && project.services.length > 0 ? (
+                    <Link href={`/services/${project.services[0].slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                      <span className="text-[#FF0066] text-3xl">←</span> {project.services[0].title}
+                    </Link>
+                  ) : (
+                    <Link href="/projects" className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                      <span className="text-[#FF0066] text-3xl">←</span> All Projects
+                    </Link>
+                  )}
+                </div>
+
+                {/* Full Title */}
+                <div>
+                  <h1 className="heading_h1">
+                    {typeof project.fullTitle === 'string' ? project.fullTitle : String(project.fullTitle)}
+                  </h1>
+                </div>
+
+                {/* Video Trailer */}
+                {project.videoTrailer && (
+                  <div>
+                    <div 
+                      className="relative w-full aspect-video overflow-hidden cursor-pointer group"
+                      onClick={() => setShowVideoOverlay(true)}
+                    >
+                      <img
+                        src={project.videoTrailer.thumbnailUrl}
+                        alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                        <img
+                          src="/play.svg"
+                          alt="Play video"
+                          className="w-[43px] h-[50px]"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="text-white text-center">
+                          <div className="text-2xl font-bold mb-2">Watch Trailer</div>
+                          <div className="text-sm opacity-90">Click to play</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Description */}
+                <div>
+                  <div className="prose prose-gray max-w-none">
+                    {renderRichText(project.description)}
+                  </div>
+                </div>
+
+                {/* Images Gallery */}
+                {project.images && project.images.length > 0 && (
+                  <div>
+                    <div className="grid grid-cols-1 gap-4">
+                      {project.images.map((image, index) => (
+                        <div key={`image-mobile-${projectSlug}-${image._id || index}`} className="aspect-video">
+                          <img
+                            src={image.imageUrl}
+                            alt={image.imageAlt || `Project image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error('Image failed to load:', image.imageUrl);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Credits */}
+                {project.credits && project.credits.length > 0 && (
+                  <div>
+                    <p 
+                      className="uppercase"
+                      style={{ marginBottom: 'calc(var(--spacing) * 12)' }}
+                    >
+                      Credits
+                    </p>
+                    <div className="space-y-3">
+                      {project.credits.map((credit, index) => (
+                        <div key={`credit-mobile-${projectSlug}-${index}`} className="pb-2">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <span className="text-sm">{typeof credit.role === 'string' ? credit.role : String(credit.role)}</span>
+                              <p className="font-semibold text-sm text-gray-600">
+                                {credit.person && (
+                                  credit.person.type === 'teamMember' 
+                                    ? credit.person.teamMember?.fullName
+                                    : credit.person.manualName
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {project.credits.some(credit => credit.award) && (
+                        <div className="pb-2">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <span className="text-sm">Award</span>
+                              <p className="font-semibold text-sm text-gray-600">
+                                {project.credits.find(credit => credit.award)?.award?.name || 'Unknown Award'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop Layout */}
+              <div className="hidden md:flex gap-8 mb-8">
                 {/* Left Column - Project Info (1/3) */}
                 <div className="w-1/3">
                   {/* Back Link */}
@@ -171,6 +293,8 @@ const ProjectPage = () => {
                       {typeof project.fullTitle === 'string' ? project.fullTitle : String(project.fullTitle)}
                     </h1>
                   </div>
+
+                  {/* Description */}
                   <div className="mb-12">
                     <div className="prose prose-gray max-w-none">
                       {renderRichText(project.description)}
@@ -188,7 +312,7 @@ const ProjectPage = () => {
                       </p>
                       <div className="space-y-3">
                         {project.credits.map((credit, index) => (
-                          <div key={`credit-${projectSlug}-${index}`} className="pb-2">
+                          <div key={`credit-desktop-${projectSlug}-${index}`} className="pb-2">
                             <div className="flex justify-between items-start">
                               <div>
                                 <span className="text-sm">{typeof credit.role === 'string' ? credit.role : String(credit.role)}</span>
@@ -203,7 +327,6 @@ const ProjectPage = () => {
                             </div>
                           </div>
                         ))}
-                        {/* Award as separate credit */}
                         {project.credits.some(credit => credit.award) && (
                           <div className="pb-2">
                             <div className="flex justify-between items-start">
@@ -235,7 +358,6 @@ const ProjectPage = () => {
                           alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
                           className="w-full h-full object-cover"
                         />
-                        {/* Play Icon */}
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                           <img
                             src="/play.svg"
@@ -243,7 +365,6 @@ const ProjectPage = () => {
                             className="w-[43px] h-[50px]"
                           />
                         </div>
-                        {/* Hover Overlay */}
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                           <div className="text-white text-center">
                             <div className="text-2xl font-bold mb-2">Watch Trailer</div>
@@ -258,7 +379,7 @@ const ProjectPage = () => {
                   {project.images && project.images.length > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {project.images.map((image, index) => (
-                        <div key={`image-${projectSlug}-${image._id || index}`} className="aspect-video">
+                        <div key={`image-desktop-${projectSlug}-${image._id || index}`} className="aspect-video">
                           <img
                             src={image.imageUrl}
                             alt={image.imageAlt || `Project image ${index + 1}`}
@@ -291,7 +412,7 @@ const ProjectPage = () => {
                     href={`/projects/${relatedProject.slug}`}
                     className="cursor-pointer group block"
                   >
-                    <div className="aspect-[4/3] mb-4 overflow-hidden">
+                    <div className="aspect-[1.8/1] mb-4 overflow-hidden">
                       <img
                         src={relatedProject.imageUrl}
                         alt={relatedProject.imageAlt}

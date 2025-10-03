@@ -13,7 +13,17 @@ export async function GET() {
         "slug": slug.current,
         image,
         "imageUrl": image.asset->url,
-        "imageAlt": image.alt
+        "imageAlt": image.alt,
+        services[]->{
+          _id,
+          title,
+          "slug": slug.current,
+          subServices[]->{
+            _id,
+            title,
+            "slug": slug.current
+          }
+        }
       }
     `);
 

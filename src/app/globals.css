@@ -131,17 +131,6 @@ p {
   color: #FF0066;
 }
 
-.heading_h1 {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-weight: 250;
-  font-style: normal;
-  font-size: 40px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: #000000;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -398,6 +387,18 @@ h2 {
   letter-spacing: 0%;
   vertical-align: middle;
   color: #000000;
+}
+
+/* Mobile styles for .heading_h1 */
+@media (max-width: 768px) {
+  .heading_h1 {
+    font-weight: 300;
+    font-style: Light;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    vertical-align: middle;
+  }
 }
 
 .trophies {

@@ -73,11 +73,11 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   return (
     <div className="w-full">
       {services.map((service) => (
-        <div key={service._id} className="border-b border-gray-200 last:border-b-0">
+        <div key={service._id} className="last:border-b-0">
           {/* Service Header (Always Visible) */}
           <button
             onClick={() => toggleService(service._id)}
-            className="w-full text-left py-8 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+            className="w-full text-left py-4 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
           >
             <div className="flex items-center justify-between">
               <h1 className="heading_h1">
