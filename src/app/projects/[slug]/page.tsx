@@ -45,6 +45,7 @@ interface Project {
     _id: string;
     title: string;
     subtitle: string;
+    slug: string;
     imageUrl: string;
     imageAlt: string;
   }[];
@@ -274,34 +275,41 @@ const ProjectPage = () => {
                 </div>
               </div>
 
-              {/* Related Projects */}
-              {project.relatedProjects && project.relatedProjects.length > 0 && (
-                <div className="border-t border-gray-200 pt-8">
-                  <h3 className="body_bold mb-6">Related Projects</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {project.relatedProjects.map((relatedProject, index) => (
-                      <div key={`related-${projectSlug}-${relatedProject._id || index}`} className="cursor-pointer group">
-                        <div className="aspect-[4/3] mb-3">
-                          <img
-                            src={relatedProject.imageUrl}
-                            alt={relatedProject.imageAlt}
-                            className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
-                          />
-                        </div>
-                        <h4 className="font-semibold text-sm mb-1">
-                          {typeof relatedProject.title === 'string' ? relatedProject.title : String(relatedProject.title)}
-                        </h4>
-                        <p className="text-xs text-gray-600">
-                          {typeof relatedProject.subtitle === 'string' ? relatedProject.subtitle : String(relatedProject.subtitle)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </section>
+
+        {/* Related Projects */}
+        {project.relatedProjects && project.relatedProjects.length > 0 && (
+          <section className="w-full bg-white py-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="body_regular uppercase" style={{ marginBottom: 'calc(var(--spacing) * 4)' }}>Related Projects</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {project.relatedProjects.slice(0, 4).map((relatedProject, index) => (
+                  <Link 
+                    key={`related-${projectSlug}-${relatedProject._id || index}`} 
+                    href={`/projects/${relatedProject.slug}`}
+                    className="cursor-pointer group block"
+                  >
+                    <div className="aspect-[4/3] mb-4 overflow-hidden">
+                      <img
+                        src={relatedProject.imageUrl}
+                        alt={relatedProject.imageAlt}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <h3 className="body_regular mb-2">
+                      {typeof relatedProject.title === 'string' ? relatedProject.title : String(relatedProject.title)}
+                    </h3>
+                    <p className="body_bold text-gray-600">
+                      {typeof relatedProject.subtitle === 'string' ? relatedProject.subtitle : String(relatedProject.subtitle)}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       
       {/* Video Overlay */}

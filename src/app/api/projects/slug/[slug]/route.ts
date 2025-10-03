@@ -49,6 +49,7 @@ export async function GET(
           _id,
           title,
           subtitle,
+          "slug": slug.current,
           image,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt
