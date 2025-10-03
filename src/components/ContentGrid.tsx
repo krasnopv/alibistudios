@@ -107,7 +107,7 @@ const ContentGrid = ({
           </div>
 
           {/* Content Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-5 xl:gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-5 xl:gap-5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeFilter}

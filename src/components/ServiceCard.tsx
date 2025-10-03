@@ -32,7 +32,7 @@ const ServiceCard = ({
       onClick={handleClick}
     >
       {/* Service Image */}
-      <div className="relative h-[372px] overflow-hidden mb-6">
+      <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
         <img 
           src={image.startsWith('http') ? image : getAssetPath(image)} 
           alt={title}

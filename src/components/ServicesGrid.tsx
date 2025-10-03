@@ -64,26 +64,27 @@ const ServicesGrid = ({
   }, [gridData.length]);
 
   // Create parallax transforms for all items except the first (disabled on mobile)
-  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -200]);
-  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -350]);
-  const parallax3 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -500]);
-  const parallax4 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -650]);
-  const parallax5 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -800]);
-  const parallax6 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -950]);
+  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -100]);
+  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -200]);
+  const parallax3 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -300]);
+  const parallax4 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -400]);
+  const parallax5 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -500]);
+  const parallax6 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -600]);
   
   const parallaxTransforms = [0, parallax1, parallax2, parallax3, parallax4, parallax5, parallax6];
   
   // Calculate dynamic height based on parallax movement
   const maxParallax = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);
-  const dynamicHeight = useTransform(maxParallax, (value) => {
-    return baseHeight > 0 ? `${baseHeight + value/2}px` : 'auto';
-  });
+  const dynamicHeight = 'auto';
+  // const dynamicHeight = useTransform(maxParallax, (value) => {
+  //   return baseHeight > 0 ? `${baseHeight - value / 2}px` : 'auto';
+  // });
 
   return (
     <motion.div 
       ref={containerRef} 
       className={`grid ${gridCols} gap-8 ${className}`} 
-      style={{ height: dynamicHeight }}
+      style={{ height: isMobile ? 'auto' : dynamicHeight }}
     >
       {gridData.map((item, index) => {
         const imageUrl = item.imageUrl;
