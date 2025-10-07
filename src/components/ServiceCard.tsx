@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 interface ServiceCardProps {
   title: string;
-  image: string;
+  image?: string; // image can be missing from CMS
   url: string;
   description?: string;
   index?: number;
@@ -33,11 +33,21 @@ const ServiceCard = ({
     >
       {/* Service Image */}
       <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
-        <img 
-          src={image.startsWith('http') ? image : getAssetPath(image)} 
-          alt={title}
-          className="w-full h-full object-cover"
-        />
+        {(() => {
+          const resolvedSrc = image
+            ? (image.startsWith('http') ? image : getAssetPath(image))
+            : '/placeholder.jpeg';
+          return (
+            <img 
+              src={resolvedSrc} 
+              alt={title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/placeholder.jpeg';
+              }}
+            />
+          );
+        })()}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <div className="text-white text-center">
             <div className="text-2xl font-bold mb-2">{title}</div>

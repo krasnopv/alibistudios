@@ -17,6 +17,12 @@ export async function GET(
         description,
         url,
         features,
+        heroVideo,
+        "heroVideoUrl": heroVideo.asset->url,
+        heroImage,
+        "heroImageUrl": heroImage.asset->url,
+        "heroImageAlt": heroImage.alt,
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt,
         projects[]->{

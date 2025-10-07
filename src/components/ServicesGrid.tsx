@@ -90,13 +90,33 @@ const ServicesGrid = ({
         const imageUrl = item.imageUrl;
         const url = item.slug ? `/${schemaUrl}/${item.slug}` : `/${schemaUrl}/${item.title.toLowerCase().replace(/\s+/g, '-')}`;
         
+        // Handle description/subtitle that might be a Sanity Portable Text object
+        const getDescription = (desc: unknown) => {
+          if (typeof desc === 'string') return desc;
+          if (Array.isArray(desc)) {
+            // Extract text from Sanity Portable Text blocks
+            return desc
+              .map((block: { _type?: string; children?: Array<{ text?: string }> }) => {
+                if (block._type === 'block' && block.children) {
+                  return block.children.map((child: { text?: string }) => child.text || '').join('');
+                }
+                return '';
+              })
+              .join(' ')
+              .trim();
+          }
+          return '';
+        };
+        
+        const description = getDescription(item.description || item.subtitle);
+        
         return (
           <ServiceCard
             key={item._id}
             title={item.title}
             image={imageUrl}
             url={url}
-            description={item.description || item.subtitle}
+            description={description}
             index={index}
             parallaxY={parallaxTransforms[index] || 0}
           />
