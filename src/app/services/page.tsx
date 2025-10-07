@@ -21,27 +21,44 @@ interface Service {
   subServices: SubService[];
 }
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+}
+
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
+  const [page, setPage] = useState<Page | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/services');
-        const data = await response.json();
-        console.log('Services fetched:', data.length, 'services');
-        console.log('Services data:', data);
-        setServices(data);
+        // Fetch services
+        const servicesResponse = await fetch('/api/services');
+        const servicesData = await servicesResponse.json();
+        console.log('Services fetched:', servicesData.length, 'services');
+        setServices(servicesData);
+
+        // Fetch page data
+        const pageResponse = await fetch('/api/pages/slug/services');
+        const pageData = await pageResponse.json();
+        console.log('Page data:', pageData);
+        setPage(pageData);
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error('Error fetching data:', error);
         setServices([]);
+        setPage(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
 
   return (
@@ -61,7 +78,7 @@ export default function Services() {
               {/* Header */}
               <div className="mb-16">
                 <h1 className="display_h1 brand-color text-center">
-                  All under one &apos;Virtual Roof&apos;
+                  {page?.title || 'All under one \'Virtual Roof\''}
                 </h1>
               </div>
 

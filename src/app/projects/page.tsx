@@ -26,25 +26,33 @@ interface Project {
   }[];
 }
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 const ProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   const [allSubServices, setAllSubServices] = useState<string[]>([]);
+  const [pageData, setPageData] = useState<Page | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 10;
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/projects');
-        const data = await response.json();
-        console.log('Projects data:', data);
-        setProjects(data);
+        // Fetch projects
+        const projectsResponse = await fetch('/api/projects');
+        const projectsData = await projectsResponse.json();
+        console.log('Projects data:', projectsData);
+        setProjects(projectsData);
         
         // Extract all unique subServices from projects
         const subServicesSet = new Set<string>();
-        data.forEach((project: Project) => {
+        projectsData.forEach((project: Project) => {
           project.services?.forEach(service => {
             service.subServices?.forEach(subService => {
               subServicesSet.add(subService.title);
@@ -52,15 +60,22 @@ const ProjectsPage = () => {
           });
         });
         setAllSubServices(Array.from(subServicesSet).sort());
+
+        // Fetch page data
+        const pageResponse = await fetch('/api/pages/slug/projects');
+        const pageData = await pageResponse.json();
+        console.log('Page data:', pageData);
+        setPageData(pageData);
       } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error('Error fetching data:', error);
         setProjects([]);
+        setPageData(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProjects();
+    fetchData();
   }, []);
 
   // Filter projects based on active category
@@ -114,7 +129,7 @@ const ProjectsPage = () => {
               {/* Header */}
               <div className="mb-16">
                 <h1 className="display_h1 brand-color text-center mb-6">
-                  All Projects
+                  {pageData?.title || 'All Projects'}
                 </h1>
                 <h6 className="display_h6 text-center">
                   Explore our portfolio of creative work

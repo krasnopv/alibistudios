@@ -400,8 +400,8 @@ const ProjectPage = () => {
           </div>
         </section>
 
-        {/* Related Projects */}
-        {project.relatedProjects && project.relatedProjects.length > 0 && (
+              {/* Related Projects */}
+              {project.relatedProjects && project.relatedProjects.length > 0 && (
           <section className="w-full bg-white py-16">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="body_regular uppercase" style={{ marginBottom: 'calc(var(--spacing) * 4)' }}>Related Projects</h2>
@@ -413,23 +413,23 @@ const ProjectPage = () => {
                     className="cursor-pointer group block"
                   >
                     <div className="aspect-[1.8/1] mb-4 overflow-hidden">
-                      <img
-                        src={relatedProject.imageUrl}
-                        alt={relatedProject.imageAlt}
+                          <img
+                            src={relatedProject.imageUrl}
+                            alt={relatedProject.imageAlt}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
+                          />
+                        </div>
                     <h3 className="body_regular mb-2">
-                      {typeof relatedProject.title === 'string' ? relatedProject.title : String(relatedProject.title)}
+                          {typeof relatedProject.title === 'string' ? relatedProject.title : String(relatedProject.title)}
                     </h3>
                     <p className="body_bold text-gray-600">
-                      {typeof relatedProject.subtitle === 'string' ? relatedProject.subtitle : String(relatedProject.subtitle)}
-                    </p>
+                          {typeof relatedProject.subtitle === 'string' ? relatedProject.subtitle : String(relatedProject.subtitle)}
+                        </p>
                   </Link>
-                ))}
-              </div>
+                    ))}
             </div>
-          </section>
+          </div>
+        </section>
         )}
       </main>
       

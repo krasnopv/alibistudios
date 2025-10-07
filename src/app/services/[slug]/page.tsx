@@ -56,12 +56,19 @@ interface Service {
   subServices?: SubService[];
 }
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 const ServicePage = () => {
   const params = useParams();
   const serviceSlug = params.slug;
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [pageData, setPageData] = useState<Page | null>(null);
 
   const renderRichText = (content: string | unknown) => {
     // Handle null/undefined
@@ -130,21 +137,28 @@ const ServicePage = () => {
   };
 
   useEffect(() => {
-    const fetchService = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/services/slug/${serviceSlug}`);
-        const data = await response.json();
-        setService(data);
+        // Fetch service
+        const serviceResponse = await fetch(`/api/services/slug/${serviceSlug}`);
+        const serviceData = await serviceResponse.json();
+        setService(serviceData);
+
+        // Fetch page data
+        const pageResponse = await fetch('/api/pages/slug/services');
+        const pageData = await pageResponse.json();
+        setPageData(pageData);
       } catch (error) {
-        console.error('Error fetching service:', error);
+        console.error('Error fetching data:', error);
         setService(null);
+        setPageData(null);
       } finally {
         setLoading(false);
       }
     };
 
     if (serviceSlug) {
-      fetchService();
+      fetchData();
     }
   }, [serviceSlug]);
 

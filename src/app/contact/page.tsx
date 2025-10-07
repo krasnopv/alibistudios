@@ -1,8 +1,33 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import ContactForm from '@/components/ContactForm';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 export default function ContactPage() {
+  const [pageData, setPageData] = useState<Page | null>(null);
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const response = await fetch('/api/pages/slug/contact');
+        const data = await response.json();
+        setPageData(data);
+      } catch (error) {
+        console.error('Error fetching page data:', error);
+        setPageData(null);
+      }
+    };
+
+    fetchPageData();
+  }, []);
   return (
     <div className="min-h-screen">
       <Header />
@@ -13,7 +38,7 @@ export default function ContactPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Let&apos;s Work Together
+                {pageData?.title || "Let's Work Together"}
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Ready to bring your ideas to life? We&apos;d love to hear about your project 

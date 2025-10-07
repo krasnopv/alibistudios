@@ -28,27 +28,41 @@ interface TeamMember {
   bio: string | unknown;
 }
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 const Team = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [pageData, setPageData] = useState<Page | null>(null);
 
   useEffect(() => {
-    const fetchTeamMembers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/team');
-        const data = await response.json();
-        setTeamMembers(data);
+        // Fetch team members
+        const teamResponse = await fetch('/api/team');
+        const teamData = await teamResponse.json();
+        setTeamMembers(teamData);
+
+        // Fetch page data
+        const pageResponse = await fetch('/api/pages/slug/team');
+        const pageData = await pageResponse.json();
+        setPageData(pageData);
       } catch (error) {
-        console.error('Error fetching team members:', error);
+        console.error('Error fetching data:', error);
         setTeamMembers([]);
+        setPageData(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTeamMembers();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -103,7 +117,7 @@ const Team = () => {
               {/* Page Title */}
               <div className="mb-16">
                 <h1 className="display_h1 brand-color text-center">
-                  Seasoned industry veterans
+                  {pageData?.title || 'Seasoned industry veterans'}
                 </h1>
               </div>
             </div>

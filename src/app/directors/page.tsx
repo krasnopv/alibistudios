@@ -32,28 +32,42 @@ interface Director {
   works?: DirectorWork[]; // Optional - can be null or undefined
 }
 
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 export default function Directors() {
   const [directors, setDirectors] = useState<Director[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [pageData, setPageData] = useState<Page | null>(null);
 
   useEffect(() => {
-    const fetchDirectors = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/directors');
-        const data = await response.json();
-        console.log('Directors fetched:', data.length, 'directors');
-        console.log('Directors data:', data);
-        setDirectors(data);
+        // Fetch directors
+        const directorsResponse = await fetch('/api/directors');
+        const directorsData = await directorsResponse.json();
+        console.log('Directors fetched:', directorsData.length, 'directors');
+        console.log('Directors data:', directorsData);
+        setDirectors(directorsData);
+
+        // Fetch page data
+        const pageResponse = await fetch('/api/pages/slug/directors');
+        const pageData = await pageResponse.json();
+        setPageData(pageData);
       } catch (error) {
-        console.error('Error fetching directors:', error);
+        console.error('Error fetching data:', error);
         setDirectors([]);
+        setPageData(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDirectors();
+    fetchData();
   }, []);
 
   // Function to render rich text objects with proper paragraph structure
@@ -109,7 +123,7 @@ export default function Directors() {
               {/* Header */}
               <div className="mb-16">
                 <h1 className="display_h1 brand-color text-center">
-                  Directing Tomorrow&apos;s Visual World
+                  {pageData?.title || "Directing Tomorrow's Visual World"}
                 </h1>
               </div>
 
