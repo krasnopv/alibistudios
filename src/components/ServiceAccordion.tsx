@@ -123,7 +123,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                           {service.subServices.map((subService) => (
                             <a
                               key={subService._id}
-                              href={`/services/${subService.slug}`}
+                              href={`/services/${service.slug}?filter=${encodeURIComponent(subService.title)}`}
                               className="inline-flex items-center px-4 py-1 rounded-full text-[16px] font-[300] leading-[150%] tracking-[0%] hover:bg-[#FF0066] hover:text-white transition-colors duration-200"
                               style={{ 
                                 fontFamily: 'Plus Jakarta Sans',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -64,6 +64,7 @@ interface Page {
 
 const ServicePage = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
   const serviceSlug = params.slug;
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
@@ -161,6 +162,18 @@ const ServicePage = () => {
       fetchData();
     }
   }, [serviceSlug]);
+
+  // Handle URL filter parameter
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam && service?.subServices) {
+      // Check if the filter parameter matches any sub-service title
+      const matchingSubService = service.subServices.find(sub => sub.title === filterParam);
+      if (matchingSubService) {
+        setActiveCategory(filterParam);
+      }
+    }
+  }, [searchParams, service]);
 
   if (loading) {
     return (

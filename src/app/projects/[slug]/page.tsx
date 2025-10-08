@@ -23,14 +23,14 @@ interface Project {
   };
   credits: {
     role: string;
-    person: {
+    people: {
       type: string;
       teamMember?: {
         fullName: string;
         name: string;
       };
       manualName?: string;
-    };
+    }[];
     award?: {
       _id: string;
       name: string;
@@ -242,13 +242,18 @@ const ProjectPage = () => {
                           <div className="flex justify-between items-start">
                             <div>
                               <span className="text-sm">{typeof credit.role === 'string' ? credit.role : String(credit.role)}</span>
-                              <p className="font-semibold text-sm text-gray-600">
-                                {credit.person && (
-                                  credit.person.type === 'teamMember' 
-                                    ? credit.person.teamMember?.fullName
-                                    : credit.person.manualName
-                                )}
-                              </p>
+                              {credit.people && credit.people.length > 0 && (
+                                <div className="space-y-1">
+                                  {credit.people.map((person, personIndex) => (
+                                    <p key={`person-mobile-${index}-${personIndex}`} className="font-semibold text-sm text-gray-600">
+                                      {person.type === 'teamMember' 
+                                        ? person.teamMember?.fullName
+                                        : person.manualName
+                                      }
+                                    </p>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -316,13 +321,18 @@ const ProjectPage = () => {
                             <div className="flex justify-between items-start">
                               <div>
                                 <span className="text-sm">{typeof credit.role === 'string' ? credit.role : String(credit.role)}</span>
-                                <p className="font-semibold text-sm text-gray-600">
-                                  {credit.person && (
-                                    credit.person.type === 'teamMember' 
-                                      ? credit.person.teamMember?.fullName
-                                      : credit.person.manualName
-                                  )}
-                                </p>
+                                {credit.people && credit.people.length > 0 && (
+                                  <div className="space-y-1">
+                                    {credit.people.map((person, personIndex) => (
+                                      <p key={`person-desktop-${index}-${personIndex}`} className="font-semibold text-sm text-gray-600">
+                                        {person.type === 'teamMember' 
+                                          ? person.teamMember?.fullName
+                                          : person.manualName
+                                        }
+                                      </p>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
