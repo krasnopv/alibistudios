@@ -2,8 +2,8 @@ import React from 'react';
 
 export const serializers = {
   marks: {
-    link: ({ children, mark }: { children: React.ReactNode; mark: { href: string } }) => {
-      const { href } = mark;
+    link: ({ children, value }: { children: React.ReactNode; value: { href: string } }) => {
+      const { href } = value;
       return (
         <a 
           href={href} 

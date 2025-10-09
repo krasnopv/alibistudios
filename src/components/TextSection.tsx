@@ -1,11 +1,8 @@
 'use client';
 
-import { PortableText } from '@portabletext/react';
-import { serializers } from '@/lib/serializers';
-
 interface TextSectionProps {
   title?: string;
-  copy?: any[];
+  copy?: unknown[];
   url?: {
     type: 'internal' | 'external';
     internalPage?: { _ref: string };
@@ -27,10 +24,23 @@ const TextSection = ({ title, copy, url }: TextSectionProps) => {
             </div>
           )}
 
-          {/* Content */}
+          {/* Content - Basic text rendering for now */}
           {copy && copy.length > 0 && (
             <div>
-              <PortableText value={copy} components={serializers} />
+              <h6 className="display_h6">
+                {copy.map((block: unknown, index: number) => {
+                  const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
+                  if (blockObj._type === 'block' && blockObj.children) {
+                    return blockObj.children.map((child: { text?: string }, childIndex: number) => (
+                      <span key={`${index}-${childIndex}`}>
+                        {child.text}
+                        {childIndex < blockObj.children!.length - 1 && <br />}
+                      </span>
+                    ));
+                  }
+                  return null;
+                })}
+              </h6>
             </div>
           )}
 

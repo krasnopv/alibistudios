@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { PortableTextBlock } from '@portabletext/react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ThumbnailSection from '@/components/ThumbnailSection';
