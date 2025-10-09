@@ -31,6 +31,7 @@ export const queries = {
     description,
     year,
     order,
+    "slug": slug.current,
     image,
     "imageUrl": image.asset->url,
     "imageAlt": image.alt,

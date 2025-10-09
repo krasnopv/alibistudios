@@ -41,21 +41,13 @@ const ServiceCard = ({
             <img 
               src={resolvedSrc} 
               alt={title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               onError={(e) => {
                 e.currentTarget.src = '/placeholder.jpeg';
               }}
             />
           );
         })()}
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="text-white text-center">
-            <div className="text-2xl font-bold mb-2">{title}</div>
-            {description && (
-              <div className="text-sm opacity-90">{description}</div>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Service Info */}

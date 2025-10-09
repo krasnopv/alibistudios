@@ -285,12 +285,16 @@ h2 {
       }
       
       .service-card:nth-child(3),
-      .service-card:nth-child(5) {
+      .service-card:nth-child(5),
+      .service-card:nth-child(7),
+      .service-card:nth-child(9) {
         margin-top: -18%;
       }
       
       .service-card:nth-child(4),
-      .service-card:nth-child(6) {
+      .service-card:nth-child(6),
+      .service-card:nth-child(8),
+      .service-card:nth-child(10) {
         margin-top: 45%;
       }
     }
@@ -301,12 +305,16 @@ h2 {
       }
       
       .service-card:nth-child(3),
-      .service-card:nth-child(5) {
+      .service-card:nth-child(5),
+      .service-card:nth-child(7),
+      .service-card:nth-child(9) {
         margin-top: -23%;
       }
       
       .service-card:nth-child(4),
-      .service-card:nth-child(6) {
+      .service-card:nth-child(6),
+      .service-card:nth-child(8),
+      .service-card:nth-child(10) {
         margin-top: 33%;
       }
     }
@@ -317,12 +325,16 @@ h2 {
       }
       
       .service-card:nth-child(3),
-      .service-card:nth-child(5) {
+      .service-card:nth-child(5),
+      .service-card:nth-child(7),
+      .service-card:nth-child(9) {
         margin-top: -22%;
       }
       
       .service-card:nth-child(4),
-      .service-card:nth-child(6) {
+      .service-card:nth-child(6),
+      .service-card:nth-child(8),
+      .service-card:nth-child(10) {
         margin-top: 32%;
       }
     }

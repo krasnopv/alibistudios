@@ -12,6 +12,7 @@ interface ContentItem {
   subtitle?: string;
   locations?: string[];
   url?: string;
+  slug?: string;
   category?: string;
   services?: {
     _id: string;
@@ -28,6 +29,7 @@ interface ContentGridProps {
   onItemClick?: (item: ContentItem) => void;
   className?: string;
   showMemberInfo?: boolean;
+  schemaUrl?: string;
 }
 
 const ContentGrid = ({
@@ -38,7 +40,8 @@ const ContentGrid = ({
   defaultCategory = 'All',
   onItemClick,
   className = '',
-  showMemberInfo = false
+  showMemberInfo = false,
+  schemaUrl
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
 
@@ -63,6 +66,14 @@ const ContentGrid = ({
       onItemClick(item);
     } else if (item.url) {
       window.location.href = item.url;
+    } else if (item.slug && schemaUrl) {
+      // Construct URL from slug and schemaUrl, similar to ServicesGrid
+      const url = `/${schemaUrl}/${item.slug}`;
+      window.location.href = url;
+    } else if (item.slug && !schemaUrl) {
+      // Fallback: try to construct URL from slug only
+      const url = `/${item.slug}`;
+      window.location.href = url;
     }
   };
 
@@ -131,21 +142,13 @@ const ContentGrid = ({
                         <img 
                           src={item.image} 
                           alt={item.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                       ) : (
                         <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                           <div className="text-2xl text-gray-500">🎬</div>
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="text-white text-center">
-                          <div className="text-lg font-bold">{item.title}</div>
-                          {item.description && (
-                            <div className="text-sm opacity-90 mt-1">{item.description}</div>
-                          )}
-                        </div>
-                      </div>
                     </div>
                     
                     {/* Team Member Information - Only show if showMemberInfo is true */}

@@ -195,7 +195,7 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
           </div> */}
 
         {/* Grid */}
-        <ServicesGrid gridData={items} schemaUrl={schemaType} />
+        <ServicesGrid gridData={items} schemaUrl={schemaType === 'service' ? 'services' : schemaType} />
         </div>
       </div>
     </section>

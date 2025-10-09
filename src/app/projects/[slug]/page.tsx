@@ -31,10 +31,13 @@ interface Project {
       };
       manualName?: string;
     }[];
-    award?: {
-      _id: string;
-      name: string;
-    };
+  }[];
+  awards?: {
+    _id: string;
+    name: string;
+    year?: number;
+    category?: string;
+    description?: string;
   }[];
   images: {
     _id: string;
@@ -173,28 +176,75 @@ const ProjectPage = () => {
                 {/* Video Trailer */}
                 {project.videoTrailer && (
                   <div>
-                    <div 
-                      className="relative w-full aspect-video overflow-hidden cursor-pointer group"
-                      onClick={() => setShowVideoOverlay(true)}
-                    >
-                      <img
-                        src={project.videoTrailer.thumbnailUrl}
-                        alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                        <img
-                          src="/play.svg"
-                          alt="Play video"
-                          className="w-[43px] h-[50px]"
-                        />
-                      </div>
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="text-white text-center">
-                          <div className="text-2xl font-bold mb-2">Watch Trailer</div>
-                          <div className="text-sm opacity-90">Click to play</div>
-                        </div>
-                      </div>
+                    <div className="relative w-full aspect-video overflow-hidden">
+                      {(() => {
+                        const videoUrl = project.videoTrailer.type === 'upload' 
+                          ? (project.videoTrailer.videoFileUrl || null)
+                          : (project.videoTrailer.url || null);
+                        
+                        if (videoUrl) {
+                          // For YouTube videos
+                          if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
+                            const videoId = videoUrl.includes('youtube.com/watch?v=') 
+                              ? videoUrl.split('v=')[1].split('&')[0]
+                              : videoUrl.split('youtu.be/')[1].split('?')[0];
+                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                            
+                            return (
+                              <iframe
+                                src={embedUrl}
+                                className="w-full h-full"
+                                frameBorder="0"
+                                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                                allowFullScreen
+                                title="Video trailer"
+                                loading="eager"
+                              />
+                            );
+                          }
+                          
+                          // For Vimeo videos
+                          if (videoUrl.includes('vimeo.com/')) {
+                            const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
+                            
+                            return (
+                              <iframe
+                                src={embedUrl}
+                                className="w-full h-full"
+                                frameBorder="0"
+                                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                                allowFullScreen
+                                title="Video trailer"
+                                loading="eager"
+                              />
+                            );
+                          }
+                          
+                          // For direct video files
+                          return (
+                            <video
+                              src={videoUrl}
+                              className="w-full h-full object-cover"
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                              controls
+                              preload="auto"
+                            />
+                          );
+                        }
+                        
+                        // Fallback to thumbnail if no video URL
+                        return (
+                          <img
+                            src={project.videoTrailer.thumbnailUrl}
+                            alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                            className="w-full h-full object-cover"
+                          />
+                        );
+                      })()}
                     </div>
                   </div>
                 )}
@@ -258,18 +308,6 @@ const ProjectPage = () => {
                           </div>
                         </div>
                       ))}
-                      {project.credits.some(credit => credit.award) && (
-                        <div className="pb-2">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <span className="text-sm">Award</span>
-                              <p className="font-semibold text-sm text-gray-600">
-                                {project.credits.find(credit => credit.award)?.award?.name || 'Unknown Award'}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
@@ -337,18 +375,31 @@ const ProjectPage = () => {
                             </div>
                           </div>
                         ))}
-                        {project.credits.some(credit => credit.award) && (
-                          <div className="pb-2">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <span className="text-sm">Award</span>
-                                <p className="font-semibold text-sm text-gray-600">
-                                  {project.credits.find(credit => credit.award)?.award?.name || 'Unknown Award'}
-                                </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Awards */}
+                  {project.awards && project.awards.length > 0 && (
+                    <div className="mb-6">
+                      <p 
+                        className="uppercase"
+                        style={{ marginBottom: 'calc(var(--spacing) * 12)' }}
+                      >
+                        Awards
+                      </p>
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <div>
+                            {project.awards.map((award, index) => (
+                              <div key={`award-desktop-${projectSlug}-${index}`} className="pb-2">
+                                <span className="font-semibold text-sm text-gray-600">
+                                  {award.name}
+                                </span>
                               </div>
-                            </div>
+                            ))}
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -356,36 +407,108 @@ const ProjectPage = () => {
 
                 {/* Right Column - Images Gallery (2/3) */}
                 <div className="w-2/3">
-                  {/* Video Trailer Thumbnail */}
+                  {/* Video Trailer */}
                   {project.videoTrailer && (
                     <div className="mb-6">
-                      <div 
-                        className="relative w-full aspect-video overflow-hidden cursor-pointer group"
-                        onClick={() => setShowVideoOverlay(true)}
-                      >
-                        <img
-                          src={project.videoTrailer.thumbnailUrl}
-                          alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                          <img
-                            src="/play.svg"
-                            alt="Play video"
-                            className="w-[43px] h-[50px]"
-                          />
-                        </div>
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="text-white text-center">
-                            <div className="text-2xl font-bold mb-2">Watch Trailer</div>
-                            <div className="text-sm opacity-90">Click to play</div>
-                          </div>
+                      <div className="relative w-full aspect-video overflow-hidden">
+                        {(() => {
+                          const videoUrl = project.videoTrailer.type === 'upload' 
+                            ? (project.videoTrailer.videoFileUrl || null)
+                            : (project.videoTrailer.url || null);
+                          
+                          if (videoUrl) {
+                            // For YouTube videos
+                            if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
+                              const videoId = videoUrl.includes('youtube.com/watch?v=') 
+                                ? videoUrl.split('v=')[1].split('&')[0]
+                                : videoUrl.split('youtu.be/')[1].split('?')[0];
+                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                              
+                              return (
+                                <iframe
+                                  src={embedUrl}
+                                  className="w-full h-full"
+                                  frameBorder="0"
+                                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                                  allowFullScreen
+                                  title="Video trailer"
+                                  loading="eager"
+                                />
+                              );
+                            }
+                            
+                            // For Vimeo videos
+                            if (videoUrl.includes('vimeo.com/')) {
+                              const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
+                              
+                              return (
+                                <iframe
+                                  src={embedUrl}
+                                  className="w-full h-full"
+                                  frameBorder="0"
+                                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                                  allowFullScreen
+                                  title="Video trailer"
+                                  loading="eager"
+                                />
+                              );
+                            }
+                            
+                            // For direct video files
+                            return (
+                              <video
+                                src={videoUrl}
+                                className="w-full h-full object-cover"
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                controls
+                                preload="auto"
+                              />
+                            );
+                          }
+                          
+                          // Fallback to thumbnail if no video URL
+                          return (
+                            <img
+                              src={project.videoTrailer.thumbnailUrl}
+                              alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                              className="w-full h-full object-cover"
+                            />
+                          );
+                        })()}
+                      </div>
+                    </div>
+                )}
+
+                {/* Awards */}
+                {project.awards && project.awards.length > 0 && (
+                  <div>
+                    <p 
+                      className="uppercase"
+                      style={{ marginBottom: 'calc(var(--spacing) * 12)' }}
+                    >
+                      Awards
+                    </p>
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          {project.awards.map((award, index) => (
+                            <div key={`award-mobile-${projectSlug}-${index}`} className="pb-2">
+                              <span className="font-semibold text-sm text-gray-600">
+                                {award.name}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Images Gallery */}
+                {/* Images Gallery */}
                   {project.images && project.images.length > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {project.images.map((image, index) => (

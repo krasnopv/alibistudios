@@ -34,11 +34,14 @@ export async function GET(
               fullName
             },
             manualName
-          },
-          award->{
-            _id,
-            name
           }
+        },
+        awards[]->{
+          _id,
+          name,
+          year,
+          category,
+          description
         },
         images[] {
           _id,

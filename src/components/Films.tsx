@@ -23,6 +23,7 @@ interface Film {
   imageAlt: string;
   imageRef: string;
   image: unknown;
+  slug?: string;
 }
 
 interface FilmsProps {
@@ -108,10 +109,12 @@ const Films = ({ title, subtitle }: FilmsProps) => {
                 title: film.title,
                 image: imageUrl,
                 description: film.description,
-                category: film.category?.name || 'All'
+                category: film.category?.name || 'All',
+                slug: film.slug
               };
             })}
             defaultCategory="All"
+            schemaUrl="films"
           />
         {/* </div> */}
       </div>
