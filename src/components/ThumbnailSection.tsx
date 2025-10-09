@@ -58,9 +58,22 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
         }
         
         const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          console.error(`API request failed: ${response.status} ${response.statusText}`);
+          throw new Error(`API request failed: ${response.status}`);
+        }
+        
+        // Handle redirects (Next.js sometimes redirects /api/endpoint to /api/endpoint/)
+        if (response.redirected) {
+          console.log(`API redirected from ${apiUrl} to ${response.url}`);
+        }
+        
         const data = await response.json();
         
+        console.log(`Fetching ${schemaType} from ${apiUrl}`);
         console.log(`${schemaType} API response:`, data);
+        console.log(`Data length:`, data?.length || 0);
         
         // Transform data to common format for different schema types
         let transformedData: GridItem[] = [];
@@ -68,12 +81,28 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
         if (data && Array.isArray(data)) {
           transformedData = data.map((item: unknown) => {
             const itemObj = item as Record<string, unknown>;
+            // Handle description field - it might be rich text array or string
+            let description = '';
+            if (Array.isArray(itemObj.description)) {
+              // Extract text from rich text blocks
+              description = itemObj.description
+                .map((block: any) => {
+                  if (block.children) {
+                    return block.children.map((child: any) => child.text || '').join('');
+                  }
+                  return '';
+                })
+                .join(' ');
+            } else if (typeof itemObj.description === 'string') {
+              description = itemObj.description;
+            }
+            
             // Common transformation for all schema types
             const transformed: GridItem = {
               _id: String(itemObj._id || ''),
               title: String(itemObj.title || itemObj.name || itemObj.fullName || 'Untitled'),
               slug: String(itemObj.slug || itemObj._id || ''),
-              description: String(itemObj.description || itemObj.subtitle || itemObj.role || ''),
+              description: description || String(itemObj.subtitle || itemObj.role || ''),
               imageUrl: String(itemObj.imageUrl || '/api/placeholder/207/307'),
               imageAlt: String(itemObj.imageAlt || itemObj.title || 'Image'),
               featured: Boolean(itemObj.featured),
@@ -83,6 +112,9 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
             return transformed;
           });
         }
+        
+        console.log(`Transformed ${schemaType} data:`, transformedData);
+        console.log(`Transformed data length:`, transformedData.length);
         
         // Apply filters if provided
         let filteredData = transformedData;
