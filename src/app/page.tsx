@@ -17,6 +17,7 @@ interface Page {
   slug: string;
   content?: Array<{
     _type: string;
+    sectionId?: string;
     title?: string | unknown[];
     subtitle?: string;
     enabled?: boolean;
@@ -62,23 +63,23 @@ export default function Home() {
         {pageData?.content && pageData.content.map((section, index) => {
           switch (section._type) {
             case 'ctaSection':
-              return <CTASection key={index} title={Array.isArray(section.title) ? section.title : undefined} />;
+              return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} />;
             
             case 'gridSection':
-              return <ThumbnailSection key={index} schemaType={section.schemaType} filters={section.filters} />;
+              return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} />;
             
             case 'textSection':
-              return <TextSection key={index} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;
+              return <TextSection key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;
             
             case 'filmsSection':
-              return section.enabled ? <Films key={index} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+              return section.enabled ? <Films key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
             
             case 'awardsSection':
-              return section.enabled ? <Awards key={index} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+              return section.enabled ? <Awards key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
             
             case 'pageTitleSection':
               return section.enabled && pageData.title ? (
-                <section key={index} className="w-full">
+                <section key={index} id={section.sectionId} className="w-full">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="row">
                       <div className="mb-16">

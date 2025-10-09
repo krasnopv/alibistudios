@@ -15,11 +15,12 @@ interface Award {
 }
 
 interface AwardsProps {
+  sectionId?: string;
   title?: string;
   subtitle?: string;
 }
 
-const Awards = ({ title, subtitle }: AwardsProps) => {
+const Awards = ({ sectionId, title, subtitle }: AwardsProps) => {
   const [awards, setAwards] = useState<Award[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeAward, setActiveAward] = useState<string | null>(null);
@@ -56,7 +57,7 @@ const Awards = ({ title, subtitle }: AwardsProps) => {
   }
 
   return (
-    <section className="w-full">
+    <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Header */}

@@ -20,6 +20,7 @@ interface GridItem {
 }
 
 interface ThumbnailSectionProps {
+  sectionId?: string;
   schemaType?: string;
   filters?: {
     featured?: boolean;
@@ -27,7 +28,7 @@ interface ThumbnailSectionProps {
   };
 }
 
-const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionProps) => {
+const ThumbnailSection = ({ sectionId, schemaType = 'service', filters }: ThumbnailSectionProps) => {
   const [items, setItems] = useState<GridItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -184,7 +185,7 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
   }
 
   return (
-    <section id="services" className="w-full">
+    <section id={sectionId || "services"} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}

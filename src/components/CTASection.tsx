@@ -2,10 +2,11 @@ import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
 
 interface CTASectionProps {
+  sectionId?: string;
   title?: unknown[];
 }
 
-export default function CTASection({ title }: CTASectionProps) {
+export default function CTASection({ sectionId, title }: CTASectionProps) {
   const defaultTitle = "An elite group of award-winning artists\nall under one 'Virtual Roof'";
   
   const renderRichText = (title: unknown[] | undefined) => {
@@ -24,7 +25,7 @@ export default function CTASection({ title }: CTASectionProps) {
   };
   
   return (
-    <section className="w-full">
+    <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4 lg:py-6">
         <div className="row">
           <div className="text-center">

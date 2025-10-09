@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getAssetPath } from '@/lib/assets';
 
 const Header = () => {
+  const router = useRouter();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -58,6 +60,95 @@ const Header = () => {
     fetchFeaturedServices();
   }, []);
 
+  useEffect(() => {
+    // Handle films section scrolling when page loads with #films hash
+    const scrollToFilmsSection = () => {
+      const filmsSection = document.getElementById('films');
+      if (filmsSection) {
+        filmsSection.scrollIntoView({ behavior: 'smooth' });
+        return true;
+      }
+      return false;
+    };
+
+    const handleFilmsHash = () => {
+      if (window.location.hash === '#films') {
+        // Try to scroll immediately first
+        if (!scrollToFilmsSection()) {
+          // If films section not found, wait for content to load
+          let attempts = 0;
+          const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
+          
+          const checkForFilmsSection = () => {
+            attempts++;
+            if (scrollToFilmsSection()) {
+              return; // Success, stop checking
+            }
+            
+            if (attempts < maxAttempts) {
+              // If still not found and haven't exceeded max attempts, check again
+              setTimeout(checkForFilmsSection, 200);
+            }
+          };
+          
+          // Start checking after initial delay
+          setTimeout(checkForFilmsSection, 300);
+        }
+      }
+    };
+
+    // Check on mount
+    handleFilmsHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleFilmsHash);
+    
+    // Also listen for route changes (for Next.js navigation)
+    const handleRouteChange = () => {
+      if (window.location.hash === '#films') {
+        if (!scrollToFilmsSection()) {
+          let attempts = 0;
+          const maxAttempts = 20;
+          
+          const checkForFilmsSection = () => {
+            attempts++;
+            if (scrollToFilmsSection()) {
+              return;
+            }
+            
+            if (attempts < maxAttempts) {
+              setTimeout(checkForFilmsSection, 200);
+            }
+          };
+          
+          setTimeout(checkForFilmsSection, 300);
+        }
+      }
+    };
+
+    // Listen for popstate events (back/forward navigation)
+    window.addEventListener('popstate', handleRouteChange);
+    
+    // Also listen for DOM mutations to catch when content loads
+    const observer = new MutationObserver(() => {
+      if (window.location.hash === '#films') {
+        scrollToFilmsSection();
+      }
+    });
+    
+    // Observe the entire document for changes
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+    
+    return () => {
+      window.removeEventListener('hashchange', handleFilmsHash);
+      window.removeEventListener('popstate', handleRouteChange);
+      observer.disconnect();
+    };
+  }, []);
+
   const handleMenuToggle = () => {
     if (isMenuOpen) {
       handleMenuClose();
@@ -75,6 +166,27 @@ const Header = () => {
       setTimeout(() => {
         setShowSidebar(false);
       }, 400);
+    }
+  };
+
+  const handleMenuItemClick = () => {
+    handleMenuClose();
+  };
+
+  const handleFilmsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleMenuClose();
+    
+    // Check if we're on the homepage
+    if (window.location.pathname === '/') {
+      // If on homepage, just scroll to films section
+      const filmsSection = document.getElementById('films');
+      if (filmsSection) {
+        filmsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If on different page, navigate to homepage with films hash
+      router.push('/#films');
     }
   };
 
@@ -210,7 +322,7 @@ const Header = () => {
             
             {/* Menu Items */}
              <div className="flex flex-col justify-start items-start">
-               <Link href="/services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <Link href="/services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -219,7 +331,7 @@ const Header = () => {
                    fontWeight: 400
                  }}>Services<br/></div>
                </Link>
-               <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -238,7 +350,7 @@ const Header = () => {
                  }}>Our Work<br/></div>
                </div>
                {featuredServices.map((service) => (
-                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                    <div className="justify-center" style={{
                      color: '#000',
                      fontFamily: 'Plus Jakarta Sans',
@@ -248,7 +360,16 @@ const Header = () => {
                    }}>- {service.title}<br/></div>
                  </Link>
                ))}
-               <a href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }}>
+               <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
+                 <div className="justify-center" style={{
+                   color: '#000',
+                   fontFamily: 'Plus Jakarta Sans',
+                   fontSize: '28px',
+                   fontStyle: 'normal',
+                   fontWeight: 400,
+                 }}>- Film & Episodic<br/></div>
+               </Link>
+               <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
@@ -256,8 +377,8 @@ const Header = () => {
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Directors</div>
-               </a>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={scrollToFooter}>
+               </Link>
+               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={() => { scrollToFooter(); handleMenuItemClick(); }}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',

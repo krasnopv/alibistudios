@@ -91,7 +91,8 @@ export const queries = {
       "slug": slug.current
     },
     featured,
-    featuredOrder
+    featuredOrder,
+    showInServices
   }`,
 
   // Get services for homepage

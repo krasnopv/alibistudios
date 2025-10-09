@@ -1,6 +1,7 @@
 'use client';
 
 interface TextSectionProps {
+  sectionId?: string;
   title?: string;
   copy?: unknown[];
   url?: {
@@ -10,9 +11,9 @@ interface TextSectionProps {
   };
 }
 
-const TextSection = ({ title, copy, url }: TextSectionProps) => {
+const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
   return (
-    <section className="w-full">
+    <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}

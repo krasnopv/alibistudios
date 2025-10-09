@@ -19,6 +19,7 @@ interface Service {
   imageUrl: string;
   imageAlt: string;
   subServices: SubService[];
+  showInServices?: boolean;
 }
 
 interface Page {
@@ -90,7 +91,7 @@ export default function Services() {
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
                 </div>
               ) : (
-                <ServiceAccordion services={services} />
+                <ServiceAccordion services={services.filter(service => service.showInServices !== false)} />
               )}
             </div>
           </div>

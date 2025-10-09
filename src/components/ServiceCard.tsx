@@ -56,11 +56,6 @@ const ServiceCard = ({
           {title}
         </div>
         <div className="flex items-center mt-1">
-          {description && (
-            <div className="text-gray-600 text-sm font-[300] leading-5 mr-2">
-              {description}
-            </div>
-          )}
           <ArrowRight className="text-black w-4 h-4" />
         </div>
       </div>

@@ -483,31 +483,6 @@ const ProjectPage = () => {
                     </div>
                 )}
 
-                {/* Awards */}
-                {project.awards && project.awards.length > 0 && (
-                  <div>
-                    <p 
-                      className="uppercase"
-                      style={{ marginBottom: 'calc(var(--spacing) * 12)' }}
-                    >
-                      Awards
-                    </p>
-                    <div>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          {project.awards.map((award, index) => (
-                            <div key={`award-mobile-${projectSlug}-${index}`} className="pb-2">
-                              <span className="font-semibold text-sm text-gray-600">
-                                {award.name}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Images Gallery */}
                   {project.images && project.images.length > 0 && (
                     <div className="grid grid-cols-2 gap-4">

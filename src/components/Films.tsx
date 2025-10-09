@@ -27,11 +27,12 @@ interface Film {
 }
 
 interface FilmsProps {
+  sectionId?: string;
   title?: string;
   subtitle?: string;
 }
 
-const Films = ({ title, subtitle }: FilmsProps) => {
+const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
   const [films, setFilms] = useState<Film[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ const Films = ({ title, subtitle }: FilmsProps) => {
   ];
 
   return (
-    <section className="w-full">
+    <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Header */}

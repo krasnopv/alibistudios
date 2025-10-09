@@ -17,6 +17,7 @@ interface Service {
   imageUrl: string;
   imageAlt: string;
   subServices: SubService[];
+  showInServices?: boolean;
 }
 
 interface ServiceAccordionProps {
