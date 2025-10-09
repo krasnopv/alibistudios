@@ -86,9 +86,9 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
             if (Array.isArray(itemObj.description)) {
               // Extract text from rich text blocks
               description = itemObj.description
-                .map((block: any) => {
-                  if (block.children) {
-                    return block.children.map((child: any) => child.text || '').join('');
+                .map((block: Record<string, unknown>) => {
+                  if (block.children && Array.isArray(block.children)) {
+                    return block.children.map((child: Record<string, unknown>) => child.text || '').join('');
                   }
                   return '';
                 })

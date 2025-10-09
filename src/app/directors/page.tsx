@@ -43,6 +43,7 @@ export default function Directors() {
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [pageData, setPageData] = useState<Page | null>(null);
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,11 +110,12 @@ export default function Directors() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero with directors video */}
         <Hero 
           pageSlug="directors" 
           className="mb-8"
+          onRenderChange={setHasHeroContent}
         />
         
         {/* Directors content */}

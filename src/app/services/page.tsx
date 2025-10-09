@@ -34,6 +34,7 @@ export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
   const [page, setPage] = useState<Page | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,11 +65,12 @@ export default function Services() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero with services video */}
         <Hero 
           pageSlug="services" 
           className="mb-8"
+          onRenderChange={setHasHeroContent}
         />
         
         {/* Services content */}

@@ -1,15 +1,20 @@
+'use client';
+
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import { useState } from 'react';
 
 export default function Portfolio() {
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-[1440px] flex flex-col items-center">
+      <main className={`w-[1440px] flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero with portfolio video */}
         <Hero 
           pageSlug="portfolio" 
           className="mb-8"
+          onRenderChange={setHasHeroContent}
         />
         
         {/* Portfolio content */}

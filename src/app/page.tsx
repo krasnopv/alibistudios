@@ -36,6 +36,7 @@ interface Page {
 
 export default function Home() {
   const [pageData, setPageData] = useState<Page | null>(null);
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -54,8 +55,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
-        <Hero pageSlug="home" />
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
+        <Hero pageSlug="home" onRenderChange={setHasHeroContent} />
         
         {/* Dynamic Content Sections */}
         {pageData?.content && pageData.content.map((section, index) => {

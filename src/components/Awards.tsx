@@ -96,7 +96,11 @@ const Awards = ({ title, subtitle }: AwardsProps) => {
                       className="w-20 h-20 object-contain"
                     />
                   ) : (
-                    <div className="text-4xl text-gray-400">🏆</div>
+                    <img 
+                      src="/api/placeholder/207/307" 
+                      alt="Award placeholder"
+                      className="w-20 h-20 object-contain opacity-50"
+                    />
                   )}
                 </div>
                 

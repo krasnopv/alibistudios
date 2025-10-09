@@ -12,11 +12,13 @@ interface HeroVideo {
 interface HeroProps {
   pageSlug?: string;
   className?: string;
+  onRenderChange?: (hasContent: boolean) => void;
 }
 
 const Hero = ({ 
   pageSlug = 'home',
-  className = '' 
+  className = '',
+  onRenderChange
 }: HeroProps) => {
   // Handle root slug - convert '/' to 'home'
   const actualSlug = pageSlug === '/' ? 'home' : pageSlug;
@@ -80,6 +82,11 @@ const Hero = ({
     hasPosterOnly,
     hasAnyMedia
   });
+
+  // Notify parent about render state
+  useEffect(() => {
+    onRenderChange?.(Boolean(hasAnyMedia));
+  }, [hasAnyMedia, onRenderChange]);
 
   // Don't render anything if no media is available
   if (!hasAnyMedia) {

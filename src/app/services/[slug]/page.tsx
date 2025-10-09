@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import Header from '@/components/Header';
-import Hero from '@/components/Hero';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import ServicesGrid from '@/components/ServicesGrid';
 import BlockContent from '@sanity/block-content-to-react';
@@ -56,11 +54,6 @@ interface Service {
   subServices?: SubService[];
 }
 
-interface Page {
-  _id: string;
-  title: string;
-  slug: string;
-}
 
 const ServicePage = () => {
   const params = useParams();
@@ -69,7 +62,6 @@ const ServicePage = () => {
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [pageData, setPageData] = useState<Page | null>(null);
 
   const renderRichText = (content: string | unknown) => {
     // Handle null/undefined
@@ -144,15 +136,9 @@ const ServicePage = () => {
         const serviceResponse = await fetch(`/api/services/slug/${serviceSlug}`);
         const serviceData = await serviceResponse.json();
         setService(serviceData);
-
-        // Fetch page data
-        const pageResponse = await fetch('/api/pages/slug/services');
-        const pageData = await pageResponse.json();
-        setPageData(pageData);
       } catch (error) {
         console.error('Error fetching data:', error);
         setService(null);
-        setPageData(null);
       } finally {
         setLoading(false);
       }
@@ -207,7 +193,7 @@ const ServicePage = () => {
       <main className="w-full flex flex-col items-center">
         {/* Hero with video/image priority logic */}
         {service && (
-          <section className="relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh]">
+          <div id="hero" className="relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh]">
             <div className="relative w-full">
               {/* Priority 1: Hero Video */}
               {service.heroVideoUrl ? (
@@ -288,7 +274,7 @@ const ServicePage = () => {
                 </div>
               )}
             </div>
-          </section>
+          </div>
         )}
         
         {/* Service Content */}

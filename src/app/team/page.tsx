@@ -40,6 +40,7 @@ const Team = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const [pageData, setPageData] = useState<Page | null>(null);
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +70,7 @@ const Team = () => {
     return (
       <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
         <Header />
-        <main className="w-full flex flex-col items-center no-hero">
+        <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
           </div>
@@ -106,9 +107,9 @@ const Team = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center no-hero">
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero with team video */}
-        <Hero pageSlug="team" />
+        <Hero pageSlug="team" onRenderChange={setHasHeroContent} />
         
         {/* Team Content */}
         <section className="w-full pt-20">
