@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { PortableTextBlock } from '@portabletext/react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ThumbnailSection from '@/components/ThumbnailSection';
@@ -18,7 +17,7 @@ interface Page {
   slug: string;
   content?: Array<{
     _type: string;
-    title?: string;
+    title?: string | unknown[];
     subtitle?: string;
     enabled?: boolean;
     copy?: unknown[];
@@ -62,19 +61,19 @@ export default function Home() {
         {pageData?.content && pageData.content.map((section, index) => {
           switch (section._type) {
             case 'ctaSection':
-              return <CTASection key={index} title={section.title} />;
+              return <CTASection key={index} title={Array.isArray(section.title) ? section.title : undefined} />;
             
             case 'gridSection':
               return <ThumbnailSection key={index} schemaType={section.schemaType} filters={section.filters} />;
             
             case 'textSection':
-              return <TextSection key={index} title={section.title} copy={section.copy} url={section.url} />;
+              return <TextSection key={index} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;
             
             case 'filmsSection':
-              return section.enabled ? <Films key={index} title={section.title} subtitle={section.subtitle} /> : null;
+              return section.enabled ? <Films key={index} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
             
             case 'awardsSection':
-              return section.enabled ? <Awards key={index} title={section.title} subtitle={section.subtitle} /> : null;
+              return section.enabled ? <Awards key={index} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
             
             case 'pageTitleSection':
               return section.enabled && pageData.title ? (

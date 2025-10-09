@@ -24,7 +24,7 @@ const TextSection = ({ title, copy, url }: TextSectionProps) => {
             </div>
           )}
 
-          {/* Content - Basic text rendering for now */}
+          {/* Content - Basic text rendering with arrow at the end */}
           {copy && copy.length > 0 && (
             <div>
               <h6 className="display_h6">
@@ -40,30 +40,28 @@ const TextSection = ({ title, copy, url }: TextSectionProps) => {
                   }
                   return null;
                 })}
+                {url && (
+                  url.type === 'internal' && url.internalPage ? (
+                    <a 
+                      href={`/pages/${url.internalPage._ref}`}
+                      className="text-black hover:underline"
+                    >
+                      →
+                    </a>
+                  ) : url.type === 'external' && url.externalUrl ? (
+                    <a 
+                      href={url.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-black hover:underline"
+                    >
+                      →
+                    </a>
+                  ) : (
+                    ' →'
+                  )
+                )}
               </h6>
-            </div>
-          )}
-
-          {/* URL Link */}
-          {url && (
-            <div className="mt-8">
-              {url.type === 'internal' && url.internalPage ? (
-                <a 
-                  href={`/pages/${url.internalPage._ref}`}
-                  className="inline-flex items-center text-[#FF0066] hover:underline"
-                >
-                  Learn More →
-                </a>
-              ) : url.type === 'external' && url.externalUrl ? (
-                <a 
-                  href={url.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-[#FF0066] hover:underline"
-                >
-                  Learn More →
-                </a>
-              ) : null}
             </div>
           )}
         </div>
