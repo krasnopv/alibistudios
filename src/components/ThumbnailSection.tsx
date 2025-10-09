@@ -115,17 +115,28 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
         
         console.log(`Transformed ${schemaType} data:`, transformedData);
         console.log(`Transformed data length:`, transformedData.length);
+        if (transformedData.length > 0) {
+          console.log(`First item featured status:`, transformedData[0].featured);
+          console.log(`First item:`, transformedData[0]);
+        }
         
         // Apply filters if provided
         let filteredData = transformedData;
         if (filters) {
+          console.log(`Applying filters:`, filters);
           if (filters.featured) {
+            const beforeFeatured = filteredData.length;
             filteredData = transformedData.filter((item: GridItem) => item.featured === true);
+            console.log(`Featured filter: ${beforeFeatured} -> ${filteredData.length} items`);
           }
           if (filters.limit && filters.limit > 0) {
+            const beforeLimit = filteredData.length;
             filteredData = filteredData.slice(0, filters.limit);
+            console.log(`Limit filter: ${beforeLimit} -> ${filteredData.length} items`);
           }
         }
+        
+        console.log(`Final filtered data length:`, filteredData.length);
         
         // Only set items if we have data, otherwise show empty array
         if (filteredData && filteredData.length > 0) {
