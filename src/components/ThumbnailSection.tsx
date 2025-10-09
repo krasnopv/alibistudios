@@ -126,8 +126,16 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
           console.log(`Applying filters:`, filters);
           if (filters.featured) {
             const beforeFeatured = filteredData.length;
-            filteredData = transformedData.filter((item: GridItem) => item.featured === true);
-            console.log(`Featured filter: ${beforeFeatured} -> ${filteredData.length} items`);
+            const featuredItems = transformedData.filter((item: GridItem) => item.featured === true);
+            console.log(`Featured items found:`, featuredItems.length);
+            
+            // Only apply featured filter if there are actually featured items
+            if (featuredItems.length > 0) {
+              filteredData = featuredItems;
+              console.log(`Featured filter applied: ${beforeFeatured} -> ${filteredData.length} items`);
+            } else {
+              console.log(`No featured items found, showing all items instead`);
+            }
           }
           if (filters.limit && filters.limit > 0) {
             const beforeLimit = filteredData.length;
