@@ -20,37 +20,80 @@ interface Service {
   imageAlt: string;
   image: unknown;
   tags?: ServiceTag[];
+  featured?: boolean;
 }
 
-const ThumbnailSection = () => {
+interface ThumbnailSectionProps {
+  schemaType?: string;
+  filters?: {
+    featured?: boolean;
+    limit?: number;
+  };
+}
+
+const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionProps) => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/homepage-services');
+        let apiUrl = '/api/homepage-services'; // Default to services
+        
+        // Determine API endpoint based on schema type
+        switch (schemaType) {
+          case 'service':
+            apiUrl = '/api/homepage-services';
+            break;
+          case 'project':
+            apiUrl = '/api/projects';
+            break;
+          case 'teamMember':
+            apiUrl = '/api/team';
+            break;
+          case 'film':
+            apiUrl = '/api/films';
+            break;
+          case 'award':
+            apiUrl = '/api/awards';
+            break;
+          default:
+            apiUrl = '/api/homepage-services';
+        }
+        
+        const response = await fetch(apiUrl);
         const data = await response.json();
         
-        console.log('Homepage services API response:', data);
+        console.log(`${schemaType} API response:`, data);
+        
+        // Apply filters if provided
+        let filteredData = data;
+        if (filters) {
+          if (filters.featured) {
+            filteredData = data.filter((item: Service) => item.featured === true);
+          }
+          if (filters.limit && filters.limit > 0) {
+            filteredData = filteredData.slice(0, filters.limit);
+          }
+        }
         
         // Only set services if we have data, otherwise show empty array
-        if (data && data.length > 0) {
-          setServices(data);
+        if (filteredData && filteredData.length > 0) {
+          setServices(filteredData);
         } else {
-          console.log('No services found for homepage, hiding section');
+          console.log(`No ${schemaType} found, hiding section`);
           setServices([]);
         }
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error(`Error fetching ${schemaType}:`, error);
         setServices([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
-  }, []);
+    fetchData();
+  }, [schemaType, filters]);
 
   if (loading) {
     return (
@@ -76,14 +119,14 @@ const ThumbnailSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Title */}
-            <div className="text-center mb-16">
+            {/* <div className="text-center mb-16">
             <h6 className="display_h6">
               An elite group of award-winning artists<br />all under one &apos;Virtual Roof&apos;
             </h6>
-          </div>
+          </div> */}
 
         {/* Services Grid */}
-        <ServicesGrid gridData={services} schemaUrl="services" />
+        <ServicesGrid gridData={services} schemaUrl={schemaType} />
         </div>
       </div>
     </section>

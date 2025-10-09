@@ -70,8 +70,11 @@ const ServicesGrid = ({
   const parallax4 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -400]);
   const parallax5 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -500]);
   const parallax6 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -600]);
+  const parallax7 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -700]);
+  const parallax8 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -800]);
+  const parallax9 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);
   
-  const parallaxTransforms = [0, parallax1, parallax2, parallax3, parallax4, parallax5, parallax6];
+  const parallaxTransforms = [0, parallax1, parallax2, parallax3, parallax4, parallax5, parallax6, parallax7, parallax8, parallax9];
   
   // Calculate dynamic height based on parallax movement
   const maxParallax = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ServiceAccordion from '@/components/ServiceAccordion';
-import CTASection from '@/components/CTASection';
 
 interface SubService {
   _id: string;
@@ -71,9 +70,6 @@ export default function Services() {
           pageSlug="services" 
           className="mb-8"
         />
-        
-        {/* CTA Section */}
-        <CTASection />
         
         {/* Services content */}
         <section className="w-full">

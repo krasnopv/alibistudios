@@ -25,7 +25,12 @@ interface Film {
   image: unknown;
 }
 
-const Films = () => {
+interface FilmsProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const Films = ({ title, subtitle }: FilmsProps) => {
   const [films, setFilms] = useState<Film[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,8 +88,13 @@ const Films = () => {
           {/* Header */}
           <div className="mb-16">
             <h1 className="display_h1 brand-color">
-              Films Led or contributed to by Alibi members
+              {title || "Films Led or contributed to by Alibi members"}
             </h1>
+            {subtitle && (
+              <h6 className="display_h6">
+                {subtitle}
+              </h6>
+            )}
           </div>
         </div>
           {/* Films Grid */}

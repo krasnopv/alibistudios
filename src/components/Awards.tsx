@@ -14,7 +14,12 @@ interface Award {
   imageAlt?: string;
 }
 
-const Awards = () => {
+interface AwardsProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const Awards = ({ title, subtitle }: AwardsProps) => {
   const [awards, setAwards] = useState<Award[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeAward, setActiveAward] = useState<string | null>(null);
@@ -63,10 +68,10 @@ const Awards = () => {
             className="mb-16"
           >
             <h1 className="display_h1 brand-color">
-              Awards & Recognition
+              {title || "Awards & Recognition"}
             </h1>
             <h6 className="display_h6">
-              Personal Achievements and contributions
+              {subtitle || "Personal Achievements and contributions"}
             </h6>
           </motion.div>
 
