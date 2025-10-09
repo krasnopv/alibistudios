@@ -4,23 +4,19 @@ import { useEffect, useState } from 'react';
 import ServicesGrid from './ServicesGrid';
 // Removed urlFor import to avoid CORS issues
 
-interface ServiceTag {
-  _id: string;
-  name: string;
-  color?: string;
-}
-
-interface Service {
+interface GridItem {
   _id: string;
   title: string;
   slug: string;
-  description: string;
+  description?: string;
+  subtitle?: string;
   url?: string;
   imageUrl: string;
   imageAlt: string;
-  image: unknown;
-  tags?: ServiceTag[];
+  image?: unknown;
+  tags?: Array<{ _id: string; name: string; color?: string }>;
   featured?: boolean;
+  [key: string]: unknown; // Allow additional properties for different schema types
 }
 
 interface ThumbnailSectionProps {
@@ -32,7 +28,7 @@ interface ThumbnailSectionProps {
 }
 
 const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionProps) => {
-  const [services, setServices] = useState<Service[]>([]);
+  const [items, setItems] = useState<GridItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,27 +62,49 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
         
         console.log(`${schemaType} API response:`, data);
         
+        // Transform data to common format for different schema types
+        let transformedData: GridItem[] = [];
+        
+        if (data && Array.isArray(data)) {
+          transformedData = data.map((item: unknown) => {
+            const itemObj = item as Record<string, unknown>;
+            // Common transformation for all schema types
+            const transformed: GridItem = {
+              _id: String(itemObj._id || ''),
+              title: String(itemObj.title || itemObj.name || itemObj.fullName || 'Untitled'),
+              slug: String(itemObj.slug || itemObj._id || ''),
+              description: String(itemObj.description || itemObj.subtitle || itemObj.role || ''),
+              imageUrl: String(itemObj.imageUrl || '/api/placeholder/207/307'),
+              imageAlt: String(itemObj.imageAlt || itemObj.title || 'Image'),
+              featured: Boolean(itemObj.featured),
+              ...itemObj // Include all original properties
+            };
+            
+            return transformed;
+          });
+        }
+        
         // Apply filters if provided
-        let filteredData = data;
+        let filteredData = transformedData;
         if (filters) {
           if (filters.featured) {
-            filteredData = data.filter((item: Service) => item.featured === true);
+            filteredData = transformedData.filter((item: GridItem) => item.featured === true);
           }
           if (filters.limit && filters.limit > 0) {
             filteredData = filteredData.slice(0, filters.limit);
           }
         }
         
-        // Only set services if we have data, otherwise show empty array
+        // Only set items if we have data, otherwise show empty array
         if (filteredData && filteredData.length > 0) {
-          setServices(filteredData);
+          setItems(filteredData);
         } else {
           console.log(`No ${schemaType} found, hiding section`);
-          setServices([]);
+          setItems([]);
         }
       } catch (error) {
         console.error(`Error fetching ${schemaType}:`, error);
-        setServices([]);
+        setItems([]);
       } finally {
         setLoading(false);
       }
@@ -109,8 +127,8 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
     );
   }
 
-  // If no services are available, don't render the section
-  if (services.length === 0) {
+  // If no items are available, don't render the section
+  if (items.length === 0) {
     return null;
   }
 
@@ -125,8 +143,8 @@ const ThumbnailSection = ({ schemaType = 'service', filters }: ThumbnailSectionP
             </h6>
           </div> */}
 
-        {/* Services Grid */}
-        <ServicesGrid gridData={services} schemaUrl={schemaType} />
+        {/* Grid */}
+        <ServicesGrid gridData={items} schemaUrl={schemaType} />
         </div>
       </div>
     </section>

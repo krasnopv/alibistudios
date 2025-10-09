@@ -96,7 +96,7 @@ export default function Home() {
         })}
         
         {/* Fallback static content if no dynamic content */}
-        {(!pageData?.content || pageData.content.length === 0) && (
+        {/* {(!pageData?.content || pageData.content.length === 0) && (
           <>
             <CTASection />
             <ThumbnailSection />
@@ -105,7 +105,7 @@ export default function Home() {
             <Films />
             <Awards />
           </>
-        )}
+        )} */}
       </main>
     </div>
   );
