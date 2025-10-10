@@ -115,6 +115,66 @@ const VideoWithThumbnail = ({
   );
 };
 
+interface EmbedWithThumbnailProps {
+  embedUrl: string;
+  thumbnailUrl?: string;
+  thumbnailAlt?: string;
+  videoId: string;
+  onLoadStart: (videoId: string) => void;
+  onCanPlay: (videoId: string) => void;
+  onError: (videoId: string) => void;
+  isLoading: boolean;
+  className?: string;
+  title?: string;
+}
+
+const EmbedWithThumbnail = ({ 
+  embedUrl, 
+  thumbnailUrl, 
+  thumbnailAlt, 
+  videoId, 
+  onLoadStart, 
+  onCanPlay, 
+  onError, 
+  isLoading,
+  className = "w-full h-full",
+  title = "Video trailer"
+}: EmbedWithThumbnailProps) => {
+  return (
+    <div className="relative w-full h-full">
+      {/* Iframe Element */}
+      <iframe
+        src={embedUrl}
+        className={className}
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        allowFullScreen
+        title={title}
+        loading="eager"
+        onLoad={() => {
+          // Simulate loading delay for iframe
+          onLoadStart(videoId);
+          setTimeout(() => {
+            onCanPlay(videoId);
+          }, 2000); // Wait 2 seconds for iframe to load
+        }}
+        onError={() => onError(videoId)}
+      />
+      
+      {/* Thumbnail Overlay - Show while loading */}
+      {isLoading && thumbnailUrl && (
+        <div className="absolute inset-0 bg-black">
+          <img
+            src={thumbnailUrl}
+            alt={thumbnailAlt || 'Video thumbnail'}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProjectPage = () => {
   const params = useParams();
   const projectSlug = params.slug;
@@ -260,16 +320,20 @@ const ProjectPage = () => {
                               ? videoUrl.split('v=')[1].split('&')[0]
                               : videoUrl.split('youtu.be/')[1].split('?')[0];
                             const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                            const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
                             
                             return (
-                              <iframe
-                                src={embedUrl}
+                              <EmbedWithThumbnail
+                                embedUrl={embedUrl}
+                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                                videoId={mobileYouTubeId}
+                                onLoadStart={handleVideoLoadStart}
+                                onCanPlay={handleVideoCanPlay}
+                                onError={handleVideoError}
+                                isLoading={videoLoadingStates[mobileYouTubeId] || false}
                                 className="w-full h-full"
-                                frameBorder="0"
-                                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                                allowFullScreen
                                 title="Video trailer"
-                                loading="eager"
                               />
                             );
                           }
@@ -278,16 +342,20 @@ const ProjectPage = () => {
                           if (videoUrl.includes('vimeo.com/')) {
                             const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
                             const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
+                            const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
                             
                             return (
-                              <iframe
-                                src={embedUrl}
+                              <EmbedWithThumbnail
+                                embedUrl={embedUrl}
+                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                                videoId={mobileVimeoId}
+                                onLoadStart={handleVideoLoadStart}
+                                onCanPlay={handleVideoCanPlay}
+                                onError={handleVideoError}
+                                isLoading={videoLoadingStates[mobileVimeoId] || false}
                                 className="w-full h-full"
-                                frameBorder="0"
-                                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                                allowFullScreen
                                 title="Video trailer"
-                                loading="eager"
                               />
                             );
                           }
@@ -496,16 +564,20 @@ const ProjectPage = () => {
                                 ? videoUrl.split('v=')[1].split('&')[0]
                                 : videoUrl.split('youtu.be/')[1].split('?')[0];
                               const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                              const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
                               
                               return (
-                                <iframe
-                                  src={embedUrl}
+                                <EmbedWithThumbnail
+                                  embedUrl={embedUrl}
+                                  thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                  thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                                  videoId={desktopYouTubeId}
+                                  onLoadStart={handleVideoLoadStart}
+                                  onCanPlay={handleVideoCanPlay}
+                                  onError={handleVideoError}
+                                  isLoading={videoLoadingStates[desktopYouTubeId] || false}
                                   className="w-full h-full"
-                                  frameBorder="0"
-                                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                                  allowFullScreen
                                   title="Video trailer"
-                                  loading="eager"
                                 />
                               );
                             }
@@ -514,16 +586,20 @@ const ProjectPage = () => {
                             if (videoUrl.includes('vimeo.com/')) {
                               const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
                               const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
+                              const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
                               
                               return (
-                                <iframe
-                                  src={embedUrl}
+                                <EmbedWithThumbnail
+                                  embedUrl={embedUrl}
+                                  thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                  thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                                  videoId={desktopVimeoId}
+                                  onLoadStart={handleVideoLoadStart}
+                                  onCanPlay={handleVideoCanPlay}
+                                  onError={handleVideoError}
+                                  isLoading={videoLoadingStates[desktopVimeoId] || false}
                                   className="w-full h-full"
-                                  frameBorder="0"
-                                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                                  allowFullScreen
                                   title="Video trailer"
-                                  loading="eager"
                                 />
                               );
                             }
