@@ -283,7 +283,36 @@ const ProjectPage = () => {
   };
 
   const handleToggleSound = (videoId: string) => {
-    setVideoMuteStates(prev => ({ ...prev, [videoId]: !prev[videoId] }));
+    const newMuteState = !videoMuteStates[videoId];
+    setVideoMuteStates(prev => ({ ...prev, [videoId]: newMuteState }));
+    
+    // For YouTube videos, use YouTube API to control sound without restarting
+    if (videoId.includes('youtube')) {
+      const iframe = document.querySelector(`iframe[title="Video trailer"]`) as HTMLIFrameElement;
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            event: 'command',
+            func: newMuteState ? 'mute' : 'unMute'
+          }),
+          '*'
+        );
+      }
+    }
+    
+    // For Vimeo videos, use Vimeo API to control sound without restarting
+    if (videoId.includes('vimeo')) {
+      const iframe = document.querySelector(`iframe[title="Video trailer"]`) as HTMLIFrameElement;
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            method: newMuteState ? 'setVolume' : 'setVolume',
+            value: newMuteState ? 0 : 1
+          }),
+          '*'
+        );
+      }
+    }
   };
 
   const getOptimalThumbnail = (videoTrailer: Project['videoTrailer'], containerWidth: number = 800) => {
@@ -424,8 +453,7 @@ const ProjectPage = () => {
                               ? videoUrl.split('v=')[1].split('&')[0]
                               : videoUrl.split('youtu.be/')[1].split('?')[0];
                             const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
-                            const isMuted = videoMuteStates[mobileYouTubeId] !== false;
-                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                             
                             return (
                               <IframeWithThumbnail
@@ -447,8 +475,7 @@ const ProjectPage = () => {
                           if (videoUrl.includes('vimeo.com/')) {
                             const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
                             const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
-                            const isMuted = videoMuteStates[mobileVimeoId] !== false;
-                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1&controls=0&title=0&byline=0&portrait=0`;
+                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`;
                             
                             return (
                               <IframeWithThumbnail
@@ -672,8 +699,7 @@ const ProjectPage = () => {
                                 ? videoUrl.split('v=')[1].split('&')[0]
                                 : videoUrl.split('youtu.be/')[1].split('?')[0];
                               const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
-                              const isMuted = videoMuteStates[desktopYouTubeId] !== false;
-                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
+                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                               
                               return (
                                 <IframeWithThumbnail
@@ -695,8 +721,7 @@ const ProjectPage = () => {
                             if (videoUrl.includes('vimeo.com/')) {
                               const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
                               const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
-                              const isMuted = videoMuteStates[desktopVimeoId] !== false;
-                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1&controls=0&title=0&byline=0&portrait=0`;
+                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`;
                               
                               return (
                                 <IframeWithThumbnail
