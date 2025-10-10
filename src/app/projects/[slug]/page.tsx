@@ -423,8 +423,9 @@ const ProjectPage = () => {
                             const videoId = videoUrl.includes('youtube.com/watch?v=') 
                               ? videoUrl.split('v=')[1].split('&')[0]
                               : videoUrl.split('youtu.be/')[1].split('?')[0];
-                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                             const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
+                            const isMuted = videoMuteStates[mobileYouTubeId] !== false;
+                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                             
                             return (
                               <IframeWithThumbnail
@@ -445,8 +446,9 @@ const ProjectPage = () => {
                           // For Vimeo videos
                           if (videoUrl.includes('vimeo.com/')) {
                             const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
-                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`;
                             const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
+                            const isMuted = videoMuteStates[mobileVimeoId] !== false;
+                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1&controls=0&title=0&byline=0&portrait=0`;
                             
                             return (
                               <IframeWithThumbnail
@@ -669,8 +671,9 @@ const ProjectPage = () => {
                               const videoId = videoUrl.includes('youtube.com/watch?v=') 
                                 ? videoUrl.split('v=')[1].split('&')[0]
                                 : videoUrl.split('youtu.be/')[1].split('?')[0];
-                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                               const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
+                              const isMuted = videoMuteStates[desktopYouTubeId] !== false;
+                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                               
                               return (
                                 <IframeWithThumbnail
@@ -691,8 +694,9 @@ const ProjectPage = () => {
                             // For Vimeo videos
                             if (videoUrl.includes('vimeo.com/')) {
                               const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
-                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0`;
                               const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
+                              const isMuted = videoMuteStates[desktopVimeoId] !== false;
+                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1&controls=0&title=0&byline=0&portrait=0`;
                               
                               return (
                                 <IframeWithThumbnail
