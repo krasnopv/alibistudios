@@ -142,6 +142,7 @@ const VideoWithThumbnail = ({
           <div className="text-white text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
             <p className="text-sm">Loading video...</p>
+            <p className="text-xs text-gray-400 mt-1">No thumbnail available</p>
           </div>
         </div>
       )}
@@ -236,6 +237,7 @@ const EmbedWithThumbnail = ({
           <div className="text-white text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
             <p className="text-sm">Loading video...</p>
+            <p className="text-xs text-gray-400 mt-1">No thumbnail available</p>
           </div>
         </div>
       )}
@@ -309,6 +311,8 @@ const ProjectPage = () => {
         console.log('Video trailer data:', data.videoTrailer);
         console.log('Thumbnail URL:', data.videoTrailer?.thumbnailUrl);
         console.log('Thumbnail Alt:', data.videoTrailer?.thumbnailAlt);
+        console.log('Has thumbnail URL:', !!data.videoTrailer?.thumbnailUrl);
+        console.log('Thumbnail URL type:', typeof data.videoTrailer?.thumbnailUrl);
         setProject(data);
       } catch (error) {
         console.error('Error fetching project:', error);
