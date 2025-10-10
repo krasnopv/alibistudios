@@ -281,21 +281,23 @@ h2 {
     /* Services grid staggered margins */
     @media (min-width: 768px) and (max-width: 1023px) {
       .service-card:nth-child(2) {
-        margin-top: 55%;
+        margin-top: 50%;
       }
       
-      .service-card:nth-child(3),
-      .service-card:nth-child(5),
-      .service-card:nth-child(7),
-      .service-card:nth-child(9) {
-        margin-top: -18%;
+      .service-card:nth-child(2n+3) {
+        margin-top: -33%;
       }
       
-      .service-card:nth-child(4),
-      .service-card:nth-child(6),
-      .service-card:nth-child(8),
-      .service-card:nth-child(10) {
-        margin-top: 45%;
+      .service-card:nth-child(2n+4) {
+        margin-top: 23%;
+      }
+      
+      .service-card:nth-child(2n+8) {
+        margin-top: 25%;
+      }
+      
+      .service-card:nth-child(2n+12) {
+        margin-top: 40%;
       }
     }
     
@@ -304,17 +306,11 @@ h2 {
         margin-top: 50%;
       }
       
-      .service-card:nth-child(3),
-      .service-card:nth-child(5),
-      .service-card:nth-child(7),
-      .service-card:nth-child(9) {
+      .service-card:nth-child(2n+3) {
         margin-top: -23%;
       }
       
-      .service-card:nth-child(4),
-      .service-card:nth-child(6),
-      .service-card:nth-child(8),
-      .service-card:nth-child(10) {
+      .service-card:nth-child(2n+4) {
         margin-top: 33%;
       }
     }
@@ -324,17 +320,11 @@ h2 {
         margin-top: 55%;
       }
       
-      .service-card:nth-child(3),
-      .service-card:nth-child(5),
-      .service-card:nth-child(7),
-      .service-card:nth-child(9) {
+      .service-card:nth-child(2n+3) {
         margin-top: -22%;
       }
       
-      .service-card:nth-child(4),
-      .service-card:nth-child(6),
-      .service-card:nth-child(8),
-      .service-card:nth-child(10) {
+      .service-card:nth-child(2n+4) {
         margin-top: 32%;
       }
     }
@@ -344,17 +334,11 @@ h2 {
         margin-top: 45%;
       }
       
-      .service-card:nth-child(3),
-      .service-card:nth-child(5),
-      .service-card:nth-child(7),
-      .service-card:nth-child(9) {
+      .service-card:nth-child(2n+3) {
         margin-top: -18%;
       }
       
-      .service-card:nth-child(4),
-      .service-card:nth-child(6),
-      .service-card:nth-child(8),
-      .service-card:nth-child(10) {
+      .service-card:nth-child(2n+4) {
         margin-top: 28%;
       }
     }

@@ -74,8 +74,6 @@ interface VideoWithThumbnailProps {
   onError: (videoId: string) => void;
   isLoading: boolean;
   className?: string;
-  isMuted: boolean;
-  onToggleSound: (videoId: string) => void;
 }
 
 const VideoWithThumbnail = ({ 
@@ -87,9 +85,7 @@ const VideoWithThumbnail = ({
   onCanPlay, 
   onError, 
   isLoading,
-  className = "w-full h-full object-cover",
-  isMuted,
-  onToggleSound
+  className = "w-full h-full object-cover"
 }: VideoWithThumbnailProps) => {
   return (
     <div className="relative w-full h-full">
@@ -98,9 +94,10 @@ const VideoWithThumbnail = ({
         src={videoUrl}
         className={className}
         autoPlay
-        muted={isMuted}
+        muted
         loop
         playsInline
+        controls
         preload="auto"
         onLoadStart={() => onLoadStart(videoId)}
         onCanPlay={() => onCanPlay(videoId)}
@@ -117,28 +114,6 @@ const VideoWithThumbnail = ({
           />
         </div>
       )}
-      
-      {/* Sound Toggle Button */}
-      <button
-        onClick={() => onToggleSound(videoId)}
-        className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
-        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-      >
-        {isMuted ? (
-          // Muted icon (speaker with X)
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <line x1="23" y1="9" x2="17" y2="15"></line>
-            <line x1="17" y1="9" x2="23" y2="15"></line>
-          </svg>
-        ) : (
-          // Unmuted icon (speaker)
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        )}
-      </button>
     </div>
   );
 };
@@ -152,8 +127,6 @@ interface IframeWithThumbnailProps {
   isLoading: boolean;
   className?: string;
   title?: string;
-  isMuted: boolean;
-  onToggleSound: (iframeId: string) => void;
 }
 
 const IframeWithThumbnail = ({ 
@@ -164,9 +137,7 @@ const IframeWithThumbnail = ({
   onLoad, 
   isLoading,
   className = "w-full h-full",
-  title = "Video trailer",
-  isMuted,
-  onToggleSound
+  title = "Video trailer"
 }: IframeWithThumbnailProps) => {
   return (
     <div className="relative w-full h-full">
@@ -192,29 +163,6 @@ const IframeWithThumbnail = ({
           />
         </div>
       )}
-      
-      {/* Sound Toggle Button - Note: This is for visual consistency only, iframe sound control is limited */}
-      <button
-        onClick={() => onToggleSound(iframeId)}
-        className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
-        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-        title="Note: Sound control for embedded videos is limited"
-      >
-        {isMuted ? (
-          // Muted icon (speaker with X)
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <line x1="23" y1="9" x2="17" y2="15"></line>
-            <line x1="17" y1="9" x2="23" y2="15"></line>
-          </svg>
-        ) : (
-          // Unmuted icon (speaker)
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        )}
-      </button>
     </div>
   );
 };
@@ -226,7 +174,6 @@ const ProjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [showVideoOverlay, setShowVideoOverlay] = useState(false);
   const [videoLoadingStates, setVideoLoadingStates] = useState<{[key: string]: boolean}>({});
-  const [videoMuteStates, setVideoMuteStates] = useState<{[key: string]: boolean}>({});
 
   const renderRichText = (description: string | unknown) => {
     // Handle null/undefined
@@ -270,10 +217,6 @@ const ProjectPage = () => {
   const handleVideoError = (videoId: string) => {
     // Hide thumbnail on error
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
-  };
-
-  const handleToggleSound = (videoId: string) => {
-    setVideoMuteStates(prev => ({ ...prev, [videoId]: !prev[videoId] }));
   };
 
   const handleIframeLoad = (iframeId: string) => {
@@ -326,13 +269,6 @@ const ProjectPage = () => {
             }
             
             setVideoLoadingStates(initialStates);
-            
-            // Initialize mute states (all videos start muted)
-            const initialMuteStates: {[key: string]: boolean} = {};
-            Object.keys(initialStates).forEach(key => {
-              initialMuteStates[key] = true;
-            });
-            setVideoMuteStates(initialMuteStates);
           }
         }
       } catch (error) {
@@ -432,8 +368,6 @@ const ProjectPage = () => {
                                 isLoading={videoLoadingStates[mobileYouTubeId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
-                                isMuted={videoMuteStates[mobileYouTubeId] || true}
-                                onToggleSound={handleToggleSound}
                               />
                             );
                           }
@@ -454,8 +388,6 @@ const ProjectPage = () => {
                                 isLoading={videoLoadingStates[mobileVimeoId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
-                                isMuted={videoMuteStates[mobileVimeoId] || true}
-                                onToggleSound={handleToggleSound}
                               />
                             );
                           }
@@ -473,8 +405,6 @@ const ProjectPage = () => {
                               onError={handleVideoError}
                               isLoading={videoLoadingStates[mobileVideoId] || false}
                               className="w-full h-full object-cover"
-                              isMuted={videoMuteStates[mobileVideoId] || true}
-                              onToggleSound={handleToggleSound}
                             />
                           );
                         }
@@ -678,8 +608,6 @@ const ProjectPage = () => {
                                   isLoading={videoLoadingStates[desktopYouTubeId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
-                                  isMuted={videoMuteStates[desktopYouTubeId] || true}
-                                  onToggleSound={handleToggleSound}
                                 />
                               );
                             }
@@ -700,8 +628,6 @@ const ProjectPage = () => {
                                   isLoading={videoLoadingStates[desktopVimeoId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
-                                  isMuted={videoMuteStates[desktopVimeoId] || true}
-                                  onToggleSound={handleToggleSound}
                                 />
                               );
                             }
@@ -719,8 +645,6 @@ const ProjectPage = () => {
                                 onError={handleVideoError}
                                 isLoading={videoLoadingStates[desktopVideoId] || false}
                                 className="w-full h-full object-cover"
-                                isMuted={videoMuteStates[desktopVideoId] || true}
-                                onToggleSound={handleToggleSound}
                               />
                             );
                           }
