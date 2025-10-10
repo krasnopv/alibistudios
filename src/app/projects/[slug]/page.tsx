@@ -84,6 +84,17 @@ const VideoWithThumbnail = ({
   isLoading,
   className = "w-full h-full object-cover"
 }: VideoWithThumbnailProps) => {
+  console.log('VideoWithThumbnail render:', { videoId, isLoading, thumbnailUrl });
+  
+  useEffect(() => {
+    if (isLoading && !thumbnailUrl) {
+      console.log('Video loading but no thumbnail URL for:', videoId);
+    }
+    if (!isLoading) {
+      console.log('Video not loading for:', videoId);
+    }
+  }, [isLoading, thumbnailUrl, videoId]);
+  
   return (
     <div className="relative w-full h-full">
       {/* Video Element */}
@@ -103,11 +114,13 @@ const VideoWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black">
+        <div className="absolute inset-0 bg-black z-10">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
+            onLoad={() => console.log('Video thumbnail loaded:', thumbnailUrl)}
+            onError={() => console.log('Video thumbnail failed to load:', thumbnailUrl)}
           />
         </div>
       )}
@@ -140,6 +153,17 @@ const EmbedWithThumbnail = ({
   className = "w-full h-full",
   title = "Video trailer"
 }: EmbedWithThumbnailProps) => {
+  console.log('EmbedWithThumbnail render:', { videoId, isLoading, thumbnailUrl });
+  
+  useEffect(() => {
+    if (isLoading && !thumbnailUrl) {
+      console.log('Embed loading but no thumbnail URL for:', videoId);
+    }
+    if (!isLoading) {
+      console.log('Embed not loading for:', videoId);
+    }
+  }, [isLoading, thumbnailUrl, videoId]);
+  
   return (
     <div className="relative w-full h-full">
       {/* Iframe Element */}
@@ -163,11 +187,13 @@ const EmbedWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black">
+        <div className="absolute inset-0 bg-black z-10">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
+            onLoad={() => console.log('Embed thumbnail loaded:', thumbnailUrl)}
+            onError={() => console.log('Embed thumbnail failed to load:', thumbnailUrl)}
           />
         </div>
       )}
@@ -212,17 +238,21 @@ const ProjectPage = () => {
   };
 
   const handleVideoLoadStart = (videoId: string) => {
+    console.log('Video load start:', videoId);
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: true }));
   };
 
   const handleVideoCanPlay = (videoId: string) => {
+    console.log('Video can play:', videoId);
     // Wait 1 second after video can play, then hide thumbnail
     setTimeout(() => {
+      console.log('Hiding thumbnail for:', videoId);
       setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
     }, 1000);
   };
 
   const handleVideoError = (videoId: string) => {
+    console.log('Video error:', videoId);
     // Hide thumbnail on error
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
   };
@@ -234,6 +264,9 @@ const ProjectPage = () => {
         const data = await response.json();
         console.log('Project data:', data);
         console.log('Project images:', data.images);
+        console.log('Video trailer data:', data.videoTrailer);
+        console.log('Thumbnail URL:', data.videoTrailer?.thumbnailUrl);
+        console.log('Thumbnail Alt:', data.videoTrailer?.thumbnailAlt);
         setProject(data);
       } catch (error) {
         console.error('Error fetching project:', error);
