@@ -32,6 +32,9 @@ export async function GET(
           "slug": slug.current,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt,
+          "imageSmall": image.asset->url + "?w=300&h=169&fit=crop&auto=format",
+          "imageMedium": image.asset->url + "?w=600&h=338&fit=crop&auto=format",
+          "imageLarge": image.asset->url + "?w=900&h=506&fit=crop&auto=format",
           subServices[]->{
             _id,
             title,

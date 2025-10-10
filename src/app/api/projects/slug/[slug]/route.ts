@@ -24,7 +24,10 @@ export async function GET(
           "videoFileUrl": videoFile.asset->url,
           thumbnail,
           "thumbnailUrl": thumbnail.asset->url,
-          "thumbnailAlt": thumbnail.alt
+          "thumbnailAlt": thumbnail.alt,
+          "thumbnailSmall": thumbnail.asset->url + "?w=400&h=225&fit=crop&auto=format",
+          "thumbnailMedium": thumbnail.asset->url + "?w=800&h=450&fit=crop&auto=format",
+          "thumbnailLarge": thumbnail.asset->url + "?w=1200&h=675&fit=crop&auto=format"
         },
         credits[] {
           role,

@@ -13,6 +13,9 @@ interface GridItem {
   url?: string;
   imageUrl: string;
   imageAlt: string;
+  imageSmall?: string;
+  imageMedium?: string;
+  imageLarge?: string;
   image?: unknown;
 }
 
@@ -76,6 +79,17 @@ const ServicesGrid = ({
   
   const parallaxTransforms = [0, parallax1, parallax2, parallax3, parallax4, parallax5, parallax6, parallax7, parallax8, parallax9];
   
+  // Helper function to get optimal image size
+  const getOptimalImage = (item: GridItem, containerWidth: number = 600) => {
+    if (containerWidth <= 300) {
+      return item.imageSmall || item.imageUrl;
+    } else if (containerWidth <= 600) {
+      return item.imageMedium || item.imageUrl;
+    } else {
+      return item.imageLarge || item.imageUrl;
+    }
+  };
+  
   // Calculate dynamic height based on parallax movement
   const maxParallax = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);
   const dynamicHeight = 'auto';
@@ -90,7 +104,9 @@ const ServicesGrid = ({
       style={{ height: isMobile ? 'auto' : dynamicHeight }}
     >
       {gridData.map((item, index) => {
-        const imageUrl = item.imageUrl;
+        // Get optimal image size based on container width
+        const containerWidth = isMobile ? 300 : 600;
+        const imageUrl = getOptimalImage(item, containerWidth);
         const url = item.slug ? `/${schemaUrl}/${item.slug}` : `/${schemaUrl}/${item.title.toLowerCase().replace(/\s+/g, '-')}`;
         
         // Handle description/subtitle that might be a Sanity Portable Text object

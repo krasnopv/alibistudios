@@ -20,6 +20,9 @@ interface Project {
     videoFileUrl?: string;
     thumbnailUrl?: string;
     thumbnailAlt?: string;
+    thumbnailSmall?: string;
+    thumbnailMedium?: string;
+    thumbnailLarge?: string;
   };
   credits: {
     role: string;
@@ -223,6 +226,19 @@ const ProjectPage = () => {
     }, 1000);
   };
 
+  const getOptimalThumbnail = (videoTrailer: Project['videoTrailer'], containerWidth: number = 800) => {
+    if (!videoTrailer) return undefined;
+    
+    // Choose thumbnail size based on container width
+    if (containerWidth <= 400) {
+      return videoTrailer.thumbnailSmall || videoTrailer.thumbnailUrl;
+    } else if (containerWidth <= 800) {
+      return videoTrailer.thumbnailMedium || videoTrailer.thumbnailUrl;
+    } else {
+      return videoTrailer.thumbnailLarge || videoTrailer.thumbnailUrl;
+    }
+  };
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -345,7 +361,7 @@ const ProjectPage = () => {
                             return (
                               <IframeWithThumbnail
                                 embedUrl={embedUrl}
-                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 400)}
                                 thumbnailAlt={project.videoTrailer.thumbnailAlt}
                                 iframeId={mobileYouTubeId}
                                 onLoad={handleIframeLoad}
@@ -365,7 +381,7 @@ const ProjectPage = () => {
                             return (
                               <IframeWithThumbnail
                                 embedUrl={embedUrl}
-                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 400)}
                                 thumbnailAlt={project.videoTrailer.thumbnailAlt}
                                 iframeId={mobileVimeoId}
                                 onLoad={handleIframeLoad}
@@ -381,7 +397,7 @@ const ProjectPage = () => {
                           return (
                             <VideoWithThumbnail
                               videoUrl={videoUrl}
-                              thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                              thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 400)}
                               thumbnailAlt={project.videoTrailer.thumbnailAlt}
                               videoId={mobileVideoId}
                               onLoadStart={handleVideoLoadStart}
@@ -396,7 +412,7 @@ const ProjectPage = () => {
                         // Fallback to thumbnail if no video URL
                         return (
                           <img
-                            src={project.videoTrailer.thumbnailUrl}
+                            src={getOptimalThumbnail(project.videoTrailer, 400)}
                             alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
                             className="w-full h-full object-cover"
                           />
@@ -585,7 +601,7 @@ const ProjectPage = () => {
                               return (
                                 <IframeWithThumbnail
                                   embedUrl={embedUrl}
-                                  thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                  thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 800)}
                                   thumbnailAlt={project.videoTrailer.thumbnailAlt}
                                   iframeId={desktopYouTubeId}
                                   onLoad={handleIframeLoad}
@@ -605,7 +621,7 @@ const ProjectPage = () => {
                               return (
                                 <IframeWithThumbnail
                                   embedUrl={embedUrl}
-                                  thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                  thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 800)}
                                   thumbnailAlt={project.videoTrailer.thumbnailAlt}
                                   iframeId={desktopVimeoId}
                                   onLoad={handleIframeLoad}
@@ -621,7 +637,7 @@ const ProjectPage = () => {
                             return (
                               <VideoWithThumbnail
                                 videoUrl={videoUrl}
-                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailUrl={getOptimalThumbnail(project.videoTrailer, 800)}
                                 thumbnailAlt={project.videoTrailer.thumbnailAlt}
                                 videoId={desktopVideoId}
                                 onLoadStart={handleVideoLoadStart}
@@ -636,7 +652,7 @@ const ProjectPage = () => {
                           // Fallback to thumbnail if no video URL
                           return (
                             <img
-                              src={project.videoTrailer.thumbnailUrl}
+                              src={getOptimalThumbnail(project.videoTrailer, 800)}
                               alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
                               className="w-full h-full object-cover"
                             />

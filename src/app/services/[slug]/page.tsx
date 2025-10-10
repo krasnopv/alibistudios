@@ -49,6 +49,9 @@ interface Service {
     slug: string;
     imageUrl: string;
     imageAlt: string;
+    imageSmall?: string;
+    imageMedium?: string;
+    imageLarge?: string;
     subServices?: SubService[];
   }[];
   subServices?: SubService[];
@@ -137,6 +140,7 @@ const ServicePage = () => {
       setIsMuted(!isMuted);
     }
   };
+
 
   useEffect(() => {
     const fetchData = async () => {
