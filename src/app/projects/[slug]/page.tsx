@@ -84,23 +84,12 @@ const VideoWithThumbnail = ({
   isLoading,
   className = "w-full h-full object-cover"
 }: VideoWithThumbnailProps) => {
-  console.log('VideoWithThumbnail render:', { videoId, isLoading, thumbnailUrl });
-  
-  useEffect(() => {
-    if (isLoading && !thumbnailUrl) {
-      console.log('Video loading but no thumbnail URL for:', videoId);
-    }
-    if (!isLoading) {
-      console.log('Video not loading for:', videoId);
-    }
-  }, [isLoading, thumbnailUrl, videoId]);
-  
   return (
     <div className="relative w-full h-full">
       {/* Video Element */}
       <video
         src={videoUrl}
-        className={`${className} ${isLoading ? 'z-10' : 'z-20'}`}
+        className={className}
         autoPlay
         muted
         loop
@@ -114,131 +103,61 @@ const VideoWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-900">
+        <div className="absolute inset-0 bg-black">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
-            onLoad={() => console.log('Video thumbnail loaded:', thumbnailUrl)}
-            onError={(e) => {
-              console.log('Video thumbnail failed to load:', thumbnailUrl);
-              console.log('Error details:', e);
-              // Hide the overlay if image fails to load
-              e.currentTarget.style.display = 'none';
-            }}
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-            <div className="text-white text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-              <p className="text-sm">Loading video...</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Loading overlay when no thumbnail URL */}
-      {isLoading && !thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
-          <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-            <p className="text-sm">Loading video...</p>
-            <p className="text-xs text-gray-400 mt-1">No thumbnail available</p>
-          </div>
         </div>
       )}
     </div>
   );
 };
 
-interface EmbedWithThumbnailProps {
+interface IframeWithThumbnailProps {
   embedUrl: string;
   thumbnailUrl?: string;
   thumbnailAlt?: string;
-  videoId: string;
-  onLoadStart: (videoId: string) => void;
-  onCanPlay: (videoId: string) => void;
-  onError: (videoId: string) => void;
+  iframeId: string;
+  onLoad: (iframeId: string) => void;
   isLoading: boolean;
   className?: string;
   title?: string;
 }
 
-const EmbedWithThumbnail = ({ 
+const IframeWithThumbnail = ({ 
   embedUrl, 
   thumbnailUrl, 
   thumbnailAlt, 
-  videoId, 
-  onLoadStart, 
-  onCanPlay, 
-  onError, 
+  iframeId, 
+  onLoad, 
   isLoading,
   className = "w-full h-full",
   title = "Video trailer"
-}: EmbedWithThumbnailProps) => {
-  console.log('EmbedWithThumbnail render:', { videoId, isLoading, thumbnailUrl });
-  
-  useEffect(() => {
-    if (isLoading && !thumbnailUrl) {
-      console.log('Embed loading but no thumbnail URL for:', videoId);
-    }
-    if (!isLoading) {
-      console.log('Embed not loading for:', videoId);
-    }
-  }, [isLoading, thumbnailUrl, videoId]);
-  
+}: IframeWithThumbnailProps) => {
   return (
     <div className="relative w-full h-full">
       {/* Iframe Element */}
       <iframe
         src={embedUrl}
-        className={`${className} ${isLoading ? 'z-10' : 'z-20'}`}
+        className={className}
         frameBorder="0"
         allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
         allowFullScreen
         title={title}
         loading="eager"
-        onLoad={() => {
-          // Simulate loading delay for iframe
-          onLoadStart(videoId);
-          setTimeout(() => {
-            onCanPlay(videoId);
-          }, 4000); // Wait 4 seconds for iframe to load
-        }}
-        onError={() => onError(videoId)}
+        onLoad={() => onLoad(iframeId)}
       />
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-900">
+        <div className="absolute inset-0 bg-black">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
-            onLoad={() => console.log('Embed thumbnail loaded:', thumbnailUrl)}
-            onError={(e) => {
-              console.log('Embed thumbnail failed to load:', thumbnailUrl);
-              console.log('Error details:', e);
-              // Hide the overlay if image fails to load
-              e.currentTarget.style.display = 'none';
-            }}
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-            <div className="text-white text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-              <p className="text-sm">Loading video...</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Loading overlay when no thumbnail URL */}
-      {isLoading && !thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
-          <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-            <p className="text-sm">Loading video...</p>
-            <p className="text-xs text-gray-400 mt-1">No thumbnail available</p>
-          </div>
         </div>
       )}
     </div>
@@ -252,30 +171,6 @@ const ProjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [showVideoOverlay, setShowVideoOverlay] = useState(false);
   const [videoLoadingStates, setVideoLoadingStates] = useState<{[key: string]: boolean}>({});
-  
-  // Initialize loading state for videos with thumbnails
-  useEffect(() => {
-    if (project?.videoTrailer?.thumbnailUrl) {
-      const videoId = `mobile-video-${projectSlug}`;
-      const desktopVideoId = `desktop-video-${projectSlug}`;
-      const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
-      const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
-      const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
-      const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
-      
-      setVideoLoadingStates(prev => ({
-        ...prev,
-        [videoId]: true,
-        [desktopVideoId]: true,
-        [mobileYouTubeId]: true,
-        [desktopYouTubeId]: true,
-        [mobileVimeoId]: true,
-        [desktopVimeoId]: true
-      }));
-      
-      console.log('Initialized loading states for all videos');
-    }
-  }, [project?.videoTrailer?.thumbnailUrl, projectSlug]);
 
   const renderRichText = (description: string | unknown) => {
     // Handle null/undefined
@@ -306,23 +201,26 @@ const ProjectPage = () => {
   };
 
   const handleVideoLoadStart = (videoId: string) => {
-    console.log('Video load start:', videoId);
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: true }));
   };
 
   const handleVideoCanPlay = (videoId: string) => {
-    console.log('Video can play:', videoId);
-    // Wait 3 seconds after video can play, then hide thumbnail
+    // Wait 1 second after video can play, then hide thumbnail
     setTimeout(() => {
-      console.log('Hiding thumbnail for:', videoId);
       setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
-    }, 3000);
+    }, 1000);
   };
 
   const handleVideoError = (videoId: string) => {
-    console.log('Video error:', videoId);
     // Hide thumbnail on error
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
+  };
+
+  const handleIframeLoad = (iframeId: string) => {
+    // Wait 1 second after iframe loads, then hide thumbnail
+    setTimeout(() => {
+      setVideoLoadingStates(prev => ({ ...prev, [iframeId]: false }));
+    }, 1000);
   };
 
   useEffect(() => {
@@ -332,12 +230,31 @@ const ProjectPage = () => {
         const data = await response.json();
         console.log('Project data:', data);
         console.log('Project images:', data.images);
-        console.log('Video trailer data:', data.videoTrailer);
-        console.log('Thumbnail URL:', data.videoTrailer?.thumbnailUrl);
-        console.log('Thumbnail Alt:', data.videoTrailer?.thumbnailAlt);
-        console.log('Has thumbnail URL:', !!data.videoTrailer?.thumbnailUrl);
-        console.log('Thumbnail URL type:', typeof data.videoTrailer?.thumbnailUrl);
         setProject(data);
+        
+        // Initialize loading states for all video types
+        if (data.videoTrailer) {
+          const videoUrl = data.videoTrailer.type === 'upload' 
+            ? (data.videoTrailer.videoFileUrl || null)
+            : (data.videoTrailer.url || null);
+          
+          if (videoUrl) {
+            const initialStates: {[key: string]: boolean} = {};
+            
+            if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
+              initialStates[`mobile-youtube-${projectSlug}`] = true;
+              initialStates[`desktop-youtube-${projectSlug}`] = true;
+            } else if (videoUrl.includes('vimeo.com/')) {
+              initialStates[`mobile-vimeo-${projectSlug}`] = true;
+              initialStates[`desktop-vimeo-${projectSlug}`] = true;
+            } else {
+              initialStates[`mobile-video-${projectSlug}`] = true;
+              initialStates[`desktop-video-${projectSlug}`] = true;
+            }
+            
+            setVideoLoadingStates(initialStates);
+          }
+        }
       } catch (error) {
         console.error('Error fetching project:', error);
         setProject(null);
@@ -426,14 +343,12 @@ const ProjectPage = () => {
                             const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
                             
                             return (
-                              <EmbedWithThumbnail
+                              <IframeWithThumbnail
                                 embedUrl={embedUrl}
                                 thumbnailUrl={project.videoTrailer.thumbnailUrl}
                                 thumbnailAlt={project.videoTrailer.thumbnailAlt}
-                                videoId={mobileYouTubeId}
-                                onLoadStart={handleVideoLoadStart}
-                                onCanPlay={handleVideoCanPlay}
-                                onError={handleVideoError}
+                                iframeId={mobileYouTubeId}
+                                onLoad={handleIframeLoad}
                                 isLoading={videoLoadingStates[mobileYouTubeId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
@@ -448,14 +363,12 @@ const ProjectPage = () => {
                             const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
                             
                             return (
-                              <EmbedWithThumbnail
+                              <IframeWithThumbnail
                                 embedUrl={embedUrl}
                                 thumbnailUrl={project.videoTrailer.thumbnailUrl}
                                 thumbnailAlt={project.videoTrailer.thumbnailAlt}
-                                videoId={mobileVimeoId}
-                                onLoadStart={handleVideoLoadStart}
-                                onCanPlay={handleVideoCanPlay}
-                                onError={handleVideoError}
+                                iframeId={mobileVimeoId}
+                                onLoad={handleIframeLoad}
                                 isLoading={videoLoadingStates[mobileVimeoId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
@@ -670,14 +583,12 @@ const ProjectPage = () => {
                               const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
                               
                               return (
-                                <EmbedWithThumbnail
+                                <IframeWithThumbnail
                                   embedUrl={embedUrl}
                                   thumbnailUrl={project.videoTrailer.thumbnailUrl}
                                   thumbnailAlt={project.videoTrailer.thumbnailAlt}
-                                  videoId={desktopYouTubeId}
-                                  onLoadStart={handleVideoLoadStart}
-                                  onCanPlay={handleVideoCanPlay}
-                                  onError={handleVideoError}
+                                  iframeId={desktopYouTubeId}
+                                  onLoad={handleIframeLoad}
                                   isLoading={videoLoadingStates[desktopYouTubeId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
@@ -692,14 +603,12 @@ const ProjectPage = () => {
                               const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
                               
                               return (
-                                <EmbedWithThumbnail
+                                <IframeWithThumbnail
                                   embedUrl={embedUrl}
                                   thumbnailUrl={project.videoTrailer.thumbnailUrl}
                                   thumbnailAlt={project.videoTrailer.thumbnailAlt}
-                                  videoId={desktopVimeoId}
-                                  onLoadStart={handleVideoLoadStart}
-                                  onCanPlay={handleVideoCanPlay}
-                                  onError={handleVideoError}
+                                  iframeId={desktopVimeoId}
+                                  onLoad={handleIframeLoad}
                                   isLoading={videoLoadingStates[desktopVimeoId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
