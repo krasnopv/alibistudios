@@ -74,8 +74,8 @@ interface VideoWithThumbnailProps {
   onError: (videoId: string) => void;
   isLoading: boolean;
   className?: string;
-  isMuted?: boolean;
-  onToggleSound?: (videoId: string) => void;
+  isMuted: boolean;
+  onToggleSound: (videoId: string) => void;
 }
 
 const VideoWithThumbnail = ({ 
@@ -88,11 +88,11 @@ const VideoWithThumbnail = ({
   onError, 
   isLoading,
   className = "w-full h-full object-cover",
-  isMuted = true,
+  isMuted,
   onToggleSound
 }: VideoWithThumbnailProps) => {
   return (
-    <div className="relative w-full h-full" data-video-id={videoId}>
+    <div className="relative w-full h-full">
       {/* Video Element */}
       <video
         src={videoUrl}
@@ -119,28 +119,26 @@ const VideoWithThumbnail = ({
       )}
       
       {/* Sound Toggle Button */}
-      {onToggleSound && (
-        <button
-          onClick={() => onToggleSound(videoId)}
-          className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
-          aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-        >
-          {isMuted ? (
-            // Muted icon (speaker with X)
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <line x1="23" y1="9" x2="17" y2="15"></line>
-              <line x1="17" y1="9" x2="23" y2="15"></line>
-            </svg>
-          ) : (
-            // Unmuted icon (speaker)
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-          )}
-        </button>
-      )}
+      <button
+        onClick={() => onToggleSound(videoId)}
+        className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
+        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+      >
+        {isMuted ? (
+          // Muted icon (speaker with X)
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        ) : (
+          // Unmuted icon (speaker)
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        )}
+      </button>
     </div>
   );
 };
@@ -154,8 +152,8 @@ interface IframeWithThumbnailProps {
   isLoading: boolean;
   className?: string;
   title?: string;
-  isMuted?: boolean;
-  onToggleSound?: (iframeId: string) => void;
+  isMuted: boolean;
+  onToggleSound: (iframeId: string) => void;
 }
 
 const IframeWithThumbnail = ({ 
@@ -167,11 +165,11 @@ const IframeWithThumbnail = ({
   isLoading,
   className = "w-full h-full",
   title = "Video trailer",
-  isMuted = true,
+  isMuted,
   onToggleSound
 }: IframeWithThumbnailProps) => {
   return (
-    <div className="relative w-full h-full" data-video-id={iframeId}>
+    <div className="relative w-full h-full">
       {/* Iframe Element */}
       <iframe
         src={embedUrl}
@@ -195,29 +193,28 @@ const IframeWithThumbnail = ({
         </div>
       )}
       
-      {/* Sound Toggle Button */}
-      {onToggleSound && (
-        <button
-          onClick={() => onToggleSound(iframeId)}
-          className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
-          aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-        >
-          {isMuted ? (
-            // Muted icon (speaker with X)
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <line x1="23" y1="9" x2="17" y2="15"></line>
-              <line x1="17" y1="9" x2="23" y2="15"></line>
-            </svg>
-          ) : (
-            // Unmuted icon (speaker)
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-          )}
-        </button>
-      )}
+      {/* Sound Toggle Button - Note: This is for visual consistency only, iframe sound control is limited */}
+      <button
+        onClick={() => onToggleSound(iframeId)}
+        className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
+        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+        title="Note: Sound control for embedded videos is limited"
+      >
+        {isMuted ? (
+          // Muted icon (speaker with X)
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        ) : (
+          // Unmuted icon (speaker)
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        )}
+      </button>
     </div>
   );
 };
@@ -275,71 +272,15 @@ const ProjectPage = () => {
     setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
   };
 
+  const handleToggleSound = (videoId: string) => {
+    setVideoMuteStates(prev => ({ ...prev, [videoId]: !prev[videoId] }));
+  };
+
   const handleIframeLoad = (iframeId: string) => {
     // Wait 1 second after iframe loads, then hide thumbnail
     setTimeout(() => {
       setVideoLoadingStates(prev => ({ ...prev, [iframeId]: false }));
     }, 1000);
-  };
-
-  const handleToggleSound = (videoId: string) => {
-    const newMuteState = !videoMuteStates[videoId];
-    setVideoMuteStates(prev => ({ ...prev, [videoId]: newMuteState }));
-    
-    // For direct video files, find and control the video element
-    if (videoId.includes('video')) {
-      const videoContainer = document.querySelector(`[data-video-id="${videoId}"]`);
-      if (videoContainer) {
-        const videoElement = videoContainer.querySelector('video') as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.muted = newMuteState;
-        }
-      }
-    }
-    
-    // For YouTube/Vimeo videos, we need to reload the iframe with new parameters
-    if (videoId.includes('youtube') || videoId.includes('vimeo')) {
-      const iframeContainer = document.querySelector(`[data-video-id="${videoId}"]`);
-      if (iframeContainer) {
-        const iframe = iframeContainer.querySelector('iframe') as HTMLIFrameElement;
-        if (iframe) {
-          const currentSrc = iframe.src;
-          let newSrc = currentSrc;
-          
-          if (videoId.includes('youtube')) {
-            // Update YouTube URL parameters
-            if (newMuteState) {
-              newSrc = currentSrc.replace(/&mute=0/, '&mute=1').replace(/mute=0/, 'mute=1');
-              if (!currentSrc.includes('mute=')) {
-                newSrc += '&mute=1';
-              }
-            } else {
-              newSrc = currentSrc.replace(/&mute=1/, '&mute=0').replace(/mute=1/, 'mute=0');
-              if (!currentSrc.includes('mute=')) {
-                newSrc += '&mute=0';
-              }
-            }
-          } else if (videoId.includes('vimeo')) {
-            // Update Vimeo URL parameters
-            if (newMuteState) {
-              newSrc = currentSrc.replace(/&muted=0/, '&muted=1').replace(/muted=0/, 'muted=1');
-              if (!currentSrc.includes('muted=')) {
-                newSrc += '&muted=1';
-              }
-            } else {
-              newSrc = currentSrc.replace(/&muted=1/, '&muted=0').replace(/muted=1/, 'muted=0');
-              if (!currentSrc.includes('muted=')) {
-                newSrc += '&muted=0';
-              }
-            }
-          }
-          
-          if (newSrc !== currentSrc) {
-            iframe.src = newSrc;
-          }
-        }
-      }
-    }
   };
 
   const getOptimalThumbnail = (videoTrailer: Project['videoTrailer'], containerWidth: number = 800) => {
@@ -371,27 +312,26 @@ const ProjectPage = () => {
             : (data.videoTrailer.url || null);
           
           if (videoUrl) {
-            const initialLoadingStates: {[key: string]: boolean} = {};
-            const initialMuteStates: {[key: string]: boolean} = {};
+            const initialStates: {[key: string]: boolean} = {};
             
             if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
-              initialLoadingStates[`mobile-youtube-${projectSlug}`] = true;
-              initialLoadingStates[`desktop-youtube-${projectSlug}`] = true;
-              initialMuteStates[`mobile-youtube-${projectSlug}`] = true;
-              initialMuteStates[`desktop-youtube-${projectSlug}`] = true;
+              initialStates[`mobile-youtube-${projectSlug}`] = true;
+              initialStates[`desktop-youtube-${projectSlug}`] = true;
             } else if (videoUrl.includes('vimeo.com/')) {
-              initialLoadingStates[`mobile-vimeo-${projectSlug}`] = true;
-              initialLoadingStates[`desktop-vimeo-${projectSlug}`] = true;
-              initialMuteStates[`mobile-vimeo-${projectSlug}`] = true;
-              initialMuteStates[`desktop-vimeo-${projectSlug}`] = true;
+              initialStates[`mobile-vimeo-${projectSlug}`] = true;
+              initialStates[`desktop-vimeo-${projectSlug}`] = true;
             } else {
-              initialLoadingStates[`mobile-video-${projectSlug}`] = true;
-              initialLoadingStates[`desktop-video-${projectSlug}`] = true;
-              initialMuteStates[`mobile-video-${projectSlug}`] = true;
-              initialMuteStates[`desktop-video-${projectSlug}`] = true;
+              initialStates[`mobile-video-${projectSlug}`] = true;
+              initialStates[`desktop-video-${projectSlug}`] = true;
             }
             
-            setVideoLoadingStates(initialLoadingStates);
+            setVideoLoadingStates(initialStates);
+            
+            // Initialize mute states (all videos start muted)
+            const initialMuteStates: {[key: string]: boolean} = {};
+            Object.keys(initialStates).forEach(key => {
+              initialMuteStates[key] = true;
+            });
             setVideoMuteStates(initialMuteStates);
           }
         }
@@ -479,9 +419,8 @@ const ProjectPage = () => {
                             const videoId = videoUrl.includes('youtube.com/watch?v=') 
                               ? videoUrl.split('v=')[1].split('&')[0]
                               : videoUrl.split('youtu.be/')[1].split('?')[0];
+                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                             const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
-                            const isMuted = videoMuteStates[mobileYouTubeId] !== false;
-                            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                             
                             return (
                               <IframeWithThumbnail
@@ -493,7 +432,7 @@ const ProjectPage = () => {
                                 isLoading={videoLoadingStates[mobileYouTubeId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
-                                isMuted={videoMuteStates[mobileYouTubeId] !== false}
+                                isMuted={videoMuteStates[mobileYouTubeId] || true}
                                 onToggleSound={handleToggleSound}
                               />
                             );
@@ -502,9 +441,8 @@ const ProjectPage = () => {
                           // For Vimeo videos
                           if (videoUrl.includes('vimeo.com/')) {
                             const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
                             const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
-                            const isMuted = videoMuteStates[mobileVimeoId] !== false;
-                            const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1`;
                             
                             return (
                               <IframeWithThumbnail
@@ -516,7 +454,7 @@ const ProjectPage = () => {
                                 isLoading={videoLoadingStates[mobileVimeoId] || false}
                                 className="w-full h-full"
                                 title="Video trailer"
-                                isMuted={videoMuteStates[mobileVimeoId] !== false}
+                                isMuted={videoMuteStates[mobileVimeoId] || true}
                                 onToggleSound={handleToggleSound}
                               />
                             );
@@ -535,7 +473,7 @@ const ProjectPage = () => {
                               onError={handleVideoError}
                               isLoading={videoLoadingStates[mobileVideoId] || false}
                               className="w-full h-full object-cover"
-                              isMuted={videoMuteStates[mobileVideoId] !== false}
+                              isMuted={videoMuteStates[mobileVideoId] || true}
                               onToggleSound={handleToggleSound}
                             />
                           );
@@ -727,9 +665,8 @@ const ProjectPage = () => {
                               const videoId = videoUrl.includes('youtube.com/watch?v=') 
                                 ? videoUrl.split('v=')[1].split('&')[0]
                                 : videoUrl.split('youtu.be/')[1].split('?')[0];
+                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                               const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
-                              const isMuted = videoMuteStates[desktopYouTubeId] !== false;
-                              const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${videoId}&enablejsapi=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
                               
                               return (
                                 <IframeWithThumbnail
@@ -741,7 +678,7 @@ const ProjectPage = () => {
                                   isLoading={videoLoadingStates[desktopYouTubeId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
-                                  isMuted={videoMuteStates[desktopYouTubeId] !== false}
+                                  isMuted={videoMuteStates[desktopYouTubeId] || true}
                                   onToggleSound={handleToggleSound}
                                 />
                               );
@@ -750,9 +687,8 @@ const ProjectPage = () => {
                             // For Vimeo videos
                             if (videoUrl.includes('vimeo.com/')) {
                               const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
                               const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
-                              const isMuted = videoMuteStates[desktopVimeoId] !== false;
-                              const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=${isMuted ? 1 : 0}&loop=1`;
                               
                               return (
                                 <IframeWithThumbnail
@@ -764,7 +700,7 @@ const ProjectPage = () => {
                                   isLoading={videoLoadingStates[desktopVimeoId] || false}
                                   className="w-full h-full"
                                   title="Video trailer"
-                                  isMuted={videoMuteStates[desktopVimeoId] !== false}
+                                  isMuted={videoMuteStates[desktopVimeoId] || true}
                                   onToggleSound={handleToggleSound}
                                 />
                               );
@@ -783,7 +719,7 @@ const ProjectPage = () => {
                                 onError={handleVideoError}
                                 isLoading={videoLoadingStates[desktopVideoId] || false}
                                 className="w-full h-full object-cover"
-                                isMuted={videoMuteStates[desktopVideoId] !== false}
+                                isMuted={videoMuteStates[desktopVideoId] || true}
                                 onToggleSound={handleToggleSound}
                               />
                             );
