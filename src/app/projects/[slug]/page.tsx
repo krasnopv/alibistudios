@@ -61,12 +61,67 @@ interface Project {
   imageAlt: string;
 }
 
+interface VideoWithThumbnailProps {
+  videoUrl: string;
+  thumbnailUrl?: string;
+  thumbnailAlt?: string;
+  videoId: string;
+  onLoadStart: (videoId: string) => void;
+  onCanPlay: (videoId: string) => void;
+  onError: (videoId: string) => void;
+  isLoading: boolean;
+  className?: string;
+}
+
+const VideoWithThumbnail = ({ 
+  videoUrl, 
+  thumbnailUrl, 
+  thumbnailAlt, 
+  videoId, 
+  onLoadStart, 
+  onCanPlay, 
+  onError, 
+  isLoading,
+  className = "w-full h-full object-cover"
+}: VideoWithThumbnailProps) => {
+  return (
+    <div className="relative w-full h-full">
+      {/* Video Element */}
+      <video
+        src={videoUrl}
+        className={className}
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls
+        preload="auto"
+        onLoadStart={() => onLoadStart(videoId)}
+        onCanPlay={() => onCanPlay(videoId)}
+        onError={() => onError(videoId)}
+      />
+      
+      {/* Thumbnail Overlay - Show while loading */}
+      {isLoading && thumbnailUrl && (
+        <div className="absolute inset-0 bg-black">
+          <img
+            src={thumbnailUrl}
+            alt={thumbnailAlt || 'Video thumbnail'}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProjectPage = () => {
   const params = useParams();
   const projectSlug = params.slug;
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [showVideoOverlay, setShowVideoOverlay] = useState(false);
+  const [videoLoadingStates, setVideoLoadingStates] = useState<{[key: string]: boolean}>({});
 
   const renderRichText = (description: string | unknown) => {
     // Handle null/undefined
@@ -94,6 +149,22 @@ const ProjectPage = () => {
         {String(description)}
       </p>
     );
+  };
+
+  const handleVideoLoadStart = (videoId: string) => {
+    setVideoLoadingStates(prev => ({ ...prev, [videoId]: true }));
+  };
+
+  const handleVideoCanPlay = (videoId: string) => {
+    // Wait 1 second after video can play, then hide thumbnail
+    setTimeout(() => {
+      setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
+    }, 1000);
+  };
+
+  const handleVideoError = (videoId: string) => {
+    // Hide thumbnail on error
+    setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
   };
 
   useEffect(() => {
@@ -222,16 +293,18 @@ const ProjectPage = () => {
                           }
                           
                           // For direct video files
+                          const mobileVideoId = `mobile-video-${projectSlug}`;
                           return (
-                            <video
-                              src={videoUrl}
+                            <VideoWithThumbnail
+                              videoUrl={videoUrl}
+                              thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                              thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                              videoId={mobileVideoId}
+                              onLoadStart={handleVideoLoadStart}
+                              onCanPlay={handleVideoCanPlay}
+                              onError={handleVideoError}
+                              isLoading={videoLoadingStates[mobileVideoId] || false}
                               className="w-full h-full object-cover"
-                              autoPlay
-                              muted
-                              loop
-                              playsInline
-                              controls
-                              preload="auto"
                             />
                           );
                         }
@@ -456,16 +529,18 @@ const ProjectPage = () => {
                             }
                             
                             // For direct video files
+                            const desktopVideoId = `desktop-video-${projectSlug}`;
                             return (
-                              <video
-                                src={videoUrl}
+                              <VideoWithThumbnail
+                                videoUrl={videoUrl}
+                                thumbnailUrl={project.videoTrailer.thumbnailUrl}
+                                thumbnailAlt={project.videoTrailer.thumbnailAlt}
+                                videoId={desktopVideoId}
+                                onLoadStart={handleVideoLoadStart}
+                                onCanPlay={handleVideoCanPlay}
+                                onError={handleVideoError}
+                                isLoading={videoLoadingStates[desktopVideoId] || false}
                                 className="w-full h-full object-cover"
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
-                                controls
-                                preload="auto"
                               />
                             );
                           }
