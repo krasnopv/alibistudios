@@ -114,14 +114,35 @@ const VideoWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10">
+        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
             onLoad={() => console.log('Video thumbnail loaded:', thumbnailUrl)}
-            onError={() => console.log('Video thumbnail failed to load:', thumbnailUrl)}
+            onError={(e) => {
+              console.log('Video thumbnail failed to load:', thumbnailUrl);
+              console.log('Error details:', e);
+              // Hide the overlay if image fails to load
+              e.currentTarget.style.display = 'none';
+            }}
           />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+              <p className="text-sm">Loading video...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Loading overlay when no thumbnail URL */}
+      {isLoading && !thumbnailUrl && (
+        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
+          <div className="text-white text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+            <p className="text-sm">Loading video...</p>
+          </div>
         </div>
       )}
     </div>
@@ -187,14 +208,35 @@ const EmbedWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10">
+        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
             className="w-full h-full object-cover"
             onLoad={() => console.log('Embed thumbnail loaded:', thumbnailUrl)}
-            onError={() => console.log('Embed thumbnail failed to load:', thumbnailUrl)}
+            onError={(e) => {
+              console.log('Embed thumbnail failed to load:', thumbnailUrl);
+              console.log('Error details:', e);
+              // Hide the overlay if image fails to load
+              e.currentTarget.style.display = 'none';
+            }}
           />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+              <p className="text-sm">Loading video...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Loading overlay when no thumbnail URL */}
+      {isLoading && !thumbnailUrl && (
+        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
+          <div className="text-white text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+            <p className="text-sm">Loading video...</p>
+          </div>
         </div>
       )}
     </div>
