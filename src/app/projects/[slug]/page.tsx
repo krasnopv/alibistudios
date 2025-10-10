@@ -202,7 +202,7 @@ const EmbedWithThumbnail = ({
           onLoadStart(videoId);
           setTimeout(() => {
             onCanPlay(videoId);
-          }, 2000); // Wait 2 seconds for iframe to load
+          }, 4000); // Wait 4 seconds for iframe to load
         }}
         onError={() => onError(videoId)}
       />
@@ -252,6 +252,30 @@ const ProjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [showVideoOverlay, setShowVideoOverlay] = useState(false);
   const [videoLoadingStates, setVideoLoadingStates] = useState<{[key: string]: boolean}>({});
+  
+  // Initialize loading state for videos with thumbnails
+  useEffect(() => {
+    if (project?.videoTrailer?.thumbnailUrl) {
+      const videoId = `mobile-video-${projectSlug}`;
+      const desktopVideoId = `desktop-video-${projectSlug}`;
+      const mobileYouTubeId = `mobile-youtube-${projectSlug}`;
+      const desktopYouTubeId = `desktop-youtube-${projectSlug}`;
+      const mobileVimeoId = `mobile-vimeo-${projectSlug}`;
+      const desktopVimeoId = `desktop-vimeo-${projectSlug}`;
+      
+      setVideoLoadingStates(prev => ({
+        ...prev,
+        [videoId]: true,
+        [desktopVideoId]: true,
+        [mobileYouTubeId]: true,
+        [desktopYouTubeId]: true,
+        [mobileVimeoId]: true,
+        [desktopVimeoId]: true
+      }));
+      
+      console.log('Initialized loading states for all videos');
+    }
+  }, [project?.videoTrailer?.thumbnailUrl, projectSlug]);
 
   const renderRichText = (description: string | unknown) => {
     // Handle null/undefined
@@ -288,11 +312,11 @@ const ProjectPage = () => {
 
   const handleVideoCanPlay = (videoId: string) => {
     console.log('Video can play:', videoId);
-    // Wait 1 second after video can play, then hide thumbnail
+    // Wait 3 seconds after video can play, then hide thumbnail
     setTimeout(() => {
       console.log('Hiding thumbnail for:', videoId);
       setVideoLoadingStates(prev => ({ ...prev, [videoId]: false }));
-    }, 1000);
+    }, 3000);
   };
 
   const handleVideoError = (videoId: string) => {
