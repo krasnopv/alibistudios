@@ -156,7 +156,6 @@ interface IframeWithThumbnailProps {
   title?: string;
   isMuted?: boolean;
   onToggleSound?: (iframeId: string) => void;
-  muteState?: boolean;
 }
 
 const IframeWithThumbnail = ({ 
@@ -169,29 +168,13 @@ const IframeWithThumbnail = ({
   className = "w-full h-full",
   title = "Video trailer",
   isMuted = true,
-  onToggleSound,
-  muteState = true
+  onToggleSound
 }: IframeWithThumbnailProps) => {
-  // Generate the correct embed URL based on mute state
-  const getEmbedUrl = () => {
-    if (embedUrl.includes('youtube.com/embed/')) {
-      const baseUrl = embedUrl.split('?')[0];
-      const muteParam = muteState ? '&mute=1' : '&mute=0';
-      return `${baseUrl}?autoplay=1${muteParam}&loop=1&playlist=${embedUrl.split('/embed/')[1].split('?')[0]}&enablejsapi=1&controls=0&showinfo=0&rel=0&modestbranding=1&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`;
-    } else if (embedUrl.includes('player.vimeo.com/video/')) {
-      const baseUrl = embedUrl.split('?')[0];
-      const muteParam = muteState ? '&muted=1' : '&muted=0';
-      return `${baseUrl}?autoplay=1${muteParam}&loop=1&controls=0&title=0&byline=0&portrait=0`;
-    }
-    return embedUrl;
-  };
-
   return (
     <div className="relative w-full h-full">
       {/* Iframe Element */}
       <iframe
-        key={`${iframeId}-${muteState}`}
-        src={getEmbedUrl()}
+        src={embedUrl}
         className={className}
         frameBorder="0"
         allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
@@ -300,7 +283,60 @@ const ProjectPage = () => {
   };
 
   const handleToggleSound = (videoId: string) => {
-    setVideoMuteStates(prev => ({ ...prev, [videoId]: !prev[videoId] }));
+    const newMuteState = !videoMuteStates[videoId];
+    setVideoMuteStates(prev => ({ ...prev, [videoId]: newMuteState }));
+    
+    // For YouTube videos, try to control sound without restarting
+    if (videoId.includes('youtube')) {
+      const iframe = document.querySelector(`iframe[title="Video trailer"]`) as HTMLIFrameElement;
+      if (iframe && iframe.contentWindow) {
+        // Try YouTube API commands
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            event: 'command',
+            func: newMuteState ? 'mute' : 'unMute'
+          }),
+          '*'
+        );
+        
+        // Fallback: try alternative YouTube API format
+        setTimeout(() => {
+          iframe.contentWindow?.postMessage(
+            JSON.stringify({
+              event: 'command',
+              func: newMuteState ? 'mute' : 'unMute'
+            }),
+            '*'
+          );
+        }, 100);
+      }
+    }
+    
+    // For Vimeo videos, try to control sound without restarting
+    if (videoId.includes('vimeo')) {
+      const iframe = document.querySelector(`iframe[title="Video trailer"]`) as HTMLIFrameElement;
+      if (iframe && iframe.contentWindow) {
+        // Try Vimeo API commands
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            method: 'setVolume',
+            value: newMuteState ? 0 : 1
+          }),
+          '*'
+        );
+        
+        // Fallback: try alternative Vimeo API format
+        setTimeout(() => {
+          iframe.contentWindow?.postMessage(
+            JSON.stringify({
+              method: 'setVolume',
+              value: newMuteState ? 0 : 1
+            }),
+            '*'
+          );
+        }, 100);
+      }
+    }
   };
 
   const getOptimalThumbnail = (videoTrailer: Project['videoTrailer'], containerWidth: number = 800) => {
@@ -455,7 +491,6 @@ const ProjectPage = () => {
                                 title="Video trailer"
                                 isMuted={videoMuteStates[mobileYouTubeId] !== false}
                                 onToggleSound={handleToggleSound}
-                                muteState={videoMuteStates[mobileYouTubeId] !== false}
                               />
                             );
                           }
@@ -478,7 +513,6 @@ const ProjectPage = () => {
                                 title="Video trailer"
                                 isMuted={videoMuteStates[mobileVimeoId] !== false}
                                 onToggleSound={handleToggleSound}
-                                muteState={videoMuteStates[mobileVimeoId] !== false}
                               />
                             );
                           }
@@ -703,7 +737,6 @@ const ProjectPage = () => {
                                   title="Video trailer"
                                   isMuted={videoMuteStates[desktopYouTubeId] !== false}
                                   onToggleSound={handleToggleSound}
-                                  muteState={videoMuteStates[desktopYouTubeId] !== false}
                                 />
                               );
                             }
@@ -726,7 +759,6 @@ const ProjectPage = () => {
                                   title="Video trailer"
                                   isMuted={videoMuteStates[desktopVimeoId] !== false}
                                   onToggleSound={handleToggleSound}
-                                  muteState={videoMuteStates[desktopVimeoId] !== false}
                                 />
                               );
                             }
