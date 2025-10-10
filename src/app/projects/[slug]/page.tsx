@@ -100,7 +100,7 @@ const VideoWithThumbnail = ({
       {/* Video Element */}
       <video
         src={videoUrl}
-        className={className}
+        className={`${className} ${isLoading ? 'z-10' : 'z-20'}`}
         autoPlay
         muted
         loop
@@ -114,7 +114,7 @@ const VideoWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-900">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
@@ -127,7 +127,7 @@ const VideoWithThumbnail = ({
               e.currentTarget.style.display = 'none';
             }}
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
             <div className="text-white text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
               <p className="text-sm">Loading video...</p>
@@ -191,7 +191,7 @@ const EmbedWithThumbnail = ({
       {/* Iframe Element */}
       <iframe
         src={embedUrl}
-        className={className}
+        className={`${className} ${isLoading ? 'z-10' : 'z-20'}`}
         frameBorder="0"
         allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
         allowFullScreen
@@ -209,7 +209,7 @@ const EmbedWithThumbnail = ({
       
       {/* Thumbnail Overlay - Show while loading */}
       {isLoading && thumbnailUrl && (
-        <div className="absolute inset-0 bg-black z-10 flex items-center justify-center">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-900">
           <img
             src={thumbnailUrl}
             alt={thumbnailAlt || 'Video thumbnail'}
@@ -222,7 +222,7 @@ const EmbedWithThumbnail = ({
               e.currentTarget.style.display = 'none';
             }}
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
             <div className="text-white text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
               <p className="text-sm">Loading video...</p>
