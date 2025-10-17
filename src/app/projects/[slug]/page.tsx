@@ -14,6 +14,8 @@ interface Project {
   subtitle: string;
   description: string | unknown;
   fullTitle: string;
+  imageUrl?: string;
+  imageAlt?: string;
   videoTrailer?: {
     type: 'youtube' | 'vimeo' | 'upload';
     url?: string;
@@ -60,8 +62,6 @@ interface Project {
     title: string;
     slug: string;
   }[];
-  imageUrl: string;
-  imageAlt: string;
 }
 
 interface VideoWithThumbnailProps {
@@ -144,7 +144,7 @@ const IframeWithThumbnail = ({
       {/* Iframe Element */}
       <iframe
         src={embedUrl}
-        className={className}
+        className={`${className} bg-black`}
         frameBorder="0"
         allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
         allowFullScreen
@@ -340,16 +340,18 @@ const ProjectPage = () => {
                   </h1>
                 </div>
 
-                {/* Video Trailer */}
-                {project.videoTrailer && (
+                {/* Video Trailer or Featured Image */}
+                {(project.videoTrailer || project.imageUrl) && (
                   <div>
                     <div className="relative w-full aspect-video overflow-hidden">
                       {(() => {
-                        const videoUrl = project.videoTrailer.type === 'upload' 
-                          ? (project.videoTrailer.videoFileUrl || null)
-                          : (project.videoTrailer.url || null);
-                        
-                        if (videoUrl) {
+                        // Check if we have a video trailer
+                        if (project.videoTrailer) {
+                          const videoUrl = project.videoTrailer.type === 'upload' 
+                            ? (project.videoTrailer.videoFileUrl || null)
+                            : (project.videoTrailer.url || null);
+                          
+                          if (videoUrl) {
                           // For YouTube videos
                           if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
                             const videoId = videoUrl.includes('youtube.com/watch?v=') 
@@ -407,16 +409,32 @@ const ProjectPage = () => {
                               className="w-full h-full object-cover"
                             />
                           );
+                          }
                         }
                         
-                        // Fallback to thumbnail if no video URL
-                        return (
-                          <img
-                            src={getOptimalThumbnail(project.videoTrailer, 400)}
-                            alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                            className="w-full h-full object-cover"
-                          />
-                        );
+                        // Fallback to featured image if no video available
+                        if (project.imageUrl) {
+                          return (
+                            <img
+                              src={project.imageUrl}
+                              alt={project.imageAlt || 'Project featured image'}
+                              className="w-full h-full object-cover"
+                            />
+                          );
+                        }
+                        
+                        // Final fallback to video thumbnail if available
+                        if (project.videoTrailer?.thumbnailUrl) {
+                          return (
+                            <img
+                              src={getOptimalThumbnail(project.videoTrailer, 400)}
+                              alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                              className="w-full h-full object-cover"
+                            />
+                          );
+                        }
+                        
+                        return null;
                       })()}
                     </div>
                   </div>
@@ -580,16 +598,18 @@ const ProjectPage = () => {
 
                 {/* Right Column - Images Gallery (2/3) */}
                 <div className="w-2/3">
-                  {/* Video Trailer */}
-                  {project.videoTrailer && (
+                  {/* Video Trailer or Featured Image */}
+                  {(project.videoTrailer || project.imageUrl) && (
                     <div className="mb-6">
                       <div className="relative w-full aspect-video overflow-hidden">
                         {(() => {
-                          const videoUrl = project.videoTrailer.type === 'upload' 
-                            ? (project.videoTrailer.videoFileUrl || null)
-                            : (project.videoTrailer.url || null);
-                          
-                          if (videoUrl) {
+                          // Check if we have a video trailer
+                          if (project.videoTrailer) {
+                            const videoUrl = project.videoTrailer.type === 'upload' 
+                              ? (project.videoTrailer.videoFileUrl || null)
+                              : (project.videoTrailer.url || null);
+                            
+                            if (videoUrl) {
                             // For YouTube videos
                             if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
                               const videoId = videoUrl.includes('youtube.com/watch?v=') 
@@ -647,16 +667,32 @@ const ProjectPage = () => {
                                 className="w-full h-full object-cover"
                               />
                             );
+                            }
                           }
                           
-                          // Fallback to thumbnail if no video URL
-                          return (
-                            <img
-                              src={getOptimalThumbnail(project.videoTrailer, 800)}
-                              alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                              className="w-full h-full object-cover"
-                            />
-                          );
+                          // Fallback to featured image if no video available
+                          if (project.imageUrl) {
+                            return (
+                              <img
+                                src={project.imageUrl}
+                                alt={project.imageAlt || 'Project featured image'}
+                                className="w-full h-full object-cover"
+                              />
+                            );
+                          }
+                          
+                          // Final fallback to video thumbnail if available
+                          if (project.videoTrailer?.thumbnailUrl) {
+                            return (
+                              <img
+                                src={getOptimalThumbnail(project.videoTrailer, 800)}
+                                alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                                className="w-full h-full object-cover"
+                              />
+                            );
+                          }
+                          
+                          return null;
                         })()}
                       </div>
                     </div>

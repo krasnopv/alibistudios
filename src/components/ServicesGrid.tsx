@@ -24,13 +24,15 @@ interface ServicesGridProps {
   schemaUrl: string;
   gridCols?: string;
   className?: string;
+  enableParallax?: boolean;
 }
 
 const ServicesGrid = ({ 
   gridData, 
   schemaUrl,
   gridCols = "md:grid-cols-2",
-  className = ""
+  className = "",
+  enableParallax = false
 }: ServicesGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -81,36 +83,36 @@ const ServicesGrid = ({
   }, [gridData.length]);
 
   // Create parallax transforms for up to 30 items with step -100
-  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -100]);
-  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -200]);
-  const parallax3 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -300]);
-  const parallax4 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -400]);
-  const parallax5 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -500]);
-  const parallax6 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -600]);
-  const parallax7 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -700]);
-  const parallax8 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -800]);
-  const parallax9 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);
-  const parallax10 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1000]);
-  const parallax11 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1100]);
-  const parallax12 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1200]);
-  const parallax13 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1300]);
-  const parallax14 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1400]);
-  const parallax15 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1500]);
-  const parallax16 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1600]);
-  const parallax17 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1700]);
-  const parallax18 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1800]);
-  const parallax19 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -1900]);
-  const parallax20 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2000]);
-  const parallax21 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2100]);
-  const parallax22 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2200]);
-  const parallax23 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2300]);
-  const parallax24 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2400]);
-  const parallax25 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2500]);
-  const parallax26 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2600]);
-  const parallax27 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2700]);
-  const parallax28 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2800]);
-  const parallax29 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -2900]);
-  const parallax30 = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -3000]);
+  const parallax1 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -100 : 0]);
+  const parallax2 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -200 : 0]);
+  const parallax3 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -300 : 0]);
+  const parallax4 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -400 : 0]);
+  const parallax5 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -500 : 0]);
+  const parallax6 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -600 : 0]);
+  const parallax7 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -700 : 0]);
+  const parallax8 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -800 : 0]);
+  const parallax9 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -900 : 0]);
+  const parallax10 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1000 : 0]);
+  const parallax11 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1100 : 0]);
+  const parallax12 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1200 : 0]);
+  const parallax13 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1300 : 0]);
+  const parallax14 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1400 : 0]);
+  const parallax15 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1500 : 0]);
+  const parallax16 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1600 : 0]);
+  const parallax17 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1700 : 0]);
+  const parallax18 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1800 : 0]);
+  const parallax19 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -1900 : 0]);
+  const parallax20 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2000 : 0]);
+  const parallax21 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2100 : 0]);
+  const parallax22 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2200 : 0]);
+  const parallax23 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2300 : 0]);
+  const parallax24 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2400 : 0]);
+  const parallax25 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2500 : 0]);
+  const parallax26 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2600 : 0]);
+  const parallax27 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2700 : 0]);
+  const parallax28 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2800 : 0]);
+  const parallax29 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -2900 : 0]);
+  const parallax30 = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -3000 : 0]);
   
   const parallaxTransforms = [0, parallax1, parallax2, parallax3, parallax4, parallax5, parallax6, parallax7, parallax8, parallax9, parallax10, parallax11, parallax12, parallax13, parallax14, parallax15, parallax16, parallax17, parallax18, parallax19, parallax20, parallax21, parallax22, parallax23, parallax24, parallax25, parallax26, parallax27, parallax28, parallax29, parallax30];
   
@@ -126,10 +128,12 @@ const ServicesGrid = ({
   };
   
   // Calculate dynamic height based on parallax movement
-  const maxParallax = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -900]);
+  const maxParallax = useTransform(scrollYProgress, [0, 1], [0, enableParallax && !isMobile ? -900 : 0]);
   
   // Get parallax multiplier based on screen size
   const getParallaxMultiplier = () => {
+    if (!enableParallax) return 0;
+    
     switch (screenSize) {
       case 'mobile': return 0;      // < 768px
       case 'tablet': return 1.5;     // 768px - 1023px
@@ -143,9 +147,11 @@ const ServicesGrid = ({
   const parallaxMultiplier = getParallaxMultiplier();
   
   // const dynamicHeight = 'auto';
-  const dynamicHeight = useTransform(maxParallax, (value) => {
+  const dynamicHeightTransform = useTransform(maxParallax, (value) => {
     return baseHeight > 0 ? `${baseHeight + value * parallaxMultiplier}px` : 'auto';
   });
+  
+  const dynamicHeight = enableParallax ? dynamicHeightTransform : 'auto';
 
   return (
     <motion.div 
