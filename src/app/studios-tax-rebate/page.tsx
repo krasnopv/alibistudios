@@ -114,21 +114,19 @@ export default function StudiosTaxRebate() {
           isSupportInTopHalf
         });
         
-        // Hide navigation when Hero, first section, or introduction (with buttons) are in view
-        // If Hero doesn't exist (no media), only check support and introduction
-        // Also hide when at the top of the page or when Support section is in top half
-        const shouldHideNavigation = isAtTop || 
-          (heroSection ? heroVisible : false) || 
-          supportVisible || 
-          isSupportInTopHalf ||
-          introductionVisible;
+        // Show navigation ONLY when Hero and Support section are scrolled up (out of view)
+        // Navigation should be visible when both Hero and Support are not visible
+        const shouldShowNavigation = !isAtTop && 
+          !(heroSection ? heroVisible : false) && 
+          !supportVisible && 
+          !isSupportInTopHalf;
         
         console.log('Final decision:', {
-          shouldHideNavigation,
-          showNavigation: !shouldHideNavigation
+          shouldShowNavigation,
+          showNavigation: shouldShowNavigation
         });
         
-        setShowNavigation(!shouldHideNavigation);
+        setShowNavigation(shouldShowNavigation);
       },
       {
         rootMargin: '-5% 0px -5% 0px', // Even more sensitive detection
