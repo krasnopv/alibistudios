@@ -96,20 +96,28 @@ export default function StudiosTaxRebate() {
         const supportVisible = entries.find(entry => entry.target === supportSection)?.isIntersecting || false;
         const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
         
+        const scrollY = window.scrollY;
+        const isAtTop = scrollY < 100; // Consider "at top" if scrolled less than 100px
+        
         console.log('Navigation visibility check:', {
           heroVisible,
           supportVisible,
           introductionVisible,
-          shouldHide: heroVisible || supportVisible || introductionVisible
+          shouldHide: heroVisible || supportVisible || introductionVisible,
+          supportElement: supportSection,
+          supportRect: supportSection?.getBoundingClientRect(),
+          scrollY,
+          isAtTop
         });
         
         // Hide navigation when Hero, first section, or introduction (with buttons) are in view
         // If Hero doesn't exist (no media), only check support and introduction
-        const shouldHideNavigation = (heroSection ? heroVisible : false) || supportVisible || introductionVisible;
+        // Also hide when at the top of the page
+        const shouldHideNavigation = isAtTop || (heroSection ? heroVisible : false) || supportVisible || introductionVisible;
         setShowNavigation(!shouldHideNavigation);
       },
       {
-        rootMargin: '0px 0px -50% 0px', // Trigger when section is 50% from bottom
+        rootMargin: '-10% 0px -10% 0px', // More sensitive detection
         threshold: 0.1
       }
     );
