@@ -292,19 +292,19 @@ const ServicePage = () => {
               {service.heroVideoUrl && (
                 <button
                   onClick={toggleSound}
-                  className="absolute bottom-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-black p-2 rounded-full transition-colors duration-200 cursor-pointer"
+                  className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full transition-colors duration-200 cursor-pointer"
                   aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                 >
                   {isMuted ? (
                     // Muted icon (speaker with X)
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <line x1="23" y1="9" x2="17" y2="15"></line>
                       <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                   ) : (
                     // Unmuted icon (speaker)
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>

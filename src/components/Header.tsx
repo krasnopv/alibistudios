@@ -340,6 +340,15 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Team<br/></div>
                </Link>
+               <Link href="/studios-tax-rebate" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
+                 <div className="justify-center" style={{
+                   color: '#000',
+                   fontFamily: 'Plus Jakarta Sans',
+                   fontSize: '28px',
+                   fontStyle: 'normal',
+                   fontWeight: 400,
+                 }}>Studios & Tax Rebate<br/></div>
+               </Link>
                <div className="inline-flex justify-start items-center gap-2.5" style={{ opacity: 0.5, cursor: 'pointer' }}>
                  <div className="justify-center" style={{
                    color: '#000',
