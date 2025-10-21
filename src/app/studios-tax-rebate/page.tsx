@@ -14,6 +14,7 @@ export default function StudiosTaxRebate() {
   useEffect(() => {
     const sections = ['fr', 'uk'];
     const introductionSection = document.getElementById('introduction');
+    const heroSection = document.querySelector('[id="hero"]');
     
     const sectionObserver = new IntersectionObserver(
       (entries) => {
@@ -29,12 +30,13 @@ export default function StudiosTaxRebate() {
       }
     );
 
-    const introductionObserver = new IntersectionObserver(
+    const visibilityObserver = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          // Show navigation when introduction section is not in view
-          setShowNavigation(!entry.isIntersecting);
-        });
+        const heroVisible = entries.find(entry => entry.target === heroSection)?.isIntersecting || false;
+        const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
+        
+        // Show navigation only when both Hero and Introduction are not in view
+        setShowNavigation(!heroVisible && !introductionVisible);
       },
       {
         rootMargin: '0px 0px -50% 0px', // Trigger when section is 50% from bottom
@@ -50,7 +52,11 @@ export default function StudiosTaxRebate() {
     });
 
     if (introductionSection) {
-      introductionObserver.observe(introductionSection);
+      visibilityObserver.observe(introductionSection);
+    }
+    
+    if (heroSection) {
+      visibilityObserver.observe(heroSection);
     }
 
     return () => {
@@ -61,7 +67,10 @@ export default function StudiosTaxRebate() {
         }
       });
       if (introductionSection) {
-        introductionObserver.unobserve(introductionSection);
+        visibilityObserver.unobserve(introductionSection);
+      }
+      if (heroSection) {
+        visibilityObserver.unobserve(heroSection);
       }
     };
   }, []);
