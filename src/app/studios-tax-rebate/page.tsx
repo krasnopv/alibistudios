@@ -3,12 +3,65 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
+import TextSection from '@/components/TextSection';
+import CTASection from '@/components/CTASection';
+import ThumbnailSection from '@/components/ThumbnailSection';
+import Films from '@/components/Films';
+import Awards from '@/components/Awards';
 import { useState, useEffect } from 'react';
+
+interface Page {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  content?: Array<{
+    _type: string;
+    sectionId?: string;
+    title?: string | unknown[];
+    copy?: unknown[];
+    url?: {
+      type: 'internal' | 'external';
+      internalPage?: {
+        _id: string;
+        slug: string;
+      };
+      externalUrl?: string;
+    };
+    schemaType?: string;
+    filters?: {
+      featured?: boolean;
+      limit?: number;
+    };
+    enabled?: boolean;
+    subtitle?: string;
+  }>;
+}
 
 export default function StudiosTaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   const [activeSection, setActiveSection] = useState<string>('');
   const [showNavigation, setShowNavigation] = useState<boolean>(false);
+  const [pageData, setPageData] = useState<Page | null>(null);
+
+  // Fetch page data from Sanity
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const response = await fetch('/api/pages/studios-tax-rebate');
+        if (response.ok) {
+          const data = await response.json();
+          setPageData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching page data:', error);
+      }
+    };
+
+    fetchPageData();
+  }, []);
 
   // Track which section is currently in view and show/hide navigation
   useEffect(() => {
@@ -373,6 +426,44 @@ export default function StudiosTaxRebate() {
             </div>
           </div>
         </section>
+
+        {/* Dynamic Content Sections from Sanity */}
+        {pageData?.content && pageData.content.map((section, index) => {
+          switch (section._type) {
+            case 'ctaSection':
+              return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} />;
+            
+            case 'gridSection':
+              return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} />;
+            
+            case 'textSection':
+              return <TextSection key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;
+            
+            case 'filmsSection':
+              return section.enabled ? <Films key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+            
+            case 'awardsSection':
+              return section.enabled ? <Awards key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+            
+            case 'pageTitleSection':
+              return section.enabled && pageData.title ? (
+                <section key={index} id={section.sectionId} className="w-full">
+                  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="row">
+                      <div className="mb-16">
+                        <h1 className="display_h1 brand-color text-center">
+                          {pageData.title}
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              ) : null;
+            
+            default:
+              return null;
+          }
+        })}
         </main>
         
         {/* Right-side Navigation */}
