@@ -467,11 +467,11 @@ export default function StudiosTaxRebate() {
         </main>
         
         {/* Right-side Navigation */}
-        <nav className={`hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50 transition-opacity duration-300 ${showNavigation ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <nav className={`fixed right-4 top-1/2 transform -translate-y-1/2 z-50 transition-opacity duration-300 ${showNavigation ? 'opacity-100' : 'opacity-0 pointer-events-none'} sm:right-6 lg:right-8`}>
           <div className="flex flex-col space-y-3">
             <a 
               href="#fr" 
-              className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl ${
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl ${
                 activeSection === 'fr' 
                   ? 'bg-[#FF0066] text-white' 
                   : 'bg-white text-[#FF0066] hover:bg-gray-50'
@@ -482,7 +482,7 @@ export default function StudiosTaxRebate() {
             </a>
             <a 
               href="#uk" 
-              className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl ${
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl ${
                 activeSection === 'uk' 
                   ? 'bg-[#FF0066] text-white' 
                   : 'bg-white text-[#FF0066] hover:bg-gray-50'
