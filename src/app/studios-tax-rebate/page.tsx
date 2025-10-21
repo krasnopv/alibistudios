@@ -119,9 +119,8 @@ export default function StudiosTaxRebate() {
           }
         });
         
-        // Show navigation when Hero and Support section are scrolled up (out of view)
-        // Simplified logic: show when not at top and Support section is not visible
-        const shouldShowNavigation = !isAtTop && !supportVisible;
+        // Always show navigation - no conditions to hide it
+        const shouldShowNavigation = true;
         
         console.log('Final decision:', {
           shouldShowNavigation,
