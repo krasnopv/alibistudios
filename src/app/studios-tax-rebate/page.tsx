@@ -96,7 +96,11 @@ export default function StudiosTaxRebate() {
         const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
         
         const scrollY = window.scrollY;
-        const isAtTop = scrollY < 100; // Consider "at top" if scrolled less than 100px
+        const isAtTop = scrollY < 200; // Consider "at top" if scrolled less than 200px
+        
+        // Additional check: if Support section is in the top half of viewport
+        const supportRect = supportSection?.getBoundingClientRect();
+        const isSupportInTopHalf = supportRect && supportRect.top < window.innerHeight / 2;
         
         console.log('Navigation visibility check:', {
           heroVisible,
@@ -104,20 +108,31 @@ export default function StudiosTaxRebate() {
           introductionVisible,
           shouldHide: heroVisible || supportVisible || introductionVisible,
           supportElement: supportSection,
-          supportRect: supportSection?.getBoundingClientRect(),
+          supportRect,
           scrollY,
-          isAtTop
+          isAtTop,
+          isSupportInTopHalf
         });
         
         // Hide navigation when Hero, first section, or introduction (with buttons) are in view
         // If Hero doesn't exist (no media), only check support and introduction
-        // Also hide when at the top of the page
-        const shouldHideNavigation = isAtTop || (heroSection ? heroVisible : false) || supportVisible || introductionVisible;
+        // Also hide when at the top of the page or when Support section is in top half
+        const shouldHideNavigation = isAtTop || 
+          (heroSection ? heroVisible : false) || 
+          supportVisible || 
+          isSupportInTopHalf ||
+          introductionVisible;
+        
+        console.log('Final decision:', {
+          shouldHideNavigation,
+          showNavigation: !shouldHideNavigation
+        });
+        
         setShowNavigation(!shouldHideNavigation);
       },
       {
-        rootMargin: '-10% 0px -10% 0px', // More sensitive detection
-        threshold: 0.1
+        rootMargin: '-5% 0px -5% 0px', // Even more sensitive detection
+        threshold: 0.05
       }
     );
 
