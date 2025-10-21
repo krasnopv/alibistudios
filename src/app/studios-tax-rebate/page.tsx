@@ -104,7 +104,8 @@ export default function StudiosTaxRebate() {
         });
         
         // Hide navigation when Hero, first section, or introduction (with buttons) are in view
-        const shouldHideNavigation = heroVisible || supportVisible || introductionVisible;
+        // If Hero doesn't exist (no media), only check support and introduction
+        const shouldHideNavigation = (heroSection ? heroVisible : false) || supportVisible || introductionVisible;
         setShowNavigation(!shouldHideNavigation);
       },
       {
