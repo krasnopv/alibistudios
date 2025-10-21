@@ -24,7 +24,7 @@ interface Page {
     copy?: unknown[];
     url?: {
       type: 'internal' | 'external';
-      internalPage?: { _ref: string };
+      internalPage?: { _ref: string; slug: string };
       externalUrl?: string;
     };
     schemaType?: string;

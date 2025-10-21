@@ -23,7 +23,16 @@ export async function GET(
         "imageAlt": image.alt,
         heroTitle,
         heroSubtitle,
-        content,
+        content[]{
+          ...,
+          url{
+            ...,
+            internalPage->{
+              _id,
+              "slug": slug.current
+            }
+          }
+        },
         seoImage,
         "seoImageUrl": seoImage.asset->url,
         publishedAt,

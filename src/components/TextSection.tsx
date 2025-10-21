@@ -6,7 +6,7 @@ interface TextSectionProps {
   copy?: unknown[];
   url?: {
     type: 'internal' | 'external';
-    internalPage?: { _ref: string };
+    internalPage?: { _ref: string; slug: string };
     externalUrl?: string;
   };
 }
@@ -44,9 +44,7 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                 {url && (
                   url.type === 'internal' && url.internalPage ? (
                     <a 
-                      href={url.internalPage._ref === 'services' ? '/services' : 
-                           url.internalPage._ref === 'team' ? '/team' : 
-                           `/pages/${url.internalPage._ref}`}
+                      href={`/${url.internalPage.slug}`}
                       className="text-black hover:underline"
                     >
                       →
