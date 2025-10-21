@@ -245,15 +245,13 @@ export default function StudiosTaxRebate() {
             
             {/* Render all sections for this rebate */}
             {rebate.sections?.map((section, index) => (
-              <div key={index} className="w-full">
+              <section key={index} className="w-full">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="row">
-                    <div className="mb-16">
-                      <RebateSection section={section} />
-                    </div>
+                    <RebateSection section={section} />
                   </div>
                 </div>
-              </div>
+              </section>
             ))}
           </section>
         ))}

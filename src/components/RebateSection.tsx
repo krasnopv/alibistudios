@@ -18,64 +18,66 @@ export default function RebateSection({ section }: RebateSectionProps) {
     switch (section._type) {
       case 'eligibleExpenses':
         return (
-          <div className="mb-8">
+          <div className="mb-16">
             {section.title && (
-              <h3 className="text-xl font-semibold mb-4 text-[#FF0066]">
+              <h1 className="display_h1 brand-color text-center">
                 {section.title}
-              </h3>
+              </h1>
             )}
             {section.points && section.points.length > 0 && (
-              <ul className="list-disc list-inside space-y-2">
+              <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
-                  <li key={index} className="text-gray-700">
+                  <span key={index}>
                     <strong>{point.point}</strong>
                     {point.description && (
-                      <span className="block text-sm text-gray-600 mt-1">
+                      <span className="block mt-1">
                         {point.description}
                       </span>
                     )}
-                  </li>
+                    {index < (section.points?.length || 0) - 1 && <br />}
+                  </span>
                 ))}
-              </ul>
+              </h6>
             )}
           </div>
         );
 
       case 'qualifyingRequirements':
         return (
-          <div className="mb-8">
+          <div className="mb-16">
             {section.title && (
-              <h3 className="text-xl font-semibold mb-4 text-[#FF0066]">
+              <h1 className="display_h1 brand-color text-center">
                 {section.title}
-              </h3>
+              </h1>
             )}
             {section.points && section.points.length > 0 && (
-              <ul className="list-disc list-inside space-y-2">
+              <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
-                  <li key={index} className="text-gray-700">
+                  <span key={index}>
                     <strong>{point.point}</strong>
                     {point.description && (
-                      <span className="block text-sm text-gray-600 mt-1">
+                      <span className="block mt-1">
                         {point.description}
                       </span>
                     )}
-                  </li>
+                    {index < (section.points?.length || 0) - 1 && <br />}
+                  </span>
                 ))}
-              </ul>
+              </h6>
             )}
           </div>
         );
 
       case 'howToApply':
         return (
-          <div className="mb-8">
+          <div className="mb-16">
             {section.title && (
-              <h3 className="text-xl font-semibold mb-4 text-[#FF0066]">
+              <h1 className="display_h1 brand-color text-center">
                 {section.title}
-              </h3>
+              </h1>
             )}
             {section.description && (
-              <div className="prose prose-gray max-w-none">
+              <div className="display_h6 text-center">
                 <PortableText value={section.description} />
               </div>
             )}
@@ -84,14 +86,14 @@ export default function RebateSection({ section }: RebateSectionProps) {
 
       case 'customSection':
         return (
-          <div className="mb-8">
+          <div className="mb-16">
             {section.title && (
-              <h3 className="text-xl font-semibold mb-4 text-[#FF0066]">
+              <h1 className="display_h1 brand-color text-center">
                 {section.title}
-              </h3>
+              </h1>
             )}
             {section.content && (
-              <div className="prose prose-gray max-w-none">
+              <div className="display_h6 text-center">
                 <PortableText value={section.content} />
               </div>
             )}
