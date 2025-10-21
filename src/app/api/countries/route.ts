@@ -2,32 +2,28 @@ import { client } from '@/lib/sanity';
 
 export async function GET() {
   try {
-    const query = `*[_type == "country"] | order(order asc, name asc) {
+    const query = `*[_type == "countries"] | order(title asc) {
       _id,
-      name,
-      code,
+      title,
       slug,
-      description,
+      code,
+      intro {
+        title,
+        description
+      },
       sections[] {
         _type,
         title,
-        description,
         points[] {
           point,
-          requirement,
+          description
+        },
+        steps[] {
           step,
-          expense,
           description
         },
         content
-      },
-      contactInfo {
-        email,
-        phone,
-        website
-      },
-      featured,
-      order
+      }
     }`;
 
     const countries = await client.fetch(query);

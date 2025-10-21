@@ -7,6 +7,7 @@ import CTASection from '@/components/CTASection';
 import ThumbnailSection from '@/components/ThumbnailSection';
 import Films from '@/components/Films';
 import Awards from '@/components/Awards';
+import CountriesContent from '@/components/CountriesContent';
 import { useState, useEffect } from 'react';
 
 interface Page {
@@ -39,10 +40,43 @@ interface Page {
   }>;
 }
 
+interface Country {
+  _id: string;
+  title: string;
+  slug: string;
+  code: string;
+  intro: {
+    title: string;
+    description: BlockContent[];
+  };
+  sections: Array<{
+    _type: string;
+    title: string;
+    points?: Array<{
+      point: string;
+      description?: string;
+    }>;
+    steps?: Array<{
+      step: string;
+      description?: string;
+    }>;
+    content?: BlockContent[];
+  }>;
+}
+
+interface BlockContent {
+  _type: string;
+  style?: string;
+  children?: Array<{
+    text: string;
+  }>;
+}
+
 export default function StudiosTaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   const [activeSection, setActiveSection] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
+  const [countries, setCountries] = useState<Country[]>([]);
 
   // Fetch page data from Sanity
   useEffect(() => {
@@ -59,6 +93,23 @@ export default function StudiosTaxRebate() {
     };
 
     fetchPageData();
+  }, []);
+
+  // Fetch countries data from Sanity
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('/api/countries');
+        if (response.ok) {
+          const data = await response.json();
+          setCountries(data);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+
+    fetchCountries();
   }, []);
 
   // Track which section is currently in view for active state highlighting
@@ -174,219 +225,18 @@ export default function StudiosTaxRebate() {
           </div>
         </section>
 
-        {/* France TRIP Section */}
-        <section id="fr" className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  FRANCE: TAX REBATE FOR INTERNATIONAL PRODUCTIONS (TRIP)
-                </h1>
-                <h6 className="display_h6 text-center">
-                  The <strong>TRIP</strong> (Tax Rebate for International Productions) is a financial incentive granted by Film France – CNC (French National Center for Cinema, TV, and the Moving Image) to French production service companies. It offers:<br />
-                  <strong>30% rebate</strong> on qualifying expenditures in France<br />
-                  <strong>40% rebate</strong> if French VFX expenses exceed €2M<br />
-                  It is capped at €30 million per project, which means €100M in eligible expenditures.<br />
-                  In 2022, 101 projects benefited from TRIP—don&apos;t miss this opportunity!
-                </h6>
+        {/* Dynamic Countries Content */}
+        {countries.length > 0 && (
+          <section className="w-full">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="row">
+                <CountriesContent countries={countries} />
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* France TRIP Details */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Eligible expenses include:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Salaries and wages paid to French or EU writers, actors (up to the minimum set in collective bargaining agreements), direction and production staff (wages and incidentals) including the related social contributions;<br />
-                  Expenditures incurred to specialized companies for technical goods and services;<br />
-                  Transportation, travel and catering expenditures;<br />
-                  Depreciation expenses
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* France TRIP Requirements */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Qualifying requirements:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  The project must be a fictional audiovisual work (live action or animation, feature film, short film, TV special, single or several episodes of a series, or a whole season); documentaries are not eligible;<br />
-                  The project must shoot at least 5 days in France for live action production;<br />
-                  At least of €250 000 or 50% of their total production expenses must be spent on French qualifying expenditures;<br />
-                  The production must pass a cultural test specific to each genre (live action or animation), including elements related to the French culture, heritage, and territory;<br />
-                  The production must hire a French production services company to apply.
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* VFX Bonus Section */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  VFX-related 10% Bonus
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Projects with over €2M in VFX-related French expenditure qualify for a 40% rebate on all eligible expenses, including live-action costs.<br />
-                  The VFX-related expenditure must be carried out by a service provider established in France and related to digital processing of shots allowing the addition of characters, decorative elements or objects participating in the action, or modifying the rendering of the scene, or the camera point of view.<br />
-                  VFX-only projects with no filming in France are eligible for the TRIP if they respect two conditions:<br />
-                  At least 15% of the shots, or on average one and a half shots per minute, are digitally processed (on the whole film);<br />
-                  More than 50% of the French spend is for VFX/post-production
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How to Apply - France */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  How to apply?
-                </h1>
-                <h6 className="display_h6 text-center">
-                  The TRIP is selectively granted by the CNC to French production services companies who are in charge of shooting in France in compliance with a contract entered into with a non-French production company.<br />
-                  The French production services company that you choose has to be in charge of:<br />
-                  supplying the artistic and technical means for making the feature film or TV project concerned;<br />
-                  managing the material operations for its making, and monitoring its proper execution.<br />
-                  The French production services company will receive the TRIP through their yearly tax return.<br />
-                  <strong>For detailed information about Tax Rebate for International Productions (TRIP), visit Film France website here.</strong>
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* UK AVEC Section */}
-        <section id="uk" className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  UK: AUDIO VISUAL EXPENDITURE CREDIT (AVEC) & FILM TAX RELIEF
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Since 2024, the UK Government has introduced the Audio Visual Expenditure Credit (AVEC), modernizing the tax relief system for film and TV productions. Further new measures confirmed by the Government will make the reliefs even more competitive, taking effect from April, 1st 2025 in respect of expenditure incurred on or after January, 1st 2025. The AVEC offers:<br />
-                  <strong>25.5% net tax relief</strong> for live-action feature films & high-end TV<br />
-                  <strong>29.25% net tax relief</strong> for animated films, animated TV & children&apos;s TV<br />
-                  <strong>39.75% net tax relief</strong> for UK Independent Film Tax Credit (IFTC)<br />
-                  <strong>5% uplift for UK VFX costs from April 2025 (29.25% total)</strong>
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* UK Eligible Expenses */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Eligible expenses include:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Production crew salaries & wages<br />
-                  Set construction & on-location costs<br />
-                  Pre-production, principal photography, VFX & Post-production<br />
-                  UK-based goods & services<br />
-                  Above-the-line costs, including actors and directors, irrespective of nationality
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* UK Transition Rules */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Transition rules to new incentives:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  AVEC applies to accounting periods ending on or after 1 January 2024;<br />
-                  Productions starting before 1 April 2025 can continue under the existing relief system until 31 March 2027;<br />
-                  Existing tax relief ends for productions starting on or after 1 April 2025.
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* UK From April 2025 */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  From April 2025:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  UK Independent Film Tax Credit (IFTC) at 39.75%, for films under £15M<br />
-                  UK VFX costs receive a 5% increase in relief (29.25%) and are no longer subject to the 80% cap
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* UK Qualifying Requirements */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Qualifying requirements:
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Theatrical release intention for films<br />
-                  Minimum UK expenditure: At least 10% of total core expenditure<br />
-                  TV minimum spend: £1M per broadcast hour<br />
-                  British certification: Pass the Cultural Test or qualify as an official UK co-production<br />
-                  80% cap remains, except for qualifying UK VFX costs (from April 2025)
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How to Apply - UK */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  How to apply?
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Apply for British certification via BFI.<br />
-                  Submit claims to HMRC.<br />
-                  Turnaround time: BFI ~10-12 weeks, HMRC ~6 weeks.<br />
-                  <strong>For detailed information about UK Tax Reliefs, visit British Film Commission website here.</strong>
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="w-full">
