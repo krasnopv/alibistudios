@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import TextSection from '@/components/TextSection';
 import CTASection from '@/components/CTASection';
@@ -181,12 +180,17 @@ export default function StudiosTaxRebate() {
                     Don&apos;t hesitate to contact our team
                   </h6>
                   <div className="mt-4">
-                    <a 
-                      href="/contact" 
-                      className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
+                    <button 
+                      onClick={() => {
+                        const footer = document.querySelector('footer');
+                        if (footer) {
+                          footer.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors cursor-pointer"
                     >
                       Contact us →
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -451,7 +455,15 @@ export default function StudiosTaxRebate() {
                 </h6>
                 <div className="text-center mt-8">
                   <h6 className="display_h6 brand-color">
-                    <a href="mailto:contact@alibi.com" className="hover:underline">Get in Touch</a> | <a href="/contact" className="hover:underline">Contact Form</a> →
+                    <a href="mailto:contact@alibi.com" className="hover:underline">Get in Touch</a> | <button 
+                      onClick={() => {
+                        const footer = document.querySelector('footer');
+                        if (footer) {
+                          footer.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="hover:underline cursor-pointer bg-transparent border-none p-0 text-inherit"
+                    >Contact Form</button> →
                   </h6>
                 </div>
               </div>
@@ -526,7 +538,6 @@ export default function StudiosTaxRebate() {
           </div>
         </nav>
       </div>
-      <Footer />
     </div>
   );
 }
