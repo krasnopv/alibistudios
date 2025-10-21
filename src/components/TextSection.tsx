@@ -6,7 +6,10 @@ interface TextSectionProps {
   copy?: unknown[];
   url?: {
     type: 'internal' | 'external';
-    internalPage?: { _ref: string; slug: string };
+    internalPage?: { 
+      _id: string;
+      slug: string;
+    };
     externalUrl?: string;
   };
 }

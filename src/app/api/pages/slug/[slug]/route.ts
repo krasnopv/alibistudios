@@ -23,9 +23,9 @@ export async function GET(
         "imageAlt": image.alt,
         heroTitle,
         heroSubtitle,
-        content[]{
+        content[] {
           ...,
-          url{
+          url {
             ...,
             internalPage->{
               _id,
