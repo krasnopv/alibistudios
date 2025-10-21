@@ -3,10 +3,68 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function StudiosTaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('');
+  const [showNavigation, setShowNavigation] = useState<boolean>(false);
+
+  // Track which section is currently in view and show/hide navigation
+  useEffect(() => {
+    const sections = ['fr', 'uk'];
+    const introductionSection = document.getElementById('introduction');
+    
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -20% 0px', // Trigger when section is 20% from top and bottom
+        threshold: 0.1
+      }
+    );
+
+    const introductionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Show navigation when introduction section is not in view
+          setShowNavigation(!entry.isIntersecting);
+        });
+      },
+      {
+        rootMargin: '0px 0px -50% 0px', // Trigger when section is 50% from bottom
+        threshold: 0.1
+      }
+    );
+
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        sectionObserver.observe(element);
+      }
+    });
+
+    if (introductionSection) {
+      introductionObserver.observe(introductionSection);
+    }
+
+    return () => {
+      sections.forEach((sectionId) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          sectionObserver.unobserve(element);
+        }
+      });
+      if (introductionSection) {
+        introductionObserver.unobserve(introductionSection);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
@@ -52,7 +110,7 @@ export default function StudiosTaxRebate() {
         </section>
 
         {/* Introduction Section */}
-        <section className="w-full">
+        <section id="introduction" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
@@ -318,18 +376,26 @@ export default function StudiosTaxRebate() {
         </main>
         
         {/* Right-side Navigation */}
-        <nav className="hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
+        <nav className={`hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50 transition-opacity duration-300 ${showNavigation ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <div className="flex flex-col space-y-3">
             <a 
               href="#fr" 
-              className="w-12 h-12 bg-[#FF0066] hover:bg-[#E6005C] text-white rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl"
+              className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl ${
+                activeSection === 'fr' 
+                  ? 'bg-[#FF0066] text-white' 
+                  : 'bg-white text-[#FF0066] hover:bg-gray-50'
+              }`}
               title="France TRIP"
             >
               FR
             </a>
             <a 
               href="#uk" 
-              className="w-12 h-12 bg-[#FF0066] hover:bg-[#E6005C] text-white rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl"
+              className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl ${
+                activeSection === 'uk' 
+                  ? 'bg-[#FF0066] text-white' 
+                  : 'bg-white text-[#FF0066] hover:bg-gray-50'
+              }`}
               title="UK AVEC"
             >
               UK
