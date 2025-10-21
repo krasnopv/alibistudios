@@ -42,7 +42,6 @@ interface Page {
 export default function StudiosTaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   const [activeSection, setActiveSection] = useState<string>('');
-  const [showNavigation, setShowNavigation] = useState<boolean>(false);
   const [pageData, setPageData] = useState<Page | null>(null);
 
   // Fetch page data from Sanity
@@ -62,18 +61,9 @@ export default function StudiosTaxRebate() {
     fetchPageData();
   }, []);
 
-  // Track which section is currently in view and show/hide navigation
+  // Track which section is currently in view for active state highlighting
   useEffect(() => {
     const sections = ['fr', 'uk'];
-    const heroSection = document.getElementById('hero');
-    const supportSection = document.getElementById('support');
-    const introductionSection = document.getElementById('introduction');
-    
-    console.log('Navigation elements found:', {
-      hero: !!heroSection,
-      support: !!supportSection,
-      introduction: !!introductionSection
-    });
     
     const sectionObserver = new IntersectionObserver(
       (entries) => {
@@ -89,63 +79,10 @@ export default function StudiosTaxRebate() {
       }
     );
 
-    const navigationObserver = new IntersectionObserver(
-      (entries) => {
-        const heroVisible = entries.find(entry => entry.target === heroSection)?.isIntersecting || false;
-        const supportVisible = entries.find(entry => entry.target === supportSection)?.isIntersecting || false;
-        const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
-        
-        const scrollY = window.scrollY;
-        const isAtTop = scrollY < 200; // Consider "at top" if scrolled less than 200px
-        
-        // Additional check: if Support section is in the top half of viewport
-        const supportRect = supportSection?.getBoundingClientRect();
-        const isSupportInTopHalf = supportRect && supportRect.top < window.innerHeight / 2;
-        
-        console.log('Navigation visibility check:', {
-          heroVisible,
-          supportVisible,
-          introductionVisible,
-          supportElement: supportSection,
-          supportRect,
-          scrollY,
-          isAtTop,
-          isSupportInTopHalf,
-          conditions: {
-            notAtTop: !isAtTop,
-            heroNotVisible: !(heroSection ? heroVisible : false),
-            supportNotVisible: !supportVisible,
-            supportNotInTopHalf: !isSupportInTopHalf
-          }
-        });
-        
-        // Always show navigation - no conditions to hide it
-        const shouldShowNavigation = true;
-        
-        console.log('Final decision:', {
-          shouldShowNavigation,
-          showNavigation: shouldShowNavigation
-        });
-        
-        setShowNavigation(shouldShowNavigation);
-      },
-      {
-        rootMargin: '-5% 0px -5% 0px', // Even more sensitive detection
-        threshold: 0.05
-      }
-    );
-
     sections.forEach((sectionId) => {
       const element = document.getElementById(sectionId);
       if (element) {
         sectionObserver.observe(element);
-      }
-    });
-
-    // Observe all sections that should hide navigation when visible
-    [heroSection, supportSection, introductionSection].forEach(element => {
-      if (element) {
-        navigationObserver.observe(element);
       }
     });
 
@@ -154,11 +91,6 @@ export default function StudiosTaxRebate() {
         const element = document.getElementById(sectionId);
         if (element) {
           sectionObserver.unobserve(element);
-        }
-      });
-      [heroSection, supportSection, introductionSection].forEach(element => {
-        if (element) {
-          navigationObserver.unobserve(element);
         }
       });
     };
@@ -525,7 +457,7 @@ export default function StudiosTaxRebate() {
         </main>
         
         {/* Right-side Navigation */}
-        <nav className={`fixed right-4 top-1/2 transform -translate-y-1/2 z-50 transition-opacity duration-300 ${showNavigation ? 'opacity-100' : 'opacity-0 pointer-events-none'} sm:right-6 lg:right-8`}>
+        <nav className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 sm:right-6 lg:right-8">
           <div className="flex flex-col space-y-3">
             <a 
               href="#fr" 
