@@ -106,20 +106,22 @@ export default function StudiosTaxRebate() {
           heroVisible,
           supportVisible,
           introductionVisible,
-          shouldHide: heroVisible || supportVisible || introductionVisible,
           supportElement: supportSection,
           supportRect,
           scrollY,
           isAtTop,
-          isSupportInTopHalf
+          isSupportInTopHalf,
+          conditions: {
+            notAtTop: !isAtTop,
+            heroNotVisible: !(heroSection ? heroVisible : false),
+            supportNotVisible: !supportVisible,
+            supportNotInTopHalf: !isSupportInTopHalf
+          }
         });
         
-        // Show navigation ONLY when Hero and Support section are scrolled up (out of view)
-        // Navigation should be visible when both Hero and Support are not visible
-        const shouldShowNavigation = !isAtTop && 
-          !(heroSection ? heroVisible : false) && 
-          !supportVisible && 
-          !isSupportInTopHalf;
+        // Show navigation when Hero and Support section are scrolled up (out of view)
+        // Simplified logic: show when not at top and Support section is not visible
+        const shouldShowNavigation = !isAtTop && !supportVisible;
         
         console.log('Final decision:', {
           shouldShowNavigation,
