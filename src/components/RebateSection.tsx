@@ -28,7 +28,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
               <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
                   <span key={index}>
-                    <strong>{point.point}</strong>
+                    {point.point}
                     {point.description && (
                       <span className="block mt-1">
                         {point.description}
@@ -54,7 +54,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
               <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
                   <span key={index}>
-                    <strong>{point.point}</strong>
+                    {point.point}
                     {point.description && (
                       <span className="block mt-1">
                         {point.description}
