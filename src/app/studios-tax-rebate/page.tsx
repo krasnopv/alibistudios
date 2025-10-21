@@ -471,7 +471,7 @@ export default function StudiosTaxRebate() {
           <div className="flex flex-col space-y-3">
             <a 
               href="#fr" 
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl ${
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
                 activeSection === 'fr' 
                   ? 'bg-[#FF0066] text-white' 
                   : 'bg-white text-[#FF0066] hover:bg-gray-50'
@@ -482,7 +482,7 @@ export default function StudiosTaxRebate() {
             </a>
             <a 
               href="#uk" 
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl ${
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
                 activeSection === 'uk' 
                   ? 'bg-[#FF0066] text-white' 
                   : 'bg-white text-[#FF0066] hover:bg-gray-50'
