@@ -216,7 +216,7 @@ export default function StudiosTaxRebate() {
               <div className="row">
                 <div className="mb-16">
                   <h1 className="display_h1 brand-color text-center">
-                    {rebate.title}
+                    {rebate.intro?.title || rebate.title}
                   </h1>
                   {rebate.intro?.description && (
                     <div className="display_h6 text-center">
