@@ -66,6 +66,8 @@ export default function StudiosTaxRebate() {
   // Track which section is currently in view and show/hide navigation
   useEffect(() => {
     const sections = ['fr', 'uk'];
+    const heroSection = document.getElementById('hero');
+    const supportSection = document.querySelector('section:nth-of-type(2)'); // First section after Hero
     const introductionSection = document.getElementById('introduction');
     
     const sectionObserver = new IntersectionObserver(
@@ -84,10 +86,13 @@ export default function StudiosTaxRebate() {
 
     const navigationObserver = new IntersectionObserver(
       (entries) => {
+        const heroVisible = entries.find(entry => entry.target === heroSection)?.isIntersecting || false;
+        const supportVisible = entries.find(entry => entry.target === supportSection)?.isIntersecting || false;
         const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
         
-        // Show navigation when introduction section is not in view (scrolled past it)
-        setShowNavigation(!introductionVisible);
+        // Show navigation when Hero, first section, and introduction (with buttons) are all out of view
+        const shouldShowNavigation = !heroVisible && !supportVisible && !introductionVisible;
+        setShowNavigation(shouldShowNavigation);
       },
       {
         rootMargin: '0px 0px -50% 0px', // Trigger when section is 50% from bottom
@@ -102,9 +107,12 @@ export default function StudiosTaxRebate() {
       }
     });
 
-    if (introductionSection) {
-      navigationObserver.observe(introductionSection);
-    }
+    // Observe all sections that should hide navigation when visible
+    [heroSection, supportSection, introductionSection].forEach(element => {
+      if (element) {
+        navigationObserver.observe(element);
+      }
+    });
 
     return () => {
       sections.forEach((sectionId) => {
@@ -113,9 +121,11 @@ export default function StudiosTaxRebate() {
           sectionObserver.unobserve(element);
         }
       });
-      if (introductionSection) {
-        navigationObserver.unobserve(introductionSection);
-      }
+      [heroSection, supportSection, introductionSection].forEach(element => {
+        if (element) {
+          navigationObserver.unobserve(element);
+        }
+      });
     };
   }, []);
 
