@@ -11,7 +11,8 @@ export default function StudiosTaxRebate() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
+      <div className="w-full flex">
+        <main className={`flex-1 flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero Section */}
         <Hero 
           pageSlug="studios-tax-rebate" 
@@ -63,13 +64,13 @@ export default function StudiosTaxRebate() {
                 </h6>
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center mt-8">
                   <a 
-                    href="#france-trip" 
+                    href="#fr" 
                     className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
                   >
                     France&apos;s TRIP
                   </a>
                   <a 
-                    href="#uk-avec" 
+                    href="#uk" 
                     className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
                   >
                     UK&apos;s AVEC
@@ -81,7 +82,7 @@ export default function StudiosTaxRebate() {
         </section>
 
         {/* France TRIP Section */}
-        <section id="france-trip" className="w-full">
+        <section id="fr" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
@@ -181,7 +182,7 @@ export default function StudiosTaxRebate() {
         </section>
 
         {/* UK AVEC Section */}
-        <section id="uk-avec" className="w-full">
+        <section id="uk" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
@@ -314,7 +315,29 @@ export default function StudiosTaxRebate() {
             </div>
           </div>
         </section>
-      </main>
+        </main>
+        
+        {/* Right-side Navigation */}
+        <nav className="hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Navigate by Country</h3>
+            <div className="space-y-2">
+              <a 
+                href="#fr" 
+                className="block text-sm text-[#FF0066] hover:text-[#E6005C] transition-colors"
+              >
+                🇫🇷 France TRIP
+              </a>
+              <a 
+                href="#uk" 
+                className="block text-sm text-[#FF0066] hover:text-[#E6005C] transition-colors"
+              >
+                🇬🇧 UK AVEC
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
       <Footer />
     </div>
   );
