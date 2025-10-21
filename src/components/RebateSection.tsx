@@ -21,27 +21,31 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="heading_h1">
-                {section.title}
-              </h1>
-            )}
-            {section.points && section.points.length > 0 && (
-              <div 
-                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
-                style={{ fontFamily: 'Plus Jakarta Sans' }}
-              >
-                {section.points.map((point, index) => (
-                  <div key={index} className="mb-4">
-                    <div>{point.point || point.requirement}</div>
-                    {point.description && (
-                      <div className="mt-2 text-gray-600">
-                        {point.description}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="mb-8">
+                <h1 className="heading_h1">
+                  {section.title}
+                </h1>
               </div>
             )}
+              {section.points && section.points.length > 0 && (
+                <div 
+                  className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                  style={{ fontFamily: 'Plus Jakarta Sans' }}
+                >
+                  <ul className="list-disc list-inside mb-4 space-y-2">
+                    {section.points.map((point, index) => (
+                      <li key={index} className="mb-2">
+                        {point.point || point.requirement}
+                        {point.description && (
+                          <div className="mt-2 text-gray-600">
+                            {point.description}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
         );
 
@@ -49,27 +53,31 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="heading_h1">
-                {section.title}
-              </h1>
-            )}
-            {section.points && section.points.length > 0 && (
-              <div 
-                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
-                style={{ fontFamily: 'Plus Jakarta Sans' }}
-              >
-                {section.points.map((point, index) => (
-                  <div key={index} className="mb-4">
-                    <div>{point.point || point.requirement}</div>
-                    {point.description && (
-                      <div className="mt-2 text-gray-600">
-                        {point.description}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="mb-8">
+                <h1 className="heading_h1">
+                  {section.title}
+                </h1>
               </div>
             )}
+              {section.points && section.points.length > 0 && (
+                <div 
+                  className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                  style={{ fontFamily: 'Plus Jakarta Sans' }}
+                >
+                  <ul className="list-disc list-inside mb-4 space-y-2">
+                    {section.points.map((point, index) => (
+                      <li key={index} className="mb-2">
+                        {point.point || point.requirement}
+                        {point.description && (
+                          <div className="mt-2 text-gray-600">
+                            {point.description}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
         );
 
@@ -77,9 +85,11 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="heading_h1">
-                {section.title}
-              </h1>
+              <div className="mb-8">
+                <h1 className="heading_h1">
+                  {section.title}
+                </h1>
+              </div>
             )}
             {section.description && (
               <div 
@@ -96,9 +106,11 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="heading_h1">
-                {section.title}
-              </h1>
+              <div className="mb-8">
+                <h1 className="heading_h1">
+                  {section.title}
+                </h1>
+              </div>
             )}
             {section.content && (
               <div 
