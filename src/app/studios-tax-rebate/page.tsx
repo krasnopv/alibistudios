@@ -1,27 +1,23 @@
+'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Hero from '@/components/Hero';
+import { useState } from 'react';
 
 export default function StudiosTaxRebate() {
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero Section */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  UP TO 40% TAX REBATE
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Do not hesitate to contact us, we will help you with the Tax Rebate schemes.<br />
-                  TAKE ADVANTAGE OF TAX RELIEFS IN FRANCE AND IN THE UK
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Hero 
+          pageSlug="studios-tax-rebate" 
+          className="mb-8"
+          onRenderChange={setHasHeroContent}
+        />
 
         {/* Support Section */}
         <section className="w-full">
@@ -38,8 +34,16 @@ export default function StudiosTaxRebate() {
                 </h6>
                 <div className="text-center mt-8">
                   <h6 className="display_h6 brand-color">
-                    Don&apos;t hesitate to contact our team at contact@alibi.com! →
+                    Don&apos;t hesitate to contact our team
                   </h6>
+                  <div className="mt-4">
+                    <a 
+                      href="/contact" 
+                      className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
+                    >
+                      Contact us →
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
