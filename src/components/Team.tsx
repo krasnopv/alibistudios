@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
 const Team = () => {
   return (
     <section className="w-full">
@@ -17,10 +15,7 @@ const Team = () => {
           {/* Content */}
           <div>
             <h6 className="display_h6">
-              Alibi&apos;s multidisciplinary studios are powered by multicultural teams of seasoned industry veterans with decades of experience. Independent and adaptable, we tailor our pipeline and team to fit the unique needs of every project. Whether collaborating as partners or taking the lead on full productions, our scalable resources and deep expertise deliver exceptional results for clients worldwide.{' '}
-              <Link href="/team" className="text-black hover:underline">
-                →
-              </Link>
+              Alibi&apos;s multidisciplinary studios are powered by multicultural teams of seasoned industry veterans with decades of experience. Independent and adaptable, we tailor our pipeline and team to fit the unique needs of every project. Whether collaborating as partners or taking the lead on full productions, our scalable resources and deep expertise deliver exceptional results for clients worldwide. →
             </h6>
           </div>
         </div>

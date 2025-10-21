@@ -44,7 +44,9 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                 {url && (
                   url.type === 'internal' && url.internalPage ? (
                     <a 
-                      href={`/pages/${url.internalPage._ref}`}
+                      href={url.internalPage._ref === 'services' ? '/services' : 
+                           url.internalPage._ref === 'team' ? '/team' : 
+                           `/pages/${url.internalPage._ref}`}
                       className="text-black hover:underline"
                     >
                       →
