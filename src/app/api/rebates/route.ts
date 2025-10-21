@@ -12,6 +12,7 @@ export async function GET() {
         title,
         points[] {
           point,
+          requirement,
           description
         },
         description,

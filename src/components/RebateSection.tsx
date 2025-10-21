@@ -5,7 +5,8 @@ interface RebateSectionProps {
     _type: string;
     title?: string;
     points?: Array<{
-      point: string;
+      point?: string;
+      requirement?: string;
       description?: string;
     }>;
     description?: PortableTextBlock[];
@@ -14,9 +15,6 @@ interface RebateSectionProps {
 }
 
 export default function RebateSection({ section }: RebateSectionProps) {
-  // Debug logging
-  console.log('RebateSection received:', section);
-  
   const renderContent = () => {
     switch (section._type) {
       case 'eligibleExpenses':
@@ -31,7 +29,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
               <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
                   <span key={index}>
-                    {point.point}
+                    {point.point || point.requirement}
                     {point.description && (
                       <span className="block mt-1">
                         {point.description}
@@ -57,7 +55,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
               <h6 className="display_h6 text-center">
                 {section.points.map((point, index) => (
                   <span key={index}>
-                    {point.point}
+                    {point.point || point.requirement}
                     {point.description && (
                       <span className="block mt-1">
                         {point.description}
