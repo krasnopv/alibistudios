@@ -319,22 +319,21 @@ export default function StudiosTaxRebate() {
         
         {/* Right-side Navigation */}
         <nav className="hidden lg:block fixed right-8 top-1/2 transform -translate-y-1/2 z-50">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Navigate by Country</h3>
-            <div className="space-y-2">
-              <a 
-                href="#fr" 
-                className="block text-sm text-[#FF0066] hover:text-[#E6005C] transition-colors"
-              >
-                🇫🇷 France TRIP
-              </a>
-              <a 
-                href="#uk" 
-                className="block text-sm text-[#FF0066] hover:text-[#E6005C] transition-colors"
-              >
-                🇬🇧 UK AVEC
-              </a>
-            </div>
+          <div className="flex flex-col space-y-3">
+            <a 
+              href="#fr" 
+              className="w-12 h-12 bg-[#FF0066] hover:bg-[#E6005C] text-white rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl"
+              title="France TRIP"
+            >
+              FR
+            </a>
+            <a 
+              href="#uk" 
+              className="w-12 h-12 bg-[#FF0066] hover:bg-[#E6005C] text-white rounded-full flex items-center justify-center font-semibold text-sm transition-colors shadow-lg hover:shadow-xl"
+              title="UK AVEC"
+            >
+              UK
+            </a>
           </div>
         </nav>
       </div>
