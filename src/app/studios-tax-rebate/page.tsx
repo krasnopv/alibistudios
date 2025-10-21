@@ -136,9 +136,9 @@ export default function StudiosTaxRebate() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
+                {/* <h1 className="display_h1 brand-color text-center">
                   NEED SOME SUPPORT WITH TAX RELIEF SCHEMES?
-                </h1>
+                </h1> */}
                 <h6 className="display_h6 text-center">
                   Our team at Alibi is here to help you with the tax rebate incentives from both the UK and France.<br />
                   We have worked on multiple productions which benefited from tax rebates – some examples below:<br />
