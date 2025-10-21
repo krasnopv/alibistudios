@@ -204,20 +204,6 @@ export default function StudiosTaxRebate() {
                 <h6 className="display_h6 text-center">
                   Whether you&apos;re working on a film or a series, both countries offer attractive incentives to support international or VFX-heavy productions.
                 </h6>
-                <div className="flex flex-col md:flex-row gap-6 justify-center items-center mt-8">
-                  <a 
-                    href="#fr" 
-                    className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
-                  >
-                    France&apos;s TRIP
-                  </a>
-                  <a 
-                    href="#uk" 
-                    className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
-                  >
-                    UK&apos;s AVEC
-                  </a>
-                </div>
               </div>
             </div>
           </div>
