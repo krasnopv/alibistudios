@@ -7,7 +7,8 @@ import CTASection from '@/components/CTASection';
 import ThumbnailSection from '@/components/ThumbnailSection';
 import Films from '@/components/Films';
 import Awards from '@/components/Awards';
-import CountriesContent from '@/components/CountriesContent';
+import RebateSection from '@/components/RebateSection';
+import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
 
 interface Page {
@@ -40,43 +41,38 @@ interface Page {
   }>;
 }
 
-interface Country {
+interface Rebate {
   _id: string;
   title: string;
-  slug: string;
-  code: string;
-  intro: {
-    title: string;
-    description: BlockContent[];
+  slug: {
+    current: string;
   };
-  sections: Array<{
+  intro?: {
+    title?: string;
+    description?: PortableTextBlock[];
+  };
+  sections?: Array<{
     _type: string;
-    title: string;
+    title?: string;
     points?: Array<{
       point: string;
       description?: string;
     }>;
-    steps?: Array<{
-      step: string;
-      description?: string;
-    }>;
-    content?: BlockContent[];
+    description?: PortableTextBlock[];
+    content?: PortableTextBlock[];
   }>;
-}
-
-interface BlockContent {
-  _type: string;
-  style?: string;
-  children?: Array<{
-    text: string;
-  }>;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  order?: number;
 }
 
 export default function StudiosTaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   const [activeSection, setActiveSection] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
-  const [countries, setCountries] = useState<Country[]>([]);
+  const [rebates, setRebates] = useState<Rebate[]>([]);
 
   // Fetch page data from Sanity
   useEffect(() => {
@@ -95,26 +91,28 @@ export default function StudiosTaxRebate() {
     fetchPageData();
   }, []);
 
-  // Fetch countries data from Sanity
+  // Fetch rebates data from Sanity
   useEffect(() => {
-    const fetchCountries = async () => {
+    const fetchRebates = async () => {
       try {
-        const response = await fetch('/api/countries');
+        const response = await fetch('/api/rebates');
         if (response.ok) {
           const data = await response.json();
-          setCountries(data);
+          setRebates(data);
         }
       } catch (error) {
-        console.error('Error fetching countries:', error);
+        console.error('Error fetching rebates:', error);
       }
     };
 
-    fetchCountries();
+    fetchRebates();
   }, []);
 
   // Track which section is currently in view for active state highlighting
   useEffect(() => {
-    const sections = ['fr', 'uk'];
+    if (rebates.length === 0) return;
+    
+    const sections = rebates.map(rebate => rebate.slug.current);
     
     const sectionObserver = new IntersectionObserver(
       (entries) => {
@@ -143,9 +141,9 @@ export default function StudiosTaxRebate() {
         if (element) {
           sectionObserver.unobserve(element);
         }
-      });
-    };
-  }, []);
+        });
+      };
+    }, [rebates]);
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
@@ -225,16 +223,40 @@ export default function StudiosTaxRebate() {
           </div>
         </section>
 
-        {/* Dynamic Countries Content */}
-        {countries.length > 0 && (
-          <section className="w-full">
+        {/* Dynamic Rebates Content */}
+        {rebates.map((rebate) => (
+          <section key={rebate._id} id={rebate.slug.current} className="w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="row">
-                <CountriesContent countries={countries} />
+                <div className="mb-16">
+                  <h1 className="display_h1 brand-color text-center">
+                    {rebate.title}
+                  </h1>
+                  {rebate.intro?.description && (
+                    <div className="display_h6 text-center">
+                      <div className="prose prose-gray max-w-none">
+                        <PortableText value={rebate.intro.description} />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
+            
+            {/* Render all sections for this rebate */}
+            {rebate.sections?.map((section, index) => (
+              <div key={index} className="w-full">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="row">
+                    <div className="mb-16">
+                      <RebateSection section={section} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </section>
-        )}
+        ))}
 
 
 
@@ -309,28 +331,20 @@ export default function StudiosTaxRebate() {
         {/* Right-side Navigation */}
         <nav className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 sm:right-6 lg:right-8">
           <div className="flex flex-col space-y-3">
-            <a 
-              href="#fr" 
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
-                activeSection === 'fr' 
-                  ? 'bg-[#FF0066] text-white' 
-                  : 'bg-white text-[#FF0066] hover:bg-gray-50'
-              }`}
-              title="France TRIP"
-            >
-              FR
-            </a>
-            <a 
-              href="#uk" 
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
-                activeSection === 'uk' 
-                  ? 'bg-[#FF0066] text-white' 
-                  : 'bg-white text-[#FF0066] hover:bg-gray-50'
-              }`}
-              title="UK AVEC"
-            >
-              UK
-            </a>
+            {rebates.map((rebate) => (
+              <a 
+                key={rebate._id}
+                href={`#${rebate.slug.current}`}
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
+                  activeSection === rebate.slug.current
+                    ? 'bg-[#FF0066] text-white' 
+                    : 'bg-white text-[#FF0066] hover:bg-gray-50'
+                }`}
+                title={rebate.title}
+              >
+                {rebate.slug.current.toUpperCase()}
+              </a>
+            ))}
           </div>
         </nav>
       </div>
