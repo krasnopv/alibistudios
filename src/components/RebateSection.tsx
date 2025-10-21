@@ -21,24 +21,26 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="display_h1 brand-color text-center">
+              <h1 className="heading_h1">
                 {section.title}
               </h1>
             )}
             {section.points && section.points.length > 0 && (
-              <h6 className="display_h6 text-center">
+              <div 
+                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                style={{ fontFamily: 'Plus Jakarta Sans' }}
+              >
                 {section.points.map((point, index) => (
-                  <span key={index}>
-                    {point.point || point.requirement}
+                  <div key={index} className="mb-4">
+                    <div>{point.point || point.requirement}</div>
                     {point.description && (
-                      <span className="block mt-1">
+                      <div className="mt-2 text-gray-600">
                         {point.description}
-                      </span>
+                      </div>
                     )}
-                    {index < (section.points?.length || 0) - 1 && <br />}
-                  </span>
+                  </div>
                 ))}
-              </h6>
+              </div>
             )}
           </div>
         );
@@ -47,24 +49,26 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="display_h1 brand-color text-center">
+              <h1 className="heading_h1">
                 {section.title}
               </h1>
             )}
             {section.points && section.points.length > 0 && (
-              <h6 className="display_h6 text-center">
+              <div 
+                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                style={{ fontFamily: 'Plus Jakarta Sans' }}
+              >
                 {section.points.map((point, index) => (
-                  <span key={index}>
-                    {point.point || point.requirement}
+                  <div key={index} className="mb-4">
+                    <div>{point.point || point.requirement}</div>
                     {point.description && (
-                      <span className="block mt-1">
+                      <div className="mt-2 text-gray-600">
                         {point.description}
-                      </span>
+                      </div>
                     )}
-                    {index < (section.points?.length || 0) - 1 && <br />}
-                  </span>
+                  </div>
                 ))}
-              </h6>
+              </div>
             )}
           </div>
         );
@@ -73,12 +77,15 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="display_h1 brand-color text-center">
+              <h1 className="heading_h1">
                 {section.title}
               </h1>
             )}
             {section.description && (
-              <div className="display_h6 text-center">
+              <div 
+                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                style={{ fontFamily: 'Plus Jakarta Sans' }}
+              >
                 <PortableText value={section.description} />
               </div>
             )}
@@ -89,12 +96,15 @@ export default function RebateSection({ section }: RebateSectionProps) {
         return (
           <div className="mb-16">
             {section.title && (
-              <h1 className="display_h1 brand-color text-center">
+              <h1 className="heading_h1">
                 {section.title}
               </h1>
             )}
             {section.content && (
-              <div className="display_h6 text-center">
+              <div 
+                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                style={{ fontFamily: 'Plus Jakarta Sans' }}
+              >
                 <PortableText value={section.content} />
               </div>
             )}
