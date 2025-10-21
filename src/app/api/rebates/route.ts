@@ -15,7 +15,11 @@ export async function GET() {
           description
         },
         description,
-        content
+        content,
+        steps[] {
+          step,
+          description
+        }
       },
       seo,
       order

@@ -14,6 +14,9 @@ interface RebateSectionProps {
 }
 
 export default function RebateSection({ section }: RebateSectionProps) {
+  // Debug logging
+  console.log('RebateSection received:', section);
+  
   const renderContent = () => {
     switch (section._type) {
       case 'eligibleExpenses':
