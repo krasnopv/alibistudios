@@ -1,38 +1,93 @@
-export default {
-  name: 'country',
-  title: 'Country',
+// Sanity schema for Countries content
+// This schema can be used in a separate Sanity project
+
+export const countriesSchema = {
+  name: 'countries',
+  title: 'Countries',
   type: 'document',
   fields: [
     {
-      name: 'name',
+      name: 'title',
       title: 'Country Name',
       type: 'string',
-      description: 'e.g., France, UK, etc.',
+      description: 'Name of the country (e.g., "France", "UK")',
       validation: (Rule) => Rule.required()
-    },
-    {
-      name: 'code',
-      title: 'Country Code',
-      type: 'string',
-      description: 'e.g., fr, uk, etc. (used for navigation)',
-      validation: (Rule) => Rule.required().max(10)
     },
     {
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
-        source: 'name',
+        source: 'title',
         maxLength: 96,
       },
+      description: 'URL-friendly identifier (e.g., "fr", "uk")',
       validation: (Rule) => Rule.required()
     },
     {
-      name: 'description',
-      title: 'Short Description',
-      type: 'text',
-      description: 'Brief description of the country\'s tax rebate program',
-      validation: (Rule) => Rule.max(200)
+      name: 'code',
+      title: 'Country Code',
+      type: 'string',
+      description: 'Two-letter country code (e.g., "FR", "UK")',
+      validation: (Rule) => Rule.required().max(2)
+    },
+    {
+      name: 'intro',
+      title: 'Introduction Section',
+      type: 'object',
+      fields: [
+        {
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          description: 'Main title for the country section'
+        },
+        {
+          name: 'description',
+          title: 'Description',
+          type: 'array',
+          of: [
+            {
+              type: 'block',
+              styles: [
+                {title: 'Normal', value: 'normal'},
+                {title: 'H1', value: 'h1'},
+                {title: 'H2', value: 'h2'},
+                {title: 'H3', value: 'h3'},
+                {title: 'H4', value: 'h4'},
+                {title: 'H5', value: 'h5'},
+                {title: 'H6', value: 'h6'},
+              ],
+              lists: [
+                {title: 'Bullet', value: 'bullet'},
+                {title: 'Number', value: 'number'}
+              ],
+              marks: {
+                decorators: [
+                  {title: 'Strong', value: 'strong'},
+                  {title: 'Emphasis', value: 'em'},
+                  {title: 'Code', value: 'code'}
+                ],
+                annotations: [
+                  {
+                    title: 'URL',
+                    name: 'link',
+                    type: 'object',
+                    fields: [
+                      {
+                        title: 'URL',
+                        name: 'href',
+                        type: 'url'
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          description: 'Rich text description for the introduction'
+        }
+      ]
     },
     {
       name: 'sections',
@@ -41,38 +96,7 @@ export default {
       of: [
         {
           type: 'object',
-          name: 'introSection',
-          title: 'Intro Section',
-          fields: [
-            {
-              name: 'title',
-              title: 'Title',
-              type: 'string',
-              validation: (Rule) => Rule.required()
-            },
-            {
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              validation: (Rule) => Rule.required()
-            }
-          ],
-          preview: {
-            select: {
-              title: 'title',
-              subtitle: 'description'
-            },
-            prepare(selection) {
-              return {
-                title: selection.title,
-                subtitle: selection.subtitle?.substring(0, 100) + '...'
-              }
-            }
-          }
-        },
-        {
-          type: 'object',
-          name: 'eligibleExpensesSection',
+          name: 'eligibleExpenses',
           title: 'Eligible Expenses Section',
           fields: [
             {
@@ -80,7 +104,7 @@ export default {
               title: 'Title',
               type: 'string',
               initialValue: 'Eligible expenses include:',
-              validation: (Rule) => Rule.required()
+              description: 'Section title (default: "Eligible expenses include:")'
             },
             {
               name: 'points',
@@ -89,8 +113,6 @@ export default {
               of: [
                 {
                   type: 'object',
-                  name: 'expensePoint',
-                  title: 'Expense Point',
                   fields: [
                     {
                       name: 'point',
@@ -100,8 +122,9 @@ export default {
                     },
                     {
                       name: 'description',
-                      title: 'Description (optional)',
-                      type: 'text'
+                      title: 'Description',
+                      type: 'text',
+                      description: 'Optional detailed description for this point'
                     }
                   ],
                   preview: {
@@ -111,25 +134,18 @@ export default {
                   }
                 }
               ],
-              validation: (Rule) => Rule.required().min(1)
+              description: 'List of eligible expenses'
             }
           ],
           preview: {
             select: {
-              title: 'title',
-              points: 'points'
-            },
-            prepare(selection) {
-              return {
-                title: selection.title,
-                subtitle: `${selection.points?.length || 0} points`
-              }
+              title: 'title'
             }
           }
         },
         {
           type: 'object',
-          name: 'qualifyingRequirementsSection',
+          name: 'qualifyingRequirements',
           title: 'Qualifying Requirements Section',
           fields: [
             {
@@ -137,7 +153,7 @@ export default {
               title: 'Title',
               type: 'string',
               initialValue: 'Qualifying requirements',
-              validation: (Rule) => Rule.required()
+              description: 'Section title (default: "Qualifying requirements")'
             },
             {
               name: 'points',
@@ -146,8 +162,6 @@ export default {
               of: [
                 {
                   type: 'object',
-                  name: 'requirementPoint',
-                  title: 'Requirement Point',
                   fields: [
                     {
                       name: 'requirement',
@@ -157,8 +171,9 @@ export default {
                     },
                     {
                       name: 'description',
-                      title: 'Description (optional)',
-                      type: 'text'
+                      title: 'Description',
+                      type: 'text',
+                      description: 'Optional detailed description for this requirement'
                     }
                   ],
                   preview: {
@@ -168,25 +183,18 @@ export default {
                   }
                 }
               ],
-              validation: (Rule) => Rule.required().min(1)
+              description: 'List of qualifying requirements'
             }
           ],
           preview: {
             select: {
-              title: 'title',
-              points: 'points'
-            },
-            prepare(selection) {
-              return {
-                title: selection.title,
-                subtitle: `${selection.points?.length || 0} requirements`
-              }
+              title: 'title'
             }
           }
         },
         {
           type: 'object',
-          name: 'howToApplySection',
+          name: 'howToApply',
           title: 'How to Apply Section',
           fields: [
             {
@@ -194,17 +202,15 @@ export default {
               title: 'Title',
               type: 'string',
               initialValue: 'How to apply?',
-              validation: (Rule) => Rule.required()
+              description: 'Section title (default: "How to apply?")'
             },
             {
-              name: 'points',
+              name: 'steps',
               title: 'Application Steps',
               type: 'array',
               of: [
                 {
                   type: 'object',
-                  name: 'applicationStep',
-                  title: 'Application Step',
                   fields: [
                     {
                       name: 'step',
@@ -214,8 +220,9 @@ export default {
                     },
                     {
                       name: 'description',
-                      title: 'Description (optional)',
-                      type: 'text'
+                      title: 'Description',
+                      type: 'text',
+                      description: 'Optional detailed description for this step'
                     }
                   ],
                   preview: {
@@ -225,42 +232,30 @@ export default {
                   }
                 }
               ],
-              validation: (Rule) => Rule.required().min(1)
+              description: 'Step-by-step application process'
             }
           ],
           preview: {
             select: {
-              title: 'title',
-              points: 'points'
-            },
-            prepare(selection) {
-              return {
-                title: selection.title,
-                subtitle: `${selection.points?.length || 0} steps`
-              }
+              title: 'title'
             }
           }
         },
         {
           type: 'object',
-          name: 'customContentSection',
+          name: 'customSection',
           title: 'Custom Content Section',
           fields: [
             {
               name: 'title',
               title: 'Title',
               type: 'string',
-              validation: (Rule) => Rule.required()
-            },
-            {
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              validation: (Rule) => Rule.required()
+              validation: (Rule) => Rule.required(),
+              description: 'Custom section title'
             },
             {
               name: 'content',
-              title: 'Additional Content',
+              title: 'Content',
               type: 'array',
               of: [
                 {
@@ -271,7 +266,8 @@ export default {
                     {title: 'H2', value: 'h2'},
                     {title: 'H3', value: 'h3'},
                     {title: 'H4', value: 'h4'},
-                    {title: 'Quote', value: 'blockquote'},
+                    {title: 'H5', value: 'h5'},
+                    {title: 'H6', value: 'h6'},
                   ],
                   lists: [
                     {title: 'Bullet', value: 'bullet'},
@@ -299,94 +295,148 @@ export default {
                     ]
                   }
                 }
-              ]
+              ],
+              description: 'Rich text content for custom section'
             }
           ],
           preview: {
             select: {
-              title: 'title',
-              subtitle: 'description'
-            },
-            prepare(selection) {
-              return {
-                title: selection.title,
-                subtitle: selection.subtitle?.substring(0, 100) + '...'
-              }
+              title: 'title'
             }
           }
         }
       ],
-      validation: (Rule) => Rule.required().min(1)
+      description: 'Content sections for this country'
     },
     {
-      name: 'contactInfo',
-      title: 'Contact Information',
+      name: 'seo',
+      title: 'SEO',
       type: 'object',
       fields: [
         {
-          name: 'email',
-          title: 'Contact Email',
+          name: 'metaTitle',
+          title: 'Meta Title',
           type: 'string',
-          description: 'Email for this country\'s tax rebate inquiries'
+          description: 'SEO title for search engines'
         },
         {
-          name: 'phone',
-          title: 'Contact Phone',
-          type: 'string',
-          description: 'Phone number for inquiries'
-        },
-        {
-          name: 'website',
-          title: 'Official Website',
-          type: 'url',
-          description: 'Official government website for tax rebate information'
+          name: 'metaDescription',
+          title: 'Meta Description',
+          type: 'text',
+          description: 'SEO description for search engines'
         }
       ]
-    },
-    {
-      name: 'featured',
-      title: 'Featured',
-      type: 'boolean',
-      description: 'Mark as featured country',
-      initialValue: false
-    },
-    {
-      name: 'order',
-      title: 'Display Order',
-      type: 'number',
-      description: 'Order in which countries appear (lower numbers first)',
-      initialValue: 0
     }
   ],
   preview: {
     select: {
-      title: 'name',
-      subtitle: 'description',
-      media: 'featured'
-    },
-    prepare(selection) {
-      return {
-        title: selection.title,
-        subtitle: selection.subtitle,
-        media: selection.media ? '⭐' : '🌍'
-      }
+      title: 'title',
+      subtitle: 'code'
     }
-  },
-  orderings: [
+  }
+};
+
+// Alternative simplified schema for easier management
+export const countriesSimpleSchema = {
+  name: 'countriesSimple',
+  title: 'Countries (Simple)',
+  type: 'document',
+  fields: [
     {
-      title: 'Display Order',
-      name: 'orderAsc',
-      by: [
-        {field: 'order', direction: 'asc'},
-        {field: 'name', direction: 'asc'}
-      ]
+      name: 'title',
+      title: 'Country Name',
+      type: 'string',
+      validation: (Rule) => Rule.required()
     },
     {
-      title: 'Name A-Z',
-      name: 'nameAsc',
-      by: [
-        {field: 'name', direction: 'asc'}
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'code',
+      title: 'Country Code',
+      type: 'string',
+      validation: (Rule) => Rule.required().max(2)
+    },
+    {
+      name: 'introTitle',
+      title: 'Introduction Title',
+      type: 'string'
+    },
+    {
+      name: 'introDescription',
+      title: 'Introduction Description',
+      type: 'text'
+    },
+    {
+      name: 'eligibleExpensesTitle',
+      title: 'Eligible Expenses Title',
+      type: 'string',
+      initialValue: 'Eligible expenses include:'
+    },
+    {
+      name: 'eligibleExpenses',
+      title: 'Eligible Expenses List',
+      type: 'array',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'qualifyingRequirementsTitle',
+      title: 'Qualifying Requirements Title',
+      type: 'string',
+      initialValue: 'Qualifying requirements'
+    },
+    {
+      name: 'qualifyingRequirements',
+      title: 'Qualifying Requirements List',
+      type: 'array',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'howToApplyTitle',
+      title: 'How to Apply Title',
+      type: 'string',
+      initialValue: 'How to apply?'
+    },
+    {
+      name: 'howToApply',
+      title: 'How to Apply Steps',
+      type: 'array',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'customSections',
+      title: 'Custom Sections',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'title',
+              title: 'Title',
+              type: 'string'
+            },
+            {
+              name: 'content',
+              title: 'Content',
+              type: 'text'
+            }
+          ]
+        }
       ]
     }
-  ]
-}
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'code'
+    }
+  }
+};
