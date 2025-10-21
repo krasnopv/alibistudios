@@ -90,9 +90,9 @@ export default function StudiosTaxRebate() {
         const supportVisible = entries.find(entry => entry.target === supportSection)?.isIntersecting || false;
         const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
         
-        // Show navigation when Hero, first section, and introduction (with buttons) are all out of view
-        const shouldShowNavigation = !heroVisible && !supportVisible && !introductionVisible;
-        setShowNavigation(shouldShowNavigation);
+        // Hide navigation when Hero, first section, or introduction (with buttons) are in view
+        const shouldHideNavigation = heroVisible || supportVisible || introductionVisible;
+        setShowNavigation(!shouldHideNavigation);
       },
       {
         rootMargin: '0px 0px -50% 0px', // Trigger when section is 50% from bottom
