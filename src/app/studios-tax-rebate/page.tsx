@@ -50,8 +50,38 @@ export default function StudiosTaxRebate() {
           </div>
         </section>
 
-        {/* France TRIP Section */}
+        {/* Introduction Section */}
         <section className="w-full">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="row">
+              <div className="mb-16">
+                <h1 className="display_h1 brand-color text-center">
+                  Maximize your production budget by leveraging tax relief opportunities in France and in the UK!
+                </h1>
+                <h6 className="display_h6 text-center">
+                  Whether you&apos;re working on a film or a series, both countries offer attractive incentives to support international or VFX-heavy productions.
+                </h6>
+                <div className="flex flex-col md:flex-row gap-6 justify-center items-center mt-8">
+                  <a 
+                    href="#france-trip" 
+                    className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
+                  >
+                    France&apos;s TRIP
+                  </a>
+                  <a 
+                    href="#uk-avec" 
+                    className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors"
+                  >
+                    UK&apos;s AVEC
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* France TRIP Section */}
+        <section id="france-trip" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
@@ -151,7 +181,7 @@ export default function StudiosTaxRebate() {
         </section>
 
         {/* UK AVEC Section */}
-        <section className="w-full">
+        <section id="uk-avec" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
