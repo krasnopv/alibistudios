@@ -67,8 +67,14 @@ export default function StudiosTaxRebate() {
   useEffect(() => {
     const sections = ['fr', 'uk'];
     const heroSection = document.getElementById('hero');
-    const supportSection = document.querySelector('section:nth-of-type(2)'); // First section after Hero
+    const supportSection = document.getElementById('support');
     const introductionSection = document.getElementById('introduction');
+    
+    console.log('Navigation elements found:', {
+      hero: !!heroSection,
+      support: !!supportSection,
+      introduction: !!introductionSection
+    });
     
     const sectionObserver = new IntersectionObserver(
       (entries) => {
@@ -89,6 +95,13 @@ export default function StudiosTaxRebate() {
         const heroVisible = entries.find(entry => entry.target === heroSection)?.isIntersecting || false;
         const supportVisible = entries.find(entry => entry.target === supportSection)?.isIntersecting || false;
         const introductionVisible = entries.find(entry => entry.target === introductionSection)?.isIntersecting || false;
+        
+        console.log('Navigation visibility check:', {
+          heroVisible,
+          supportVisible,
+          introductionVisible,
+          shouldHide: heroVisible || supportVisible || introductionVisible
+        });
         
         // Hide navigation when Hero, first section, or introduction (with buttons) are in view
         const shouldHideNavigation = heroVisible || supportVisible || introductionVisible;
@@ -142,7 +155,7 @@ export default function StudiosTaxRebate() {
         />
 
         {/* Support Section */}
-        <section className="w-full">
+        <section id="support" className="w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="row">
               <div className="mb-16">
