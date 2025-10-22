@@ -160,7 +160,7 @@ const Hero = ({
         {isSanityVideo && (
           <button
             onClick={toggleSound}
-            className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full transition-colors duration-200 cursor-pointer"
+            className="absolute bottom-6 right-6 z-10 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full transition-colors duration-200 cursor-pointer"
             aria-label={isMuted ? 'Unmute video' : 'Mute video'}
           >
             {isMuted ? (
