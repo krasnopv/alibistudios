@@ -330,15 +330,24 @@ const ServicePage = () => {
               </div>
 
               {/* Categories Filter */}
-              {service.subServices && service.subServices.length > 0 && (
-                <div className="mb-12">
-                  <ScrollableCategories
-                    categories={['All', ...service.subServices.map(sub => sub.title)]}
-                    activeCategory={activeCategory}
-                    onCategoryChange={setActiveCategory}
-                  />
-                </div>
-              )}
+              {service.projects && service.projects.length > 0 && (() => {
+                // Collect all unique subServices from projects
+                const projectSubServices = service.projects
+                  .flatMap(project => project.subServices || [])
+                  .filter((sub, index, self) => 
+                    index === self.findIndex(s => s.title === sub.title)
+                  );
+                
+                return projectSubServices.length > 0 ? (
+                  <div className="mb-12">
+                    <ScrollableCategories
+                      categories={['All', ...projectSubServices.map(sub => sub.title)]}
+                      activeCategory={activeCategory}
+                      onCategoryChange={setActiveCategory}
+                    />
+                  </div>
+                ) : null;
+              })()}
 
               {/* Projects Grid */}
               {service.projects && service.projects.length > 0 && (
@@ -359,6 +368,23 @@ const ServicePage = () => {
                   <h3 className="font-bold mb-2">Debug Info:</h3>
                   <p><strong>Service subServices:</strong> {service.subServices?.length || 0}</p>
                   <p><strong>Service subServices titles:</strong> {service.subServices?.map(s => s.title).join(', ') || 'None'}</p>
+                  
+                  {/* Project-based subServices */}
+                  {(() => {
+                    const projectSubServices = service.projects
+                      ?.flatMap(project => project.subServices || [])
+                      .filter((sub, index, self) => 
+                        index === self.findIndex(s => s.title === sub.title)
+                      ) || [];
+                    
+                    return (
+                      <>
+                        <p><strong>Project-based subServices:</strong> {projectSubServices.length}</p>
+                        <p><strong>Project-based subServices titles:</strong> {projectSubServices.map(s => s.title).join(', ') || 'None'}</p>
+                      </>
+                    );
+                  })()}
+                  
                   <p><strong>Active category:</strong> {activeCategory}</p>
                   <p><strong>Total projects:</strong> {service.projects?.length || 0}</p>
                   <p><strong>Filtered projects:</strong> {service.projects?.filter(project => {
