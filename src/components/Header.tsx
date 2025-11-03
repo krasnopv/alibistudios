@@ -210,9 +210,9 @@ const Header = () => {
           backdropFilter: hasHero 
             ? `blur(${scrollProgress * 12}px)`
             : 'blur(12px)',
-          boxShadow: hasHero 
-            ? (scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none')
-            : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          // boxShadow: hasHero 
+          //   ? (scrollProgress > 0 ? `0 4px 6px -1px rgba(0, 0, 0, ${scrollProgress * 0.1})` : 'none')
+          //   : '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
         }}
       >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 py-2.5">
@@ -240,9 +240,9 @@ const Header = () => {
             <Image 
               src={getAssetPath((hasHero && scrollProgress > 0.8) || !hasHero ? 'logo_black.svg' : 'logo_white.svg')}
               alt="Alibi Studios" 
-              width={120} 
-              height={40}
-              className="h-10 w-auto transition-all duration-300"
+              width={93} 
+              height={35}
+              className="w-auto transition-all duration-300"
               style={{
                 filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
               }}

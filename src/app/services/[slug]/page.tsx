@@ -361,43 +361,6 @@ const ServicePage = () => {
                   gridCols="md:grid-cols-2"
                 />
               )}
-              
-              {/* Debug info - remove this after fixing */}
-              {process.env.NODE_ENV === 'development' && (
-                <div className="mt-8 p-4 bg-gray-100 rounded">
-                  <h3 className="font-bold mb-2">Debug Info:</h3>
-                  <p><strong>Service subServices:</strong> {service.subServices?.length || 0}</p>
-                  <p><strong>Service subServices titles:</strong> {service.subServices?.map(s => s.title).join(', ') || 'None'}</p>
-                  
-                  {/* Project-based subServices */}
-                  {(() => {
-                    const projectSubServices = service.projects
-                      ?.flatMap(project => project.subServices || [])
-                      .filter((sub, index, self) => 
-                        index === self.findIndex(s => s.title === sub.title)
-                      ) || [];
-                    
-                    return (
-                      <>
-                        <p><strong>Project-based subServices:</strong> {projectSubServices.length}</p>
-                        <p><strong>Project-based subServices titles:</strong> {projectSubServices.map(s => s.title).join(', ') || 'None'}</p>
-                      </>
-                    );
-                  })()}
-                  
-                  <p><strong>Active category:</strong> {activeCategory}</p>
-                  <p><strong>Total projects:</strong> {service.projects?.length || 0}</p>
-                  <p><strong>Filtered projects:</strong> {service.projects?.filter(project => {
-                    if (activeCategory === 'All') return true;
-                    return project.subServices?.some(sub => sub.title === activeCategory);
-                  }).length || 0}</p>
-                  {service.projects?.slice(0, 2).map((project, index) => (
-                    <div key={index} className="mt-2">
-                      <p><strong>Project {index + 1} subServices:</strong> {project.subServices?.map(s => s.title).join(', ') || 'None'}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </section>

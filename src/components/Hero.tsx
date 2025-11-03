@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface HeroVideo {
   videoUrl: string;
@@ -160,22 +161,25 @@ const Hero = ({
         {isSanityVideo && (
           <button
             onClick={toggleSound}
-            className="absolute bottom-6 right-6 z-10 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full transition-colors duration-200 cursor-pointer"
+            className="absolute bottom-2 left-2 z-10 p-2 cursor-pointer"
             aria-label={isMuted ? 'Unmute video' : 'Mute video'}
           >
             {isMuted ? (
-              // Muted icon (speaker with X)
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-              </svg>
+              // Muted icon
+              <Image 
+                src="/muted.svg" 
+                alt="Muted" 
+                width={28} 
+                height={28}
+              />
             ) : (
-              // Unmuted icon (speaker)
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
+              // Playing icon
+              <Image 
+                src="/playing.svg" 
+                alt="Playing" 
+                width={28} 
+                height={28}
+              />
             )}
           </button>
         )}

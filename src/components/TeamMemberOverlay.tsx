@@ -128,7 +128,7 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+            className="relative bg-white/90 shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
