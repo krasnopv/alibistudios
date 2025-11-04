@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import PageLoader from '@/components/PageLoader';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
 import VideoOverlay from '@/components/VideoOverlay';
@@ -285,16 +286,7 @@ const ProjectPage = () => {
   }, [projectSlug]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
-        <Header />
-        <main className="w-full flex flex-col items-center no-hero">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
-          </div>
-        </main>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!project) {
@@ -347,11 +339,11 @@ const ProjectPage = () => {
                       {(() => {
                         // Check if we have a video trailer
                         if (project.videoTrailer) {
-                          const videoUrl = project.videoTrailer.type === 'upload' 
-                            ? (project.videoTrailer.videoFileUrl || null)
-                            : (project.videoTrailer.url || null);
-                          
-                          if (videoUrl) {
+                        const videoUrl = project.videoTrailer.type === 'upload' 
+                          ? (project.videoTrailer.videoFileUrl || null)
+                          : (project.videoTrailer.url || null);
+                        
+                        if (videoUrl) {
                           // For YouTube videos
                           if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
                             const videoId = videoUrl.includes('youtube.com/watch?v=') 
@@ -425,13 +417,13 @@ const ProjectPage = () => {
                         
                         // Final fallback to video thumbnail if available
                         if (project.videoTrailer?.thumbnailUrl) {
-                          return (
-                            <img
+                        return (
+                          <img
                               src={getOptimalThumbnail(project.videoTrailer, 400)}
-                              alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                              className="w-full h-full object-cover"
-                            />
-                          );
+                            alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                            className="w-full h-full object-cover"
+                          />
+                        );
                         }
                         
                         return null;
@@ -605,11 +597,11 @@ const ProjectPage = () => {
                         {(() => {
                           // Check if we have a video trailer
                           if (project.videoTrailer) {
-                            const videoUrl = project.videoTrailer.type === 'upload' 
-                              ? (project.videoTrailer.videoFileUrl || null)
-                              : (project.videoTrailer.url || null);
-                            
-                            if (videoUrl) {
+                          const videoUrl = project.videoTrailer.type === 'upload' 
+                            ? (project.videoTrailer.videoFileUrl || null)
+                            : (project.videoTrailer.url || null);
+                          
+                          if (videoUrl) {
                             // For YouTube videos
                             if (videoUrl.includes('youtube.com/watch?v=') || videoUrl.includes('youtu.be/')) {
                               const videoId = videoUrl.includes('youtube.com/watch?v=') 
@@ -683,13 +675,13 @@ const ProjectPage = () => {
                           
                           // Final fallback to video thumbnail if available
                           if (project.videoTrailer?.thumbnailUrl) {
-                            return (
-                              <img
+                          return (
+                            <img
                                 src={getOptimalThumbnail(project.videoTrailer, 800)}
-                                alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
-                                className="w-full h-full object-cover"
-                              />
-                            );
+                              alt={project.videoTrailer.thumbnailAlt || 'Video trailer thumbnail'}
+                              className="w-full h-full object-cover"
+                            />
+                          );
                           }
                           
                           return null;

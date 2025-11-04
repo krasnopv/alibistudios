@@ -68,7 +68,7 @@ interface Rebate {
   order?: number;
 }
 
-export default function StudiosTaxRebate() {
+export default function TaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
   const [activeSection, setActiveSection] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
@@ -78,7 +78,7 @@ export default function StudiosTaxRebate() {
   useEffect(() => {
     const fetchPageData = async () => {
       try {
-        const response = await fetch('/api/pages/studios-tax-rebate');
+        const response = await fetch('/api/pages/tax-rebate');
         if (response.ok) {
           const data = await response.json();
           setPageData(data);
@@ -152,7 +152,7 @@ export default function StudiosTaxRebate() {
         <main className={`flex-1 flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
         {/* Hero Section */}
         <Hero 
-          pageSlug="studios-tax-rebate" 
+          pageSlug="tax-rebate" 
           className="mb-8"
           onRenderChange={setHasHeroContent}
         />
@@ -335,3 +335,5 @@ export default function StudiosTaxRebate() {
     </div>
   );
 }
+
+

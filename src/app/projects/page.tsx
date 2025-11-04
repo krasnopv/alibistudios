@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
+import PageLoader from '@/components/PageLoader';
 import ServicesGrid from '@/components/ServicesGrid';
 import ScrollableCategories from '@/components/ScrollableCategories';
 
@@ -106,16 +107,7 @@ const ProjectsPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
-        <Header />
-        <main className="w-full flex flex-col items-center no-hero">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
-          </div>
-        </main>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import PageLoader from '@/components/PageLoader';
 import ContentGrid from '@/components/ContentGrid';
 import TeamMemberOverlay from '@/components/TeamMemberOverlay';
 
@@ -67,16 +68,7 @@ const Team = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
-        <Header />
-        <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
-          </div>
-        </main>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   // Get unique services for filtering from the services field (array of service references)

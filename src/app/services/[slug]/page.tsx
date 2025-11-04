@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import Header from '@/components/Header';
+import PageLoader from '@/components/PageLoader';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import ServicesGrid from '@/components/ServicesGrid';
 import BlockContent from '@sanity/block-content-to-react';
@@ -175,16 +177,7 @@ const ServicePage = () => {
   }, [searchParams, service]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
-        <Header />
-        <main className="w-full flex flex-col items-center">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0066]"></div>
-          </div>
-        </main>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!service) {
@@ -292,22 +285,25 @@ const ServicePage = () => {
               {service.heroVideoUrl && (
                 <button
                   onClick={toggleSound}
-                  className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full transition-colors duration-200 cursor-pointer"
+                  className="absolute bottom-2 left-2 z-10 p-2 cursor-pointer"
                   aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                 >
                   {isMuted ? (
-                    // Muted icon (speaker with X)
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <line x1="23" y1="9" x2="17" y2="15"></line>
-                      <line x1="17" y1="9" x2="23" y2="15"></line>
-                    </svg>
+                    // Muted icon
+                    <Image 
+                      src="/muted.svg" 
+                      alt="Muted" 
+                      width={28} 
+                      height={28}
+                    />
                   ) : (
-                    // Unmuted icon (speaker)
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    </svg>
+                    // Playing icon
+                    <Image 
+                      src="/playing.svg" 
+                      alt="Playing" 
+                      width={28} 
+                      height={28}
+                    />
                   )}
                 </button>
               )}
@@ -339,13 +335,13 @@ const ServicePage = () => {
                   );
                 
                 return projectSubServices.length > 0 ? (
-                  <div className="mb-12">
-                    <ScrollableCategories
+                <div className="mb-12">
+                  <ScrollableCategories
                       categories={['All', ...projectSubServices.map(sub => sub.title)]}
-                      activeCategory={activeCategory}
-                      onCategoryChange={setActiveCategory}
-                    />
-                  </div>
+                    activeCategory={activeCategory}
+                    onCategoryChange={setActiveCategory}
+                  />
+                </div>
                 ) : null;
               })()}
 
