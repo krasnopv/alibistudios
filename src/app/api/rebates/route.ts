@@ -10,6 +10,15 @@ export async function GET() {
       sections[] {
         _type,
         title,
+        image {
+          asset->{
+            _id,
+            url
+          },
+          alt
+        },
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt,
         points[] {
           point,
           requirement,

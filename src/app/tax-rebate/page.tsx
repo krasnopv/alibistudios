@@ -10,6 +10,7 @@ import Awards from '@/components/Awards';
 import RebateSection from '@/components/RebateSection';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Page {
   _id: string;
@@ -54,6 +55,8 @@ interface Rebate {
   sections?: Array<{
     _type: string;
     title?: string;
+    imageUrl?: string;
+    imageAlt?: string;
     points?: Array<{
       point: string;
       description?: string;
@@ -78,7 +81,7 @@ export default function TaxRebate() {
   useEffect(() => {
     const fetchPageData = async () => {
       try {
-        const response = await fetch('/api/pages/tax-rebate');
+        const response = await fetch('/api/pages/slug/tax-rebate');
         if (response.ok) {
           const data = await response.json();
           setPageData(data);
@@ -157,57 +160,23 @@ export default function TaxRebate() {
           onRenderChange={setHasHeroContent}
         />
 
-        {/* Support Section */}
-        <section id="support" className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                {/* <h1 className="display_h1 brand-color text-center">
-                  NEED SOME SUPPORT WITH TAX RELIEF SCHEMES?
-                </h1> */}
-                <h6 className="display_h6 text-center">
-                  Our team at Alibi is here to help you with the tax rebate incentives from both the UK and France.<br />
-                  We have worked on multiple productions which benefited from tax rebates – some examples below:<br />
-                  A list of projects, which benefited from the schemes, can be found on CNC&apos;s website and British Film Commission website.
-                </h6>
-                <div className="text-center mt-8">
-                  <h6 className="display_h6 brand-color">
-                    Don&apos;t hesitate to contact our team
+        {/* Page Title Section */}
+        {pageData?.title && (
+          <section className="w-full">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="row">
+                <div className="mb-16">
+                  <h1 className="display_h1 brand-color text-center">
+                    {pageData.title}
+                  </h1>
+                  <h6 className="display_h6 text-center">
+                    Alibi is here to help you with the tax rebate incentives in France and the UK.
                   </h6>
-                  <div className="mt-4">
-                    <button 
-                      onClick={() => {
-                        const footer = document.querySelector('footer');
-                        if (footer) {
-                          footer.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="inline-block bg-[#FF0066] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#E6005C] transition-colors cursor-pointer"
-                    >
-                      Contact us →
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Introduction Section */}
-        <section id="introduction" className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Maximize your production budget by leveraging tax relief opportunities in France and in the UK!
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Whether you&apos;re working on a film or a series, both countries offer attractive incentives to support international or VFX-heavy productions.
-                </h6>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Dynamic Rebates Content */}
         {rebates.map((rebate) => (
@@ -229,16 +198,69 @@ export default function TaxRebate() {
               </div>
             </div>
             
-            {/* Render all sections for this rebate */}
-            {rebate.sections?.map((section, index) => (
-              <section key={index} className="w-full">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="row">
-                    <RebateSection section={section} />
+            {/* Render all sections for this rebate in chess format */}
+            {rebate.sections?.map((section, sectionIndex) => {
+              // Chess format: first section (index 0) = Image-Content, second (index 1) = Content-Image, etc.
+              const isEven = sectionIndex % 2 === 0;
+              // Even index (0, 2, 4...): Image | Content
+              // Odd index (1, 3, 5...): Content | Image
+
+              return (
+                <section key={sectionIndex} className="w-full">
+                  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="row">
+                      <div className="mb-16 w-full">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                          {isEven ? (
+                            <>
+                              {/* Image on left (desktop), Image on top (mobile) */}
+                              {section.imageUrl && (
+                                <div className="order-1 flex items-center justify-center self-stretch">
+                                  <div className="relative w-[25%] aspect-square">
+                                    <Image
+                                      src={section.imageUrl}
+                                      alt={section.imageAlt || section.title || 'Section image'}
+                                      fill
+                                      className="object-contain"
+                                      sizes="(max-width: 768px) 100vw, 12.5vw"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                              {/* Content on right (desktop), Content below (mobile) */}
+                              <div className={section.imageUrl ? "order-2" : "order-1 md:col-span-2"}>
+                                <RebateSection section={section} />
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              {/* Content on left (desktop), Content on top (mobile) */}
+                              <div className={section.imageUrl ? "order-2 md:order-1" : "order-1 md:col-span-2"}>
+                                <RebateSection section={section} />
+                              </div>
+                              {/* Image on right (desktop), Image below (mobile) */}
+                              {section.imageUrl && (
+                                <div className="order-1 md:order-2 flex items-center justify-center self-stretch">
+                                  <div className="relative w-[25%] aspect-square">
+                                    <Image
+                                      src={section.imageUrl}
+                                      alt={section.imageAlt || section.title || 'Section image'}
+                                      fill
+                                      className="object-contain"
+                                      sizes="(max-width: 768px) 100vw, 12.5vw"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </section>
-            ))}
+                </section>
+              );
+            })}
           </section>
         ))}
 

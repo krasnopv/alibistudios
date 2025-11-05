@@ -4,6 +4,8 @@ interface RebateSectionProps {
   section: {
     _type: string;
     title?: string;
+    imageUrl?: string;
+    imageAlt?: string;
     points?: Array<{
       point?: string;
       requirement?: string;
@@ -19,7 +21,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
     switch (section._type) {
       case 'eligibleExpenses':
         return (
-          <div className="mb-16">
+          <div>
             {section.title && (
               <div className="mb-8">
                 <h1 className="heading_h1">
@@ -51,7 +53,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
 
       case 'qualifyingRequirements':
         return (
-          <div className="mb-16">
+          <div>
             {section.title && (
               <div className="mb-8">
                 <h1 className="heading_h1">
@@ -83,7 +85,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
 
       case 'howToApply':
         return (
-          <div className="mb-16">
+          <div>
             {section.title && (
               <div className="mb-8">
                 <h1 className="heading_h1">
@@ -104,7 +106,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
 
       case 'customSection':
         return (
-          <div className="mb-16">
+          <div>
             {section.title && (
               <div className="mb-8">
                 <h1 className="heading_h1">
