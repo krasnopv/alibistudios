@@ -52,6 +52,8 @@ interface Rebate {
   intro?: {
     title?: string;
     description?: PortableTextBlock[];
+    imageUrl?: string;
+    imageAlt?: string;
   };
   sections?: Array<{
     _type: string;
@@ -217,20 +219,41 @@ export default function TaxRebate() {
           <section key={rebate._id} id={rebate.slug.current} className="w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="row border-t-2 border-b border-black pt-8 pb-8" style={{ borderColor: '#000000' }}>
-                <div className="mb-16">
-                  <h1 className="display_h6 brand-color text-center">
+                <div className="mb-16 w-full">
+                  <h1 className="display_h6 brand-color text-center mb-8">
                     {rebate.intro?.title || rebate.title}
                   </h1>
-                  {rebate.intro?.description && (
-                    <div 
-                      className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
-                      style={{ fontFamily: 'Plus Jakarta Sans' }}
-                    >
-                      <div className="prose prose-gray max-w-none">
-                        <PortableText value={rebate.intro.description} />
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-stretch items-start">
+                    {/* Description on left (desktop), Description on top (mobile) */}
+                    <div className="order-1">
+                      {rebate.intro?.description && (
+                        <div 
+                          className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                          style={{ fontFamily: 'Plus Jakarta Sans' }}
+                        >
+                          <div className="prose prose-gray max-w-none">
+                            <PortableText value={rebate.intro.description} />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                    {/* Image on right (desktop), Image below (mobile) */}
+                    {rebate.intro?.imageUrl && (
+                      <div className="order-2 flex items-start md:items-stretch justify-center self-stretch h-full">
+                        <div 
+                          className="relative w-full aspect-square md:h-full md:[aspect-ratio:unset]"
+                        >
+                          <Image
+                            src={rebate.intro.imageUrl}
+                            alt={rebate.intro.imageAlt || rebate.intro?.title || rebate.title || 'Introduction image'}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

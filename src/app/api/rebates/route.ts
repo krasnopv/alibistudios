@@ -6,7 +6,19 @@ export async function GET() {
       _id,
       title,
       slug,
-      intro,
+      intro {
+        title,
+        description,
+        image {
+          asset->{
+            _id,
+            url
+          },
+          alt
+        },
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
       sections[] {
         _type,
         title,
