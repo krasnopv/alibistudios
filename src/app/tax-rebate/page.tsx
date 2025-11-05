@@ -8,6 +8,7 @@ import ThumbnailSection from '@/components/ThumbnailSection';
 import Films from '@/components/Films';
 import Awards from '@/components/Awards';
 import RebateSection from '@/components/RebateSection';
+import ScrollableCategories from '@/components/ScrollableCategories';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -73,7 +74,7 @@ interface Rebate {
 
 export default function TaxRebate() {
   const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
-  const [activeSection, setActiveSection] = useState<string>('');
+  const [activeCategory, setActiveCategory] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
   const [rebates, setRebates] = useState<Rebate[]>([]);
 
@@ -111,7 +112,14 @@ export default function TaxRebate() {
     fetchRebates();
   }, []);
 
-  // Track which section is currently in view for active state highlighting
+  // Set initial active category when rebates are loaded
+  useEffect(() => {
+    if (rebates.length > 0 && activeCategory === '') {
+      setActiveCategory(rebates[0].slug.current);
+    }
+  }, [rebates, activeCategory]);
+
+  // Track which rebate section is currently in view for active state highlighting
   useEffect(() => {
     if (rebates.length === 0) return;
     
@@ -121,7 +129,7 @@ export default function TaxRebate() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+            setActiveCategory(entry.target.id);
           }
         });
       },
@@ -178,17 +186,46 @@ export default function TaxRebate() {
           </section>
         )}
 
+        {/* Rebates Navigation */}
+        {rebates.length > 0 && (
+          <section className="w-full">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="row">
+                <div className="mb-12">
+                  <ScrollableCategories
+                    categories={rebates.map(rebate => rebate.title)}
+                    activeCategory={rebates.find(r => r.slug.current === activeCategory)?.title || rebates[0]?.title || ''}
+                    onCategoryChange={(category) => {
+                      const selectedRebate = rebates.find(r => r.title === category);
+                      if (selectedRebate) {
+                        const element = document.getElementById(selectedRebate.slug.current);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          setActiveCategory(selectedRebate.slug.current);
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Dynamic Rebates Content */}
         {rebates.map((rebate) => (
           <section key={rebate._id} id={rebate.slug.current} className="w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="row">
+              <div className="row border-t-2 border-b border-black pt-8 pb-8" style={{ borderColor: '#000000' }}>
                 <div className="mb-16">
-                  <h1 className="display_h1 brand-color text-center">
+                  <h1 className="display_h6 brand-color text-center">
                     {rebate.intro?.title || rebate.title}
                   </h1>
                   {rebate.intro?.description && (
-                    <div className="display_h6 text-center">
+                    <div 
+                      className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                      style={{ fontFamily: 'Plus Jakarta Sans' }}
+                    >
                       <div className="prose prose-gray max-w-none">
                         <PortableText value={rebate.intro.description} />
                       </div>
@@ -204,11 +241,13 @@ export default function TaxRebate() {
               const isEven = sectionIndex % 2 === 0;
               // Even index (0, 2, 4...): Image | Content
               // Odd index (1, 3, 5...): Content | Image
+              // Don't add bottom border for "How to apply" sections
+              const shouldShowBottomBorder = section._type !== 'howToApply';
 
               return (
                 <section key={sectionIndex} className="w-full">
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="row">
+                    <div className={`row ${shouldShowBottomBorder ? 'border-b' : ''}`} style={shouldShowBottomBorder ? { borderColor: '#000000' } : {}}>
                       <div className="mb-16 w-full">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                           {isEven ? (
@@ -333,26 +372,6 @@ export default function TaxRebate() {
           }
         })}
         </main>
-        
-        {/* Right-side Navigation */}
-        <nav className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 sm:right-6 lg:right-8">
-          <div className="flex flex-col space-y-3">
-            {rebates.map((rebate) => (
-              <a 
-                key={rebate._id}
-                href={`#${rebate.slug.current}`}
-                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-colors shadow-lg hover:shadow-xl aspect-square ${
-                  activeSection === rebate.slug.current
-                    ? 'bg-[#FF0066] text-white' 
-                    : 'bg-white text-[#FF0066] hover:bg-gray-50'
-                }`}
-                title={rebate.title}
-              >
-                {rebate.slug.current.toUpperCase()}
-              </a>
-            ))}
-          </div>
-        </nav>
       </div>
     </div>
   );
