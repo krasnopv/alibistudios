@@ -9,18 +9,32 @@ interface ScrollableCategoriesProps {
   activeCategory: string;
   onCategoryChange: (category: string) => void;
   className?: string;
+  layout?: 'scroll' | 'rows';
 }
 
 const ScrollableCategories = ({
   categories,
   activeCategory,
   onCategoryChange,
-  className = ''
+  className = '',
+  layout = 'rows'
 }: ScrollableCategoriesProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [showArrows, setShowArrows] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const checkScrollability = () => {
     if (!scrollContainerRef.current) return;
@@ -34,13 +48,21 @@ const ScrollableCategories = ({
   };
 
   useEffect(() => {
-    checkScrollability();
+    const effectiveLayout = isMobile ? 'scroll' : layout;
+    if (effectiveLayout === 'scroll') {
+      checkScrollability();
+    }
     
-    const handleResize = () => checkScrollability();
+    const handleResize = () => {
+      const currentEffectiveLayout = window.innerWidth < 768 ? 'scroll' : layout;
+      if (currentEffectiveLayout === 'scroll') {
+        checkScrollability();
+      }
+    };
     window.addEventListener('resize', handleResize);
     
     return () => window.removeEventListener('resize', handleResize);
-  }, [categories]);
+  }, [categories, isMobile, layout]);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -64,6 +86,43 @@ const ScrollableCategories = ({
     checkScrollability();
   };
 
+  // Determine which layout to use: mobile always uses scroll, desktop uses layout prop (default: rows)
+  const effectiveLayout = isMobile ? 'scroll' : layout;
+
+  // Rows layout (desktop default, no scroll)
+  if (effectiveLayout === 'rows') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className={`relative ${className}`}
+      >
+        <div className="flex flex-wrap gap-4 md:gap-8">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => onCategoryChange(category)}
+              className={`heading_h3 transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                activeCategory === category
+                  ? 'active-filter'
+                  : 'hover-filter'
+              }`}
+              style={{ 
+                color: '#000000',
+                fontSize: isMobile ? '20px' : undefined
+              }}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Scroll layout (with horizontal scroll)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -98,7 +157,7 @@ const ScrollableCategories = ({
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex gap-8 overflow-x-auto scrollbar-hide scroll-smooth"
+        className="flex gap-4 md:gap-8 overflow-x-auto scrollbar-hide scroll-smooth"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none'
@@ -108,11 +167,15 @@ const ScrollableCategories = ({
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`text-[28px] font-[400] leading-[33.6px] transition-all duration-300 cursor-pointer whitespace-nowrap flex-shrink-0 ${
+            className={`heading_h3 transition-all duration-300 cursor-pointer whitespace-nowrap flex-shrink-0 ${
               activeCategory === category
-                ? 'text-black active-filter'
-                : 'text-black hover:text-black hover-filter'
+                ? 'active-filter'
+                : 'hover-filter'
             }`}
+            style={{ 
+              color: '#000000',
+              fontSize: isMobile ? '20px' : undefined
+            }}
           >
             {category}
           </button>
