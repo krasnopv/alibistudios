@@ -329,6 +329,7 @@ const ServicePage = () => {
               {service.projects && service.projects.length > 0 && (() => {
                 // Collect all unique subServices from projects
                 const projectSubServices = service.projects
+                  .filter(project => project != null) // Filter out null projects
                   .flatMap(project => project.subServices || [])
                   .filter((sub, index, self) => 
                     index === self.findIndex(s => s.title === sub.title)
@@ -348,11 +349,13 @@ const ServicePage = () => {
               {/* Projects Grid */}
               {service.projects && service.projects.length > 0 && (
                 <ServicesGrid 
-                  gridData={service.projects.filter(project => {
-                    if (activeCategory === 'All') return true;
-                    // Check if project has the selected subService
-                    return project.subServices?.some(sub => sub.title === activeCategory);
-                  })}
+                  gridData={service.projects
+                    .filter(project => project != null) // Filter out null projects
+                    .filter(project => {
+                      if (activeCategory === 'All') return true;
+                      // Check if project has the selected subService
+                      return project.subServices?.some(sub => sub.title === activeCategory);
+                    })}
                   schemaUrl="projects"
                   gridCols="md:grid-cols-2"
                 />

@@ -25,7 +25,7 @@ export async function GET(
         image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt,
-        projects[]->{
+        "projects": *[_type == "project" && _id in ^.projects[]._ref && (!defined(hideProject) || hideProject != true)] {
           _id,
           title,
           subtitle,

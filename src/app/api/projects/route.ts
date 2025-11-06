@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const projects = await client.fetch(`
-      *[_type == "project"] | order(order asc) {
+      *[_type == "project" && (!defined(hideProject) || hideProject != true)] | order(order asc) {
         _id,
         title,
         subtitle,

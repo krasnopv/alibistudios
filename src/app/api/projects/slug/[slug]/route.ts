@@ -11,7 +11,7 @@ export async function GET(
     const { slug } = await params;
     
     const project = await client.fetch(`
-      *[_type == "project" && slug.current == $slug][0] {
+      *[_type == "project" && slug.current == $slug && (!defined(hideProject) || hideProject != true)][0] {
         _id,
         title,
         subtitle,
@@ -51,7 +51,7 @@ export async function GET(
           "imageUrl": asset->url,
           "imageAlt": alt
         },
-        relatedProjects[]->{
+        relatedProjects[]->[(!defined(hideProject) || hideProject != true)]{
           _id,
           title,
           subtitle,
