@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ScrollableCategories from './ScrollableCategories';
 
 interface ContentItem {
@@ -30,6 +30,10 @@ interface ContentGridProps {
   className?: string;
   showMemberInfo?: boolean;
   schemaUrl?: string;
+  enablePagination?: boolean;
+  itemsPerPageDesktop?: number;
+  itemsPerPageTablet?: number;
+  itemsPerPageMobile?: number;
 }
 
 const ContentGrid = ({
@@ -41,9 +45,43 @@ const ContentGrid = ({
   onItemClick,
   className = '',
   showMemberInfo = false,
-  schemaUrl
+  schemaUrl,
+  enablePagination = false,
+  itemsPerPageDesktop = 24,
+  itemsPerPageTablet = 12,
+  itemsPerPageMobile = 6
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDesktop);
+
+  // Detect screen size and update items per page
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (typeof window !== 'undefined') {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+          // Desktop (lg and above)
+          setItemsPerPage(itemsPerPageDesktop);
+        } else if (width >= 768) {
+          // Tablet (md to lg)
+          setItemsPerPage(itemsPerPageTablet);
+        } else {
+          // Mobile (below md)
+          setItemsPerPage(itemsPerPageMobile);
+        }
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, [itemsPerPageDesktop, itemsPerPageTablet, itemsPerPageMobile]);
+
+  // Reset to page 1 when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter]);
 
   const filteredItems = activeFilter === 'All' 
     ? items 
@@ -60,6 +98,21 @@ const ContentGrid = ({
       }
       return false;
     });
+
+  // Calculate pagination
+  const totalPages = enablePagination ? Math.ceil(filteredItems.length / itemsPerPage) : 1;
+  const startIndex = enablePagination ? (currentPage - 1) * itemsPerPage : 0;
+  const endIndex = enablePagination ? startIndex + itemsPerPage : filteredItems.length;
+  const paginatedItems = enablePagination ? filteredItems.slice(startIndex, endIndex) : filteredItems;
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    // Scroll to top of grid when page changes
+    const gridElement = document.getElementById('content-grid');
+    if (gridElement) {
+      gridElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const handleItemClick = (item: ContentItem) => {
     if (onItemClick) {
@@ -118,17 +171,17 @@ const ContentGrid = ({
           </div>
 
           {/* Content Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-5 xl:gap-5">
+          <div id="content-grid" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-5 xl:gap-5">
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeFilter}
+                key={`${activeFilter}-${currentPage}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="contents"
               >
-                {filteredItems.map((item, index) => (
+                {paginatedItems.map((item, index) => (
                   <motion.div
                     key={item.id}
                     initial={{ opacity: 0, y: 10 }}
@@ -175,6 +228,75 @@ const ContentGrid = ({
               </motion.div>
             </AnimatePresence>
           </div>
+
+          {/* Pagination Controls */}
+          {enablePagination && totalPages > 1 && (
+            <div className="mt-12 flex items-center justify-center gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded transition-colors ${
+                  currentPage === 1
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
+                aria-label="Previous page"
+              >
+                Previous
+              </button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  const showPage = 
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+                  
+                  if (!showPage) {
+                    // Show ellipsis
+                    if (page === currentPage - 2 || page === currentPage + 2) {
+                      return (
+                        <span key={page} className="px-2 text-gray-400">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+                  
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-2 rounded transition-colors ${
+                        currentPage === page
+                          ? 'bg-black text-white'
+                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                      }`}
+                      aria-label={`Go to page ${page}`}
+                      aria-current={currentPage === page ? 'page' : undefined}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-800'
+                }`}
+                aria-label="Next page"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
     //   </div>
     // </section>

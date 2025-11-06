@@ -116,6 +116,10 @@ const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
             })}
             defaultCategory="All"
             schemaUrl="films"
+            enablePagination={true}
+            itemsPerPageDesktop={24}
+            itemsPerPageTablet={12}
+            itemsPerPageMobile={6}
           />
         {/* </div> */}
       </div>
