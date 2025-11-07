@@ -716,12 +716,12 @@ const ProjectPage = () => {
         </section>
 
               {/* Related Projects */}
-              {project.relatedProjects && project.relatedProjects.length > 0 && (
+              {project.relatedProjects && project.relatedProjects.filter(p => p != null).length > 0 && (
           <section className="w-full bg-white py-16">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="body_regular uppercase" style={{ marginBottom: 'calc(var(--spacing) * 4)' }}>Related Projects</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {project.relatedProjects.slice(0, 4).map((relatedProject, index) => (
+                {project.relatedProjects.filter(p => p != null).slice(0, 4).map((relatedProject, index) => (
                   <Link 
                     key={`related-${projectSlug}-${relatedProject._id || index}`} 
                     href={`/projects/${relatedProject.slug}`}
