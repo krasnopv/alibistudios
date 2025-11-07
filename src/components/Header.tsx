@@ -275,7 +275,7 @@ const Header = () => {
       <div className="fixed inset-0 z-50">
         {/* Backdrop */}
         <div 
-          className={`absolute inset-0 bg-black/50 transition-opacity duration-300 z-10 ${
+          className={`absolute inset-0 bg-white/80 transition-opacity duration-300 z-10 ${
             isMenuOpen ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={handleMenuClose}
