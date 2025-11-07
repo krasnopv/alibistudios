@@ -235,11 +235,12 @@ const ContentGrid = ({
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded transition-colors ${
+                className={`px-4 py-2 transition-colors ${
                   currentPage === 1
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-black text-white hover:bg-gray-800'
+                    : 'text-white hover:opacity-90'
                 }`}
+                style={currentPage !== 1 ? { backgroundColor: '#FF0066' } : {}}
                 aria-label="Previous page"
               >
                 Previous
@@ -269,11 +270,12 @@ const ContentGrid = ({
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 rounded transition-colors ${
+                      className={`px-3 py-2 transition-colors ${
                         currentPage === page
-                          ? 'bg-black text-white'
+                          ? 'text-white'
                           : 'bg-gray-200 text-black hover:bg-gray-300'
                       }`}
+                      style={currentPage === page ? { backgroundColor: '#FF0066' } : {}}
                       aria-label={`Go to page ${page}`}
                       aria-current={currentPage === page ? 'page' : undefined}
                     >
@@ -286,11 +288,12 @@ const ContentGrid = ({
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded transition-colors ${
+                className={`px-4 py-2 transition-colors ${
                   currentPage === totalPages
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-black text-white hover:bg-gray-800'
+                    : 'text-white hover:opacity-90'
                 }`}
+                style={currentPage !== totalPages ? { backgroundColor: '#FF0066' } : {}}
                 aria-label="Next page"
               >
                 Next
