@@ -341,15 +341,7 @@ export default function TaxRebate() {
                 </h6>
                 <div className="text-center mt-8">
                   <h6 className="display_h6 brand-color">
-                    <a href="mailto:contact@alibi.com" className="hover:underline">Get in Touch</a> | <button 
-                      onClick={() => {
-                        const footer = document.querySelector('footer');
-                        if (footer) {
-                          footer.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="hover:underline cursor-pointer bg-transparent border-none p-0 text-inherit"
-                    >Contact Form</button> →
+                    <a href="mailto:production@alibistudios.co.uk" className="hover:underline">Get in Touch</a> →
                   </h6>
                 </div>
               </div>

@@ -38,16 +38,20 @@ const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
       }}>
         {address}
       </p>
-      <span className="text-[#FF0066]" style={{
-        fontFamily: 'Plus Jakarta Sans',
-        fontWeight: 400,
-        fontStyle: 'normal',
-        fontSize: '14px',
-        lineHeight: '150%',
-        letterSpacing: '0%'
-      }}>
+      <a 
+        href="mailto:production@alibistudios.co.uk"
+        className="text-[#FF0066] hover:underline cursor-pointer" 
+        style={{
+          fontFamily: 'Plus Jakarta Sans',
+          fontWeight: 400,
+          fontStyle: 'normal',
+          fontSize: '14px',
+          lineHeight: '150%',
+          letterSpacing: '0%'
+        }}
+      >
         {country} →
-      </span>
+      </a>
     </motion.div>
   );
 };
