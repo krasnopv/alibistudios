@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useMailto } from '@/hooks/useMailto';
 
 interface FooterItemProps {
   city: string;
@@ -10,6 +11,9 @@ interface FooterItemProps {
 }
 
 const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
+  const email = 'production@alibistudios.co.uk';
+  const { handleMailtoClick, copied } = useMailto(email);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -39,8 +43,9 @@ const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
         {address}
       </p>
       <a 
-        href="mailto:production@alibistudios.co.uk"
-        className="text-[#FF0066] hover:underline cursor-pointer" 
+        href={`mailto:${email}`}
+        onClick={handleMailtoClick}
+        className="text-[#FF0066] hover:underline cursor-pointer transition-all duration-200" 
         style={{
           fontFamily: 'Plus Jakarta Sans',
           fontWeight: 400,
@@ -49,8 +54,9 @@ const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
           lineHeight: '150%',
           letterSpacing: '0%'
         }}
+        title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
       >
-        {country} →
+        {copied ? 'Email copied!' : `${country} →`}
       </a>
     </motion.div>
   );

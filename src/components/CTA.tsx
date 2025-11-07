@@ -2,8 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone, Mail, MessageCircle } from 'lucide-react';
+import { useMailto } from '@/hooks/useMailto';
 
 const CTA = () => {
+  const email = 'hello@alibi.com';
+  const { handleMailtoClick, copied } = useMailto(email);
+
   return (
     <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,8 +79,13 @@ const CTA = () => {
               </div>
               <h3 className="text-xl font-semibold mb-2">Email Us</h3>
               <p className="text-blue-100 mb-4">Send us your project details</p>
-              <a href="mailto:hello@alibi.com" className="text-white font-semibold hover:underline">
-                hello@alibi.com
+              <a 
+                href={`mailto:${email}`}
+                onClick={handleMailtoClick}
+                className="text-white font-semibold hover:underline cursor-pointer"
+                title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
+              >
+                {copied ? 'Email copied!' : email}
               </a>
             </motion.div>
 

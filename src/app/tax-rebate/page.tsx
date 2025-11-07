@@ -12,6 +12,7 @@ import ScrollableCategories from '@/components/ScrollableCategories';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useMailto } from '@/hooks/useMailto';
 
 interface Page {
   _id: string;
@@ -79,6 +80,8 @@ export default function TaxRebate() {
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
   const [rebates, setRebates] = useState<Rebate[]>([]);
+  const email = 'production@alibistudios.co.uk';
+  const { handleMailtoClick, copied } = useMailto(email);
 
   // Fetch page data from Sanity
   useEffect(() => {
@@ -341,7 +344,14 @@ export default function TaxRebate() {
                 </h6>
                 <div className="text-center mt-8">
                   <h6 className="display_h6 brand-color">
-                    <a href="mailto:production@alibistudios.co.uk" className="hover:underline">Get in Touch</a> →
+                    <a 
+                      href={`mailto:${email}`}
+                      onClick={handleMailtoClick}
+                      className="hover:underline cursor-pointer"
+                      title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
+                    >
+                      {copied ? 'Email copied!' : 'Get in Touch'}
+                    </a> →
                   </h6>
                 </div>
               </div>
