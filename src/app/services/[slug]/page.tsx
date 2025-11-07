@@ -283,29 +283,35 @@ const ServicePage = () => {
               
               {/* Sound Toggle Button - Only show for videos */}
               {service.heroVideoUrl && (
-                <button
-                  onClick={toggleSound}
-                  className="absolute bottom-2 left-2 z-10 p-2 cursor-pointer"
-                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                >
-                  {isMuted ? (
-                    // Muted icon
-                    <Image 
-                      src="/muted.svg" 
-                      alt="Muted" 
-                      width={28} 
-                      height={28}
-                    />
-                  ) : (
-                    // Playing icon
-                    <Image 
-                      src="/playing.svg" 
-                      alt="Playing" 
-                      width={28} 
-                      height={28}
-                    />
-                  )}
-                </button>
+                <div className="absolute bottom-2 left-0 right-0 z-10">
+                  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-start">
+                      <button
+                        onClick={toggleSound}
+                        className="p-2 cursor-pointer"
+                        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                      >
+                        {isMuted ? (
+                          // Muted icon
+                          <Image 
+                            src="/muted.svg" 
+                            alt="Muted" 
+                            width={28} 
+                            height={28}
+                          />
+                        ) : (
+                          // Playing icon
+                          <Image 
+                            src="/playing.svg" 
+                            alt="Playing" 
+                            width={28} 
+                            height={28}
+                          />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
