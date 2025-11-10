@@ -31,6 +31,7 @@ interface ContentGridProps {
   showMemberInfo?: boolean;
   schemaUrl?: string;
   enablePagination?: boolean;
+  paginationMode?: 'pages' | 'loadMore';
   itemsPerPageDesktop?: number;
   itemsPerPageTablet?: number;
   itemsPerPageMobile?: number;
@@ -47,12 +48,14 @@ const ContentGrid = ({
   showMemberInfo = false,
   schemaUrl,
   enablePagination = false,
+  paginationMode = 'pages',
   itemsPerPageDesktop = 24,
   itemsPerPageTablet = 12,
   itemsPerPageMobile = 6
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsToShow, setItemsToShow] = useState(itemsPerPageDesktop);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDesktop);
 
   // Detect screen size and update items per page
@@ -78,10 +81,20 @@ const ContentGrid = ({
     return () => window.removeEventListener('resize', updateItemsPerPage);
   }, [itemsPerPageDesktop, itemsPerPageTablet, itemsPerPageMobile]);
 
-  // Reset to page 1 when filter changes
+  // Initialize itemsToShow based on screen size and pagination mode
+  useEffect(() => {
+    if (paginationMode === 'loadMore') {
+      setItemsToShow(itemsPerPage);
+    }
+  }, [paginationMode, itemsPerPage]);
+
+  // Reset to page 1 or initial items when filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeFilter]);
+    if (paginationMode === 'loadMore') {
+      setItemsToShow(itemsPerPage);
+    }
+  }, [activeFilter, paginationMode, itemsPerPage]);
 
   const filteredItems = activeFilter === 'All' 
     ? items 
@@ -102,8 +115,12 @@ const ContentGrid = ({
   // Calculate pagination
   const totalPages = enablePagination ? Math.ceil(filteredItems.length / itemsPerPage) : 1;
   const startIndex = enablePagination ? (currentPage - 1) * itemsPerPage : 0;
-  const endIndex = enablePagination ? startIndex + itemsPerPage : filteredItems.length;
-  const paginatedItems = enablePagination ? filteredItems.slice(startIndex, endIndex) : filteredItems;
+  const endIndex = enablePagination 
+    ? (paginationMode === 'loadMore' ? itemsToShow : startIndex + itemsPerPage)
+    : filteredItems.length;
+  const paginatedItems = enablePagination ? filteredItems.slice(0, endIndex) : filteredItems;
+  
+  const hasMoreItems = paginationMode === 'loadMore' && itemsToShow < filteredItems.length;
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -112,6 +129,10 @@ const ContentGrid = ({
     if (gridElement) {
       gridElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  const handleLoadMore = () => {
+    setItemsToShow(prev => prev + itemsPerPage);
   };
 
   const handleItemClick = (item: ContentItem) => {
@@ -230,75 +251,90 @@ const ContentGrid = ({
           </div>
 
           {/* Pagination Controls */}
-          {enablePagination && totalPages > 1 && (
-            <div className="mt-12 flex items-center justify-center gap-2">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 transition-colors ${
-                  currentPage === 1
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'text-white hover:opacity-90'
-                }`}
-                style={currentPage !== 1 ? { backgroundColor: '#FF0066' } : {}}
-                aria-label="Previous page"
-              >
-                Previous
-              </button>
-              
-              <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                  // Show first page, last page, current page, and pages around current
-                  const showPage = 
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1);
-                  
-                  if (!showPage) {
-                    // Show ellipsis
-                    if (page === currentPage - 2 || page === currentPage + 2) {
-                      return (
-                        <span key={page} className="px-2 text-gray-400">
-                          ...
-                        </span>
-                      );
+          {enablePagination && (
+            paginationMode === 'loadMore' ? (
+              hasMoreItems && (
+                <div className="mt-12 flex items-center justify-center">
+                  <button
+                    onClick={handleLoadMore}
+                    className="px-6 py-3 text-white hover:opacity-90 transition-opacity cursor-pointer"
+                    style={{ backgroundColor: '#FF0066' }}
+                    aria-label="Load more items"
+                  >
+                    Load more
+                  </button>
+                </div>
+              )
+            ) : totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 transition-colors ${
+                    currentPage === 1
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'text-white hover:opacity-90'
+                  }`}
+                  style={currentPage !== 1 ? { backgroundColor: '#FF0066' } : {}}
+                  aria-label="Previous page"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    // Show first page, last page, current page, and pages around current
+                    const showPage = 
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1);
+                    
+                    if (!showPage) {
+                      // Show ellipsis
+                      if (page === currentPage - 2 || page === currentPage + 2) {
+                        return (
+                          <span key={page} className="px-2 text-gray-400">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
                     }
-                    return null;
-                  }
-                  
-                  return (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`px-3 py-2 transition-colors ${
-                        currentPage === page
-                          ? 'text-white'
-                          : 'bg-gray-200 text-black hover:bg-gray-300'
-                      }`}
-                      style={currentPage === page ? { backgroundColor: '#FF0066' } : {}}
-                      aria-label={`Go to page ${page}`}
-                      aria-current={currentPage === page ? 'page' : undefined}
-                    >
-                      {page}
-                    </button>
-                  );
-                })}
-              </div>
+                    
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`px-3 py-2 transition-colors ${
+                          currentPage === page
+                            ? 'text-white'
+                            : 'bg-gray-200 text-black hover:bg-gray-300'
+                        }`}
+                        style={currentPage === page ? { backgroundColor: '#FF0066' } : {}}
+                        aria-label={`Go to page ${page}`}
+                        aria-current={currentPage === page ? 'page' : undefined}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 transition-colors ${
-                  currentPage === totalPages
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'text-white hover:opacity-90'
-                }`}
-                style={currentPage !== totalPages ? { backgroundColor: '#FF0066' } : {}}
-                aria-label="Next page"
-              >
-                Next
-              </button>
-            </div>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 transition-colors ${
+                    currentPage === totalPages
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'text-white hover:opacity-90'
+                  }`}
+                  style={currentPage !== totalPages ? { backgroundColor: '#FF0066' } : {}}
+                  aria-label="Next page"
+                >
+                  Next
+                </button>
+              </div>
+            )
           )}
         </div>
     //   </div>
