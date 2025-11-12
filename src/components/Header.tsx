@@ -149,6 +149,95 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Handle services section scrolling when page loads with #services hash
+    const scrollToServicesSection = () => {
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+        return true;
+      }
+      return false;
+    };
+
+    const handleServicesHash = () => {
+      if (window.location.hash === '#services') {
+        // Try to scroll immediately first
+        if (!scrollToServicesSection()) {
+          // If services section not found, wait for content to load
+          let attempts = 0;
+          const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
+          
+          const checkForServicesSection = () => {
+            attempts++;
+            if (scrollToServicesSection()) {
+              return; // Success, stop checking
+            }
+            
+            if (attempts < maxAttempts) {
+              // If still not found and haven't exceeded max attempts, check again
+              setTimeout(checkForServicesSection, 200);
+            }
+          };
+          
+          // Start checking after initial delay
+          setTimeout(checkForServicesSection, 300);
+        }
+      }
+    };
+
+    // Check on mount
+    handleServicesHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleServicesHash);
+    
+    // Also listen for route changes (for Next.js navigation)
+    const handleRouteChange = () => {
+      if (window.location.hash === '#services') {
+        if (!scrollToServicesSection()) {
+          let attempts = 0;
+          const maxAttempts = 20;
+          
+          const checkForServicesSection = () => {
+            attempts++;
+            if (scrollToServicesSection()) {
+              return;
+            }
+            
+            if (attempts < maxAttempts) {
+              setTimeout(checkForServicesSection, 200);
+            }
+          };
+          
+          setTimeout(checkForServicesSection, 300);
+        }
+      }
+    };
+
+    // Listen for popstate events (back/forward navigation)
+    window.addEventListener('popstate', handleRouteChange);
+    
+    // Also listen for DOM mutations to catch when content loads
+    const observer = new MutationObserver(() => {
+      if (window.location.hash === '#services') {
+        scrollToServicesSection();
+      }
+    });
+    
+    // Observe the entire document for changes
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+    
+    return () => {
+      window.removeEventListener('hashchange', handleServicesHash);
+      window.removeEventListener('popstate', handleRouteChange);
+      observer.disconnect();
+    };
+  }, []);
+
   const handleMenuToggle = () => {
     if (isMenuOpen) {
       handleMenuClose();
@@ -187,6 +276,23 @@ const Header = () => {
     } else {
       // If on different page, navigate to homepage with films hash
       router.push('/#films');
+    }
+  };
+
+  const handleServicesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleMenuClose();
+    
+    // Check if we're on the homepage
+    if (window.location.pathname === '/') {
+      // If on homepage, just scroll to services section
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If on different page, navigate to homepage with services hash
+      router.push('/#services');
     }
   };
 
@@ -322,7 +428,7 @@ const Header = () => {
             
             {/* Menu Items */}
              <div className="flex flex-col justify-start items-start">
-               <Link href="/services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
+               <Link href="/#services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleServicesClick}>
                  <div className="justify-center" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',

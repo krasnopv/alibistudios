@@ -95,6 +95,9 @@ export default function Home() {
                 </section>
               ) : null;
             
+            case 'ourServicesSection':
+              return section.enabled !== false ? <OurServices key={index} /> : null;
+            
             default:
               return null;
           }
