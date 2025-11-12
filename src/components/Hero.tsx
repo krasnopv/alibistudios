@@ -107,106 +107,108 @@ const Hero = ({
     <div id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
-        {isSanityVideo ? (
-          // Show Sanity video
-          <video
-            ref={setVideoRef}
-            src={heroData.videoUrl}
-            poster={heroData?.posterUrl}
-            autoPlay
-            loop
-            muted={isMuted}
-            playsInline
-            className="w-full block landscape:max-h-[75vh]"
-            style={{
-              aspectRatio: '16/9',
-              minHeight: '400px',
-              maxHeight: '75vh',
-              margin: 0,
-              padding: 0,
-              objectFit: 'cover'
-            }}
-            onError={handleVideoError}
-          />
-        ) : hasPosterOnly ? (
-          // Show Sanity poster image
-          <img
-            src={heroData.posterUrl}
-            alt={heroData.title || 'Hero image'}
-            className="w-full block landscape:max-h-[75vh]"
-            style={{
-              aspectRatio: '16/9',
-              minHeight: '400px',
-              maxHeight: '75vh',
-              margin: 0,
-              padding: 0,
-              objectFit: 'cover'
-            }}
-          />
-        ) : (
-          // Show nothing when no Sanity media
-          <div 
-            className="w-full bg-transparent landscape:max-h-[75vh]"
-            style={{
-              aspectRatio: '16/9',
-              minHeight: '400px',
-              maxHeight: '75vh',
-              margin: 0,
-              padding: 0
-            }}
-          />
-        )}
-        
+        <div className="relative scale-120">
+          {isSanityVideo ? (
+            // Show Sanity video
+            <video
+              ref={setVideoRef}
+              src={heroData.videoUrl}
+              poster={heroData?.posterUrl}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              className="w-full block landscape:max-h-[75vh]"
+              style={{
+                aspectRatio: '16/9',
+                minHeight: '400px',
+                maxHeight: '75vh',
+                margin: 0,
+                padding: 0,
+                objectFit: 'cover'
+              }}
+              onError={handleVideoError}
+            />
+          ) : hasPosterOnly ? (
+            // Show Sanity poster image
+            <img
+              src={heroData.posterUrl}
+              alt={heroData.title || 'Hero image'}
+              className="w-full block landscape:max-h-[75vh]"
+              style={{
+                aspectRatio: '16/9',
+                minHeight: '400px',
+                maxHeight: '75vh',
+                margin: 0,
+                padding: 0,
+                objectFit: 'cover'
+              }}
+            />
+          ) : (
+            // Show nothing when no Sanity media
+            <div 
+              className="w-full bg-transparent landscape:max-h-[75vh]"
+              style={{
+                aspectRatio: '16/9',
+                minHeight: '400px',
+                maxHeight: '75vh',
+                margin: 0,
+                padding: 0
+              }}
+            />
+          )}
+          
+          
+          {/* Hero Content Overlay */}
+          {(heroData?.title || heroData?.subtitle) && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div className="text-center text-white">
+                {heroData.title && (
+                  <h1 className="text-4xl md:text-6xl font-bold mb-4">
+                    {heroData.title}
+                  </h1>
+                )}
+                {heroData.subtitle && (
+                  <p className="text-lg md:text-xl opacity-90">
+                    {heroData.subtitle}
+                  </p>
+                )}
+              </div>
+              </div>
+          )}
+        </div>
         {/* Sound Toggle Button - Only show for videos */}
         {isSanityVideo && (
-          <div className="absolute bottom-2 left-0 right-0 z-10">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-start">
-                <button
-                  onClick={toggleSound}
-                  className="p-2 cursor-pointer"
-                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                >
-                  {isMuted ? (
-                    // Muted icon
-                    <Image 
-                      src="/muted.svg" 
-                      alt="Muted" 
-                      width={28} 
-                      height={28}
-                    />
-                  ) : (
-                    // Playing icon
-                    <Image 
-                      src="/playing.svg" 
-                      alt="Playing" 
-                      width={28} 
-                      height={28}
-                    />
-                  )}
-                </button>
+            <div className="absolute bottom-2 left-0 right-0 z-10">
+              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-start">
+                  <button
+                    onClick={toggleSound}
+                    className="p-2 cursor-pointer"
+                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                  >
+                    {isMuted ? (
+                      // Muted icon
+                      <Image 
+                        src="/muted.svg" 
+                        alt="Muted" 
+                        width={28} 
+                        height={28}
+                      />
+                    ) : (
+                      // Playing icon
+                      <Image 
+                        src="/playing.svg" 
+                        alt="Playing" 
+                        width={28} 
+                        height={28}
+                      />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        
-        {/* Hero Content Overlay */}
-        {(heroData?.title || heroData?.subtitle) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="text-center text-white">
-              {heroData.title && (
-                <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                  {heroData.title}
-                </h1>
-              )}
-              {heroData.subtitle && (
-                <p className="text-lg md:text-xl opacity-90">
-                  {heroData.subtitle}
-                </p>
-              )}
-            </div>
-            </div>
-        )}
+          )}
       </div>
     </div>
   );
