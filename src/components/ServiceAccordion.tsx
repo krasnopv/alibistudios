@@ -25,9 +25,7 @@ interface ServiceAccordionProps {
 }
 
 const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
-  const [expandedService, setExpandedService] = useState<string | null>(
-    services.length > 0 ? services[0]._id : null
-  );
+  const [expandedService, setExpandedService] = useState<string | null>(null);
   
   console.log('ServiceAccordion rendering with', services.length, 'services');
 
@@ -72,7 +70,7 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-8">
       {services.map((service) => (
         <div key={service._id} className="last:border-b-0">
           {/* Service Header (Always Visible) */}
