@@ -280,6 +280,18 @@ const Header = () => {
     handleMenuClose();
   };
 
+  const handleContactUsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    handleMenuClose();
+    // Scroll to footer after menu closes
+    setTimeout(() => {
+      const footer = document.getElementById('footer');
+      if (footer) {
+        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 400);
+  };
+
   const handleFilmsClick = (e: React.MouseEvent) => {
     e.preventDefault();
     handleMenuClose();
@@ -543,14 +555,10 @@ const Header = () => {
                  }}>Tax Rebate<br/></div>
                </Link>
                <a 
-                 href={`mailto:${email}`}
-                 onClick={(e) => {
-                   handleMailtoClick(e as React.MouseEvent<HTMLAnchorElement>);
-                   handleMenuItemClick();
-                 }}
+                 href="#footer"
+                 onClick={handleContactUsClick}
                  className="inline-flex justify-start items-center gap-2.5 menu-item-hover" 
                  style={{ cursor: 'pointer' }}
-                 title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
                >
                  <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
