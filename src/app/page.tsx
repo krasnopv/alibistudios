@@ -10,6 +10,7 @@ import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
 import Team from '@/components/Team';
+import GetInTouch from '@/components/GetInTouch';
 
 interface Page {
   _id: string;
@@ -22,6 +23,9 @@ interface Page {
     subtitle?: string;
     enabled?: boolean;
     copy?: unknown[];
+    description?: unknown[];
+    buttonText?: string;
+    email?: string;
     url?: {
       type: 'internal' | 'external';
       internalPage?: { 
@@ -97,6 +101,18 @@ export default function Home() {
             
             case 'ourServicesSection':
               return section.enabled !== false ? <OurServices key={index} /> : null;
+            
+            case 'getInTouchSection':
+              return section.email ? (
+                <GetInTouch 
+                  key={index} 
+                  sectionId={section.sectionId}
+                  title={typeof section.title === 'string' ? section.title : undefined}
+                  description={section.description}
+                  buttonText={section.buttonText}
+                  email={section.email}
+                />
+              ) : null;
             
             default:
               return null;

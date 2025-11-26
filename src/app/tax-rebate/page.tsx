@@ -9,10 +9,10 @@ import Films from '@/components/Films';
 import Awards from '@/components/Awards';
 import RebateSection from '@/components/RebateSection';
 import ScrollableCategories from '@/components/ScrollableCategories';
+import GetInTouch from '@/components/GetInTouch';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useMailto } from '@/hooks/useMailto';
 
 interface Page {
   _id: string;
@@ -26,6 +26,9 @@ interface Page {
     sectionId?: string;
     title?: string | unknown[];
     copy?: unknown[];
+    description?: unknown[];
+    buttonText?: string;
+    email?: string;
     url?: {
       type: 'internal' | 'external';
       internalPage?: {
@@ -80,8 +83,6 @@ export default function TaxRebate() {
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [pageData, setPageData] = useState<Page | null>(null);
   const [rebates, setRebates] = useState<Rebate[]>([]);
-  const email = 'production@alibistudios.co.uk';
-  const { handleMailtoClick, copied } = useMailto(email);
 
   // Fetch page data from Sanity
   useEffect(() => {
@@ -329,36 +330,6 @@ export default function TaxRebate() {
           </section>
         ))}
 
-
-
-        {/* CTA Section */}
-        <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
-              <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
-                  Ready to Maximize Your Production Budget?
-                </h1>
-                <h6 className="display_h6 text-center">
-                  Contact our team to learn more about how we can help you take advantage of tax relief opportunities in France and the UK.
-                </h6>
-                <div className="text-center mt-8">
-                  <h6 className="display_h6 brand-color">
-                    <a 
-                      href={`mailto:${email}`}
-                      onClick={handleMailtoClick}
-                      className="hover:underline cursor-pointer"
-                      title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
-                    >
-                      {copied ? 'Email copied!' : 'Get in Touch'}
-                    </a> →
-                  </h6>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Dynamic Content Sections from Sanity */}
         {pageData?.content && pageData.content.map((section, index) => {
           switch (section._type) {
@@ -390,6 +361,18 @@ export default function TaxRebate() {
                     </div>
                   </div>
                 </section>
+              ) : null;
+            
+            case 'getInTouchSection':
+              return section.email ? (
+                <GetInTouch 
+                  key={index} 
+                  sectionId={section.sectionId}
+                  title={typeof section.title === 'string' ? section.title : undefined}
+                  description={section.description}
+                  buttonText={section.buttonText}
+                  email={section.email}
+                />
               ) : null;
             
             default:

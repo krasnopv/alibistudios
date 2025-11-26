@@ -143,41 +143,41 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                   </h6>
                 )
               ) : (
-                <h6 className="display_h6">
-                  {copy.map((block: unknown, index: number) => {
-                    const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
-                    if (blockObj._type === 'block' && blockObj.children) {
-                      return blockObj.children.map((child: { text?: string }, childIndex: number) => (
-                        <span key={`${index}-${childIndex}`}>
-                          {child.text}
-                          {childIndex < blockObj.children!.length - 1 && <br />}
-                        </span>
-                      ));
-                    }
-                    return null;
-                  })}
+              <h6 className="display_h6">
+                {copy.map((block: unknown, index: number) => {
+                  const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
+                  if (blockObj._type === 'block' && blockObj.children) {
+                    return blockObj.children.map((child: { text?: string }, childIndex: number) => (
+                      <span key={`${index}-${childIndex}`}>
+                        {child.text}
+                        {childIndex < blockObj.children!.length - 1 && <br />}
+                      </span>
+                    ));
+                  }
+                  return null;
+                })}
                   {url && !isOurServicesSection && (
-                    url.type === 'internal' && url.internalPage ? (
-                      <a 
+                  url.type === 'internal' && url.internalPage ? (
+                    <a 
                         href={`/${url.internalPage.slug}`}
-                        className="text-black hover:underline"
-                      >
+                      className="text-black hover:underline"
+                    >
                         {' →'}
-                      </a>
-                    ) : url.type === 'external' && url.externalUrl ? (
-                      <a 
-                        href={url.externalUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-black hover:underline"
-                      >
+                    </a>
+                  ) : url.type === 'external' && url.externalUrl ? (
+                    <a 
+                      href={url.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-black hover:underline"
+                    >
                         {' →'}
-                      </a>
-                    ) : (
-                      ' →'
-                    )
-                  )}
-                </h6>
+                    </a>
+                  ) : (
+                    ' →'
+                  )
+                )}
+              </h6>
               )}
             </div>
           )}

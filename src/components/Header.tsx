@@ -484,7 +484,7 @@ const Header = () => {
                        textDecoration: 'none'
                      }}>{isOurWorkExpanded ? '−' : '+'}</span>
                    </div>
-                 </div>
+               </div>
                </button>
                <AnimatePresence>
                  {isOurWorkExpanded && (
@@ -496,24 +496,24 @@ const Header = () => {
                      style={{ overflow: 'hidden' }}
                    >
                      <div className="flex flex-col">
-                       {featuredServices.map((service) => (
-                         <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
+               {featuredServices.map((service) => (
+                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                            <div className="justify-center text-[20px] md:text-[28px]" style={{
-                             color: '#000',
-                             fontFamily: 'Plus Jakarta Sans',
-                             fontStyle: 'normal',
-                             fontWeight: 400,
-                           }}>- {service.title}<br/></div>
-                         </Link>
-                       ))}
-                       <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
+                     color: '#000',
+                     fontFamily: 'Plus Jakarta Sans',
+                     fontStyle: 'normal',
+                     fontWeight: 400,
+                   }}>- {service.title}<br/></div>
+                 </Link>
+               ))}
+               <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
                          <div className="justify-center text-[20px] md:text-[28px]" style={{
-                           color: '#000',
-                           fontFamily: 'Plus Jakarta Sans',
-                           fontStyle: 'normal',
-                           fontWeight: 400,
-                         }}>- Film & Episodic<br/></div>
-                       </Link>
+                   color: '#000',
+                   fontFamily: 'Plus Jakarta Sans',
+                   fontStyle: 'normal',
+                   fontWeight: 400,
+                 }}>- Film & Episodic<br/></div>
+               </Link>
                      </div>
                    </motion.div>
                  )}

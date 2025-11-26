@@ -160,13 +160,13 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
 
                       {/* Learn More Link */}
                       {service.slug && service.slug.trim() !== '' && (
-                        <a 
-                          href={`/services/${service.slug}`}
-                          className="inline-flex items-center text-[#FF0066] hover:underline transition-colors duration-200"
-                          style={{ fontFamily: 'Plus Jakarta Sans' }}
-                        >
-                          Learn more →
-                        </a>
+                      <a 
+                        href={`/services/${service.slug}`}
+                        className="inline-flex items-center text-[#FF0066] hover:underline transition-colors duration-200"
+                        style={{ fontFamily: 'Plus Jakarta Sans' }}
+                      >
+                        Learn more →
+                      </a>
                       )}
                     </div>
 
