@@ -358,10 +358,10 @@ const ServicePage = () => {
                   gridData={service.projects
                     .filter(project => project != null) // Filter out null projects
                     .filter(project => {
-                      if (activeCategory === 'All') return true;
-                      // Check if project has the selected subService
-                      return project.subServices?.some(sub => sub.title === activeCategory);
-                    })}
+                    if (activeCategory === 'All') return true;
+                    // Check if project has the selected subService
+                    return project.subServices?.some(sub => sub.title === activeCategory);
+                  })}
                   schemaUrl="projects"
                   gridCols="md:grid-cols-2"
                 />

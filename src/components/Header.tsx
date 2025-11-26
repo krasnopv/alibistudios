@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
 
 const Header = () => {
@@ -13,6 +14,7 @@ const Header = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [hasHero, setHasHero] = useState(true);
   const [featuredServices, setFeaturedServices] = useState<Array<{_id: string; title: string; slug: string}>>([]);
+  const [isOurWorkExpanded, setIsOurWorkExpanded] = useState(false);
 
   useEffect(() => {
     // Check if Hero section exists
@@ -59,6 +61,19 @@ const Header = () => {
 
     fetchFeaturedServices();
   }, []);
+
+  useEffect(() => {
+    // Prevent body scroll when menu is open
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     // Handle films section scrolling when page loads with #films hash
@@ -388,16 +403,23 @@ const Header = () => {
         />
         {/* Sidebar */}
         <div 
-          className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-screen md:h-[1140px] z-20 ${
+          className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-full z-20 ${
             isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
           }`} 
           style={{
             display: 'flex',
             padding: '24px 40px 40px 40px',
             flexDirection: 'column',
-            alignItems: 'flex-end'
+            alignItems: 'flex-end',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            maxHeight: '100vh'
           }}
           onClick={(e) => e.stopPropagation()}
+          onWheel={(e) => {
+            // Allow scrolling within sidebar, prevent body scroll
+            e.stopPropagation();
+          }}
         >
           {/* Close Button */}
             <div style={{
@@ -427,86 +449,106 @@ const Header = () => {
             </div>
             
             {/* Menu Items */}
-             <div className="flex flex-col justify-start items-start">
+             <div className="flex flex-col justify-start items-start w-full">
                <Link href="/#services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleServicesClick}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400
                  }}>Services<br/></div>
                </Link>
                <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Team<br/></div>
                </Link>
-               <div className="inline-flex justify-start items-center gap-2.5" style={{ opacity: 0.5, cursor: 'pointer' }}>
-                 <div className="justify-center" style={{
+               <button 
+                 className="w-full inline-flex justify-between items-center gap-2.5" 
+                 style={{ cursor: 'pointer' }}
+                 onClick={() => setIsOurWorkExpanded(!isOurWorkExpanded)}
+               >
+                 <div className="justify-center menu-item-hover text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Our Work<br/></div>
-               </div>
-               {featuredServices.map((service) => (
-                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                   <div className="justify-center" style={{
-                     color: '#000',
-                     fontFamily: 'Plus Jakarta Sans',
-                     fontSize: '28px',
-                     fontStyle: 'normal',
-                     fontWeight: 400,
-                   }}>- {service.title}<br/></div>
-                 </Link>
-               ))}
-               <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
-                 <div className="justify-center" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>- Film & Episodic<br/></div>
-               </Link>
+                 <div className="flex-shrink-0 ml-4" style={{ textDecoration: 'none' }}>
+                   <div className="w-6 h-6 flex items-center justify-center">
+                     <span className="text-[18px] md:text-[24px]" style={{
+                       color: '#000',
+                       fontFamily: 'Plus Jakarta Sans',
+                       fontStyle: 'normal',
+                       fontWeight: 300,
+                       textDecoration: 'none'
+                     }}>{isOurWorkExpanded ? '−' : '+'}</span>
+                   </div>
+                 </div>
+               </button>
+               <AnimatePresence>
+                 {isOurWorkExpanded && (
+                   <motion.div
+                     initial={{ height: 0, opacity: 0 }}
+                     animate={{ height: 'auto', opacity: 1 }}
+                     exit={{ height: 0, opacity: 0 }}
+                     transition={{ duration: 0.3, ease: 'easeInOut' }}
+                     style={{ overflow: 'hidden' }}
+                   >
+                     <div className="flex flex-col">
+                       {featuredServices.map((service) => (
+                         <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
+                           <div className="justify-center text-[20px] md:text-[28px]" style={{
+                             color: '#000',
+                             fontFamily: 'Plus Jakarta Sans',
+                             fontStyle: 'normal',
+                             fontWeight: 400,
+                           }}>- {service.title}<br/></div>
+                         </Link>
+                       ))}
+                       <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
+                         <div className="justify-center text-[20px] md:text-[28px]" style={{
+                           color: '#000',
+                           fontFamily: 'Plus Jakarta Sans',
+                           fontStyle: 'normal',
+                           fontWeight: 400,
+                         }}>- Film & Episodic<br/></div>
+                       </Link>
+                     </div>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
                <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Directors</div>
                </Link>
                <Link href="/studios" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Studios<br/></div>
                </Link>
                <Link href="/tax-rebate" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Tax Rebate<br/></div>
                </Link>
                <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={() => { scrollToFooter(); handleMenuItemClick(); }}>
-                 <div className="justify-center" style={{
+                 <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
-                   fontSize: '28px',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Contact Us<br/></div>

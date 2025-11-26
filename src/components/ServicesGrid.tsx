@@ -155,6 +155,7 @@ const ServicesGrid = ({
 
   return (
     <motion.div 
+      id="services-grid"
       ref={containerRef} 
       className={`grid ${gridCols} gap-8 ${className}`} 
       style={{ height: isMobile ? 'auto' : dynamicHeight }}

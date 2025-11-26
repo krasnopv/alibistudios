@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SubService {
@@ -26,6 +26,7 @@ interface ServiceAccordionProps {
 
 const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
   const [expandedService, setExpandedService] = useState<string | null>(null);
+  const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   
   console.log('ServiceAccordion rendering with', services.length, 'services');
 
@@ -69,6 +70,25 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
     setExpandedService(expandedService === serviceId ? null : serviceId);
   };
 
+  // Scroll to expanded content when it opens
+  useEffect(() => {
+    if (expandedService) {
+      // Wait for animation to start and content to render
+      const timer = setTimeout(() => {
+        const contentElement = contentRefs.current[expandedService];
+        if (contentElement) {
+          contentElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 150); // Wait for animation to start
+
+      return () => clearTimeout(timer);
+    }
+  }, [expandedService]);
+
   return (
     <div className="w-full pt-8">
       {services.map((service) => (
@@ -76,21 +96,18 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
           {/* Service Header (Always Visible) */}
           <button
             onClick={() => toggleService(service._id)}
-            className="w-full text-left py-4 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+            className="group w-full text-left py-4 px-0 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
           >
             <div className="flex items-center justify-between">
-              <h1 className="heading_h1">
+              <h1 className="heading_h1 !group-hover:text-[#FF0066] group-hover:underline transition-colors duration-200">
                 {service.title}
               </h1>
               <div className="flex-shrink-0 ml-4">
-                <motion.div
-                  initial={false}
-                  animate={{ rotate: expandedService === service._id ? 45 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-6 h-6 flex items-center justify-center"
-                >
-                  <span className="text-2xl text-gray-600 font-light">+</span>
-                </motion.div>
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <span className="text-2xl text-gray-600 font-light">
+                    {expandedService === service._id ? '-' : '+'}
+                  </span>
+                </div>
               </div>
             </div>
           </button>
@@ -105,7 +122,12 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <div className="pb-8">
+                <div 
+                  ref={(el) => {
+                    contentRefs.current[service._id] = el;
+                  }}
+                  className="pb-8"
+                >
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Description and Tags (1/3) */}
                     <div className="lg:col-span-1">

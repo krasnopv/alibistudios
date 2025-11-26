@@ -401,6 +401,11 @@ h2 {
   }
 }
 
+/* Hover state for heading_h1 in accordion */
+.group:hover .heading_h1 {
+  color: #FF0066 !important;
+}
+
 .trophies {
   margin-top: 0 !important;
 }

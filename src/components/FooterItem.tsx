@@ -47,12 +47,12 @@ const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
         onClick={handleMailtoClick}
         className="text-[#FF0066] hover:underline cursor-pointer transition-all duration-200" 
         style={{
-          fontFamily: 'Plus Jakarta Sans',
-          fontWeight: 400,
-          fontStyle: 'normal',
-          fontSize: '14px',
-          lineHeight: '150%',
-          letterSpacing: '0%'
+        fontFamily: 'Plus Jakarta Sans',
+        fontWeight: 400,
+        fontStyle: 'normal',
+        fontSize: '14px',
+        lineHeight: '150%',
+        letterSpacing: '0%'
         }}
         title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
       >

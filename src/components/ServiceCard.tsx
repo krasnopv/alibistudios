@@ -52,7 +52,7 @@ const ServiceCard = ({
 
       {/* Service Info */}
       <div className="flex flex-col">
-        <div className="text-[#FF0066] text-base font-[300] leading-6">
+        <div className="text-[#FF0066] text-base font-[300] leading-6 group-hover:underline">
           {title}
         </div>
         <div className="flex items-center mt-1">
