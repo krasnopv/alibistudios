@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
+import { useMailto } from '@/hooks/useMailto';
 
 const Header = () => {
   const router = useRouter();
@@ -15,6 +16,8 @@ const Header = () => {
   const [hasHero, setHasHero] = useState(true);
   const [featuredServices, setFeaturedServices] = useState<Array<{_id: string; title: string; slug: string}>>([]);
   const [isOurWorkExpanded, setIsOurWorkExpanded] = useState(false);
+  const email = 'production@alibistudios.co.uk';
+  const { handleMailtoClick, copied } = useMailto(email);
 
   useEffect(() => {
     // Check if Hero section exists
@@ -311,14 +314,6 @@ const Header = () => {
     }
   };
 
-  const scrollToFooter = () => {
-    const footer = document.querySelector('footer');
-    if (footer) {
-      footer.scrollIntoView({ behavior: 'smooth' });
-    }
-    // Close sidebar after scrolling
-    handleMenuClose();
-  };
 
   return (
     <>
@@ -372,9 +367,11 @@ const Header = () => {
         </div>
 
         {/* Right - Contact */}
-        <button 
-          onClick={scrollToFooter}
+        <a 
+          href={`mailto:${email}`}
+          onClick={handleMailtoClick}
           className="p-2 hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+          title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
         >
           <Image 
             src={getAssetPath('contact.svg')} 
@@ -386,7 +383,7 @@ const Header = () => {
               filter: (hasHero && scrollProgress > 0.8) || !hasHero ? 'none' : `brightness(0) invert(1)`
             }}
           />
-        </button>
+        </a>
         </div>
       </div>
     </header>
@@ -545,14 +542,23 @@ const Header = () => {
                    fontWeight: 400,
                  }}>Tax Rebate<br/></div>
                </Link>
-               <div className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={() => { scrollToFooter(); handleMenuItemClick(); }}>
+               <a 
+                 href={`mailto:${email}`}
+                 onClick={(e) => {
+                   handleMailtoClick(e as React.MouseEvent<HTMLAnchorElement>);
+                   handleMenuItemClick();
+                 }}
+                 className="inline-flex justify-start items-center gap-2.5 menu-item-hover" 
+                 style={{ cursor: 'pointer' }}
+                 title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
+               >
                  <div className="justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
                  }}>Contact Us<br/></div>
-               </div>
+               </a>
              </div>
           </div>
         </div>
