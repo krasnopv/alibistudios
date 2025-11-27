@@ -493,18 +493,18 @@ const Header = () => {
                    fontWeight: 400,
                  }}>
                    Our Work
-                   <span className="text-[18px] md:text-[24px]" style={{
-                     color: '#000',
-                     fontFamily: 'Plus Jakarta Sans',
-                     fontStyle: 'normal',
-                     fontWeight: 300,
-                     textDecoration: 'none'
-                   }}>{isOurWorkExpanded ? '−' : '+'}</span>
+                     <span className="text-[18px] md:text-[24px]" style={{
+                       color: '#000',
+                       fontFamily: 'Plus Jakarta Sans',
+                       fontStyle: 'normal',
+                       fontWeight: 300,
+                       textDecoration: 'none'
+                     }}>{isOurWorkExpanded ? '−' : '+'}</span>
                    <br/>
                    {/* <span className="menu-text-duplicate">
                      Our Work<br/>
                    </span> */}
-                 </div>
+               </div>
                </button>
                <AnimatePresence>
                  {isOurWorkExpanded && (
