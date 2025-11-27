@@ -16,6 +16,15 @@ interface SubService {
   slug: string;
 }
 
+interface Reel {
+  type: 'youtube' | 'vimeo' | 'upload';
+  url?: string;
+  videoFileUrl?: string;
+  thumbnailUrl?: string;
+  thumbnailAlt?: string;
+  thumbnailCaption?: string;
+}
+
 interface Service {
   _id: string;
   title: string;
@@ -44,6 +53,7 @@ interface Service {
   heroImageAlt?: string;
   imageUrl?: string;
   imageAlt?: string;
+  reels?: Reel[];
   projects?: {
     _id: string;
     title: string;
@@ -141,6 +151,63 @@ const ServicePage = () => {
       videoRef.muted = !isMuted;
       setIsMuted(!isMuted);
     }
+  };
+
+  // Helper function to get embed URL for YouTube/Vimeo
+  const getEmbedUrl = (url: string, type: 'youtube' | 'vimeo'): string => {
+    if (type === 'youtube') {
+      // Handle YouTube URLs
+      if (url.includes('youtube.com/watch?v=')) {
+        const videoId = url.split('v=')[1].split('&')[0];
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+      if (url.includes('youtu.be/')) {
+        const videoId = url.split('youtu.be/')[1].split('?')[0];
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    } else if (type === 'vimeo') {
+      // Handle Vimeo URLs
+      const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
+      if (videoId) {
+        return `https://player.vimeo.com/video/${videoId}`;
+      }
+    }
+    return url;
+  };
+
+  // Render a single reel video
+  const renderReel = (reel: Reel, index: number) => {
+    if (reel.type === 'upload' && reel.videoFileUrl) {
+      // Uploaded video - use HTML5 video player
+      return (
+        <div key={index} className="relative w-full aspect-video bg-black">
+          <video
+            src={reel.videoFileUrl}
+            controls
+            className="w-full h-full object-contain"
+            poster={reel.thumbnailUrl}
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    } else if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
+      // YouTube or Vimeo - use iframe embed
+      const embedUrl = getEmbedUrl(reel.url, reel.type);
+      return (
+        <div key={index} className="relative w-full aspect-video bg-black">
+          <iframe
+            src={embedUrl}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allowFullScreen
+            title={reel.thumbnailCaption || `Video ${index + 1}`}
+          />
+        </div>
+      );
+    }
+    return null;
   };
 
 
@@ -330,6 +397,15 @@ const ServicePage = () => {
                   {renderRichText(service.subtitle)}
                 </h6>
               </div>
+
+              {/* Reels Section */}
+              {service.reels && service.reels.length > 0 && (
+                <div className="mb-16">
+                  <div className="grid grid-cols-1 gap-4">
+                    {service.reels.map((reel, index) => renderReel(reel, index))}
+                  </div>
+                </div>
+              )}
 
               {/* Categories Filter */}
               {service.projects && service.projects.length > 0 && (() => {

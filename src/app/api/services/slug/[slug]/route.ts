@@ -25,6 +25,28 @@ export async function GET(
         image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt,
+        reels[] {
+          type,
+          url,
+          videoFile {
+            asset->{
+              _id,
+              url
+            }
+          },
+          "videoFileUrl": videoFile.asset->url,
+          thumbnail {
+            asset->{
+              _id,
+              url
+            },
+            alt,
+            caption
+          },
+          "thumbnailUrl": thumbnail.asset->url,
+          "thumbnailAlt": thumbnail.alt,
+          "thumbnailCaption": thumbnail.caption
+        },
         "projects": *[_type == "project" && _id in ^.projects[]._ref && (!defined(hideProject) || hideProject != true)] {
           _id,
           title,
