@@ -401,7 +401,7 @@ const ServicePage = () => {
               {/* Reels Section */}
               {service.reels && service.reels.length > 0 && (
                 <div className="mb-16">
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-16">
                     {service.reels.map((reel, index) => renderReel(reel, index))}
                   </div>
                 </div>
