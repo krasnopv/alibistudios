@@ -219,14 +219,17 @@ const ServicePage = () => {
     
     return (
       <div key={index} className="w-full">
+        {videoContent()}
         {hasCaption && (
-          <div className="mb-4">
-            <h2 className="display_h6">
+          <div className="mt-4">
+            <p 
+              className="text-[20px] font-[400] leading-[150%] tracking-[0%] brand-color"
+              style={{ fontFamily: 'Plus Jakarta Sans' }}
+            >
               {reel.thumbnailCaption}
-            </h2>
+            </p>
           </div>
         )}
-        {videoContent()}
       </div>
     );
   };
