@@ -180,9 +180,9 @@ export default function Studios() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
+                </div>
+              </div>
+            </section>
         
         {/* Get in Touch Section */}
         <GetInTouch />

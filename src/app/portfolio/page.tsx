@@ -41,7 +41,7 @@ export default function Portfolio() {
         
         {/* Get in Touch Section */}
         <GetInTouch />
-      </main>
-    </div>
-  );
-}
+          </main>
+        </div>
+      );
+    }

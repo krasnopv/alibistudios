@@ -258,11 +258,36 @@ h2 {
     }
 
     /* Menu item hover effect with strikethrough */
-    .menu-item-hover:hover {
+    .menu-item-hover:hover > div {
       text-decoration: line-through;
       text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
     }
+
+    /* Menu item hover effect with duplicate text - COMMENTED OUT */
+    /* .menu-item-hover {
+      position: relative;
+    }
+    
+    .menu-item-hover > div {
+      white-space: nowrap;
+      width: max-content;
+    }
+    
+    .menu-item-hover .menu-text-duplicate {
+      position: absolute;
+      bottom: -3px;
+      left: 3px;
+      color: #FF0066;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    
+    .menu-item-hover:hover .menu-text-duplicate {
+      opacity: 1;
+    } */
 
     /* Films filter active state - red stroke */
     .active-filter {

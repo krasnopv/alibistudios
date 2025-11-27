@@ -460,43 +460,51 @@ const Header = () => {
             {/* Menu Items */}
              <div className="flex flex-col justify-start items-start w-full">
                <Link href="/#services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleServicesClick}>
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400
-                 }}>Services<br/></div>
+                 }}>
+                   Services<br/>
+                   {/* <span className="menu-text-duplicate">Services<br/></span> */}
+                 </div>
                </Link>
                <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Team<br/></div>
+                 }}>
+                   Team<br/>
+                   {/* <span className="menu-text-duplicate">Team<br/></span> */}
+                 </div>
                </Link>
                <button 
-                 className="w-full inline-flex justify-between items-center gap-2.5" 
+                 className="w-full inline-flex justify-start items-center gap-2.5 menu-item-hover" 
                  style={{ cursor: 'pointer' }}
                  onClick={() => setIsOurWorkExpanded(!isOurWorkExpanded)}
                >
-                 <div className="justify-center menu-item-hover text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px] inline-flex items-center gap-8" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Our Work<br/></div>
-                 <div className="flex-shrink-0 ml-4" style={{ textDecoration: 'none' }}>
-                   <div className="w-6 h-6 flex items-center justify-center">
-                     <span className="text-[18px] md:text-[24px]" style={{
-                       color: '#000',
-                       fontFamily: 'Plus Jakarta Sans',
-                       fontStyle: 'normal',
-                       fontWeight: 300,
-                       textDecoration: 'none'
-                     }}>{isOurWorkExpanded ? '−' : '+'}</span>
-                   </div>
-               </div>
+                 }}>
+                   Our Work
+                   <span className="text-[18px] md:text-[24px]" style={{
+                     color: '#000',
+                     fontFamily: 'Plus Jakarta Sans',
+                     fontStyle: 'normal',
+                     fontWeight: 300,
+                     textDecoration: 'none'
+                   }}>{isOurWorkExpanded ? '−' : '+'}</span>
+                   <br/>
+                   {/* <span className="menu-text-duplicate">
+                     Our Work<br/>
+                   </span> */}
+                 </div>
                </button>
                <AnimatePresence>
                  {isOurWorkExpanded && (
@@ -510,49 +518,64 @@ const Header = () => {
                      <div className="flex flex-col">
                {featuredServices.map((service) => (
                  <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                           <div className="justify-center text-[20px] md:text-[28px]" style={{
+                           <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                      color: '#000',
                      fontFamily: 'Plus Jakarta Sans',
                      fontStyle: 'normal',
                      fontWeight: 400,
-                   }}>- {service.title}<br/></div>
+                   }}>
+                     - {service.title}<br/>
+                     {/* <span className="menu-text-duplicate">- {service.title}<br/></span> */}
+                   </div>
                  </Link>
                ))}
                <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
-                         <div className="justify-center text-[20px] md:text-[28px]" style={{
+                         <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>- Film & Episodic<br/></div>
+                 }}>
+                   - Film & Episodic<br/>
+                   {/* <span className="menu-text-duplicate">- Film & Episodic<br/></span> */}
+                 </div>
                </Link>
                      </div>
                    </motion.div>
                  )}
                </AnimatePresence>
                <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Directors</div>
+                 }}>
+                   Directors
+                   {/* <span className="menu-text-duplicate">Directors</span> */}
+                 </div>
                </Link>
                <Link href="/studios" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Studios<br/></div>
+                 }}>
+                   Studios<br/>
+                   {/* <span className="menu-text-duplicate">Studios<br/></span> */}
+                 </div>
                </Link>
                <Link href="/tax-rebate" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Tax Rebate<br/></div>
+                 }}>
+                   Tax Rebate<br/>
+                   {/* <span className="menu-text-duplicate">Tax Rebate<br/></span> */}
+                 </div>
                </Link>
                <a 
                  href="#footer"
@@ -560,12 +583,15 @@ const Header = () => {
                  className="inline-flex justify-start items-center gap-2.5 menu-item-hover" 
                  style={{ cursor: 'pointer' }}
                >
-                 <div className="justify-center text-[20px] md:text-[28px]" style={{
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
                    fontFamily: 'Plus Jakarta Sans',
                    fontStyle: 'normal',
                    fontWeight: 400,
-                 }}>Contact Us<br/></div>
+                 }}>
+                   Contact Us<br/>
+                   {/* <span className="menu-text-duplicate">Contact Us<br/></span> */}
+                 </div>
                </a>
              </div>
           </div>
