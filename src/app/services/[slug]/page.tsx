@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import PageLoader from '@/components/PageLoader';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import ServicesGrid from '@/components/ServicesGrid';
+import GetInTouch from '@/components/GetInTouch';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
 
@@ -177,37 +178,57 @@ const ServicePage = () => {
 
   // Render a single reel video
   const renderReel = (reel: Reel, index: number) => {
-    if (reel.type === 'upload' && reel.videoFileUrl) {
-      // Uploaded video - use HTML5 video player
-      return (
-        <div key={index} className="relative w-full aspect-video bg-black">
-          <video
-            src={reel.videoFileUrl}
-            controls
-            className="w-full h-full object-contain"
-            poster={reel.thumbnailUrl}
-          >
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      );
-    } else if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
-      // YouTube or Vimeo - use iframe embed
-      const embedUrl = getEmbedUrl(reel.url, reel.type);
-      return (
-        <div key={index} className="relative w-full aspect-video bg-black">
-          <iframe
-            src={embedUrl}
-            className="w-full h-full"
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowFullScreen
-            title={reel.thumbnailCaption || `Video ${index + 1}`}
-          />
-        </div>
-      );
-    }
-    return null;
+    // Debug: log reel data
+    console.log('Reel data:', reel);
+    
+    const videoContent = () => {
+      if (reel.type === 'upload' && reel.videoFileUrl) {
+        // Uploaded video - use HTML5 video player
+        return (
+          <div className="relative w-full aspect-video bg-black">
+            <video
+              src={reel.videoFileUrl}
+              controls
+              className="w-full h-full object-contain"
+              poster={reel.thumbnailUrl}
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        );
+      } else if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
+        // YouTube or Vimeo - use iframe embed
+        const embedUrl = getEmbedUrl(reel.url, reel.type);
+        return (
+          <div className="relative w-full aspect-video bg-black">
+            <iframe
+              src={embedUrl}
+              className="w-full h-full"
+              frameBorder="0"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              title={reel.thumbnailCaption || `Video ${index + 1}`}
+            />
+          </div>
+        );
+      }
+      return null;
+    };
+
+    const hasCaption = reel.thumbnailCaption && String(reel.thumbnailCaption).trim() !== '';
+    
+    return (
+      <div key={index} className="w-full">
+        {hasCaption && (
+          <div className="mb-4">
+            <h2 className="display_h6">
+              {reel.thumbnailCaption}
+            </h2>
+          </div>
+        )}
+        {videoContent()}
+      </div>
+    );
   };
 
 
@@ -400,8 +421,8 @@ const ServicePage = () => {
 
               {/* Reels Section */}
               {service.reels && service.reels.length > 0 && (
-                <div className="mb-16">
-                  <div className="grid grid-cols-1 gap-16">
+                <div className="mb-16 pt-0 lg:pt-32 pb-0 lg:pb-32">
+                  <div className="grid grid-cols-1 gap-16 lg:gap-48">
                     {service.reels.map((reel, index) => renderReel(reel, index))}
                   </div>
                 </div>
@@ -445,6 +466,9 @@ const ServicePage = () => {
             </div>
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
     </div>
   );

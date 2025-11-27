@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import VideoOverlay from '@/components/VideoOverlay';
+import GetInTouch from '@/components/GetInTouch';
 
 interface Trophy {
   _id: string;
@@ -245,6 +246,9 @@ export default function Directors() {
             </div>
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
       
       {/* Video Overlay */}

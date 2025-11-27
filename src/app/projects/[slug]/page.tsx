@@ -8,6 +8,7 @@ import PageLoader from '@/components/PageLoader';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
 import VideoOverlay from '@/components/VideoOverlay';
+import GetInTouch from '@/components/GetInTouch';
 
 interface Project {
   _id: string;
@@ -746,6 +747,9 @@ const ProjectPage = () => {
           </div>
         </section>
         )}
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
       
       {/* Video Overlay */}

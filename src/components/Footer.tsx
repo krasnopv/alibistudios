@@ -30,7 +30,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer id="footer" className="w-full text-black" style={{ paddingTop: '15%' }}>
+    <footer id="footer" className="w-full text-black" style={{ paddingTop: '10%' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <div className="row">
           {/* Layer Image Row */}

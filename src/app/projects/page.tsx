@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import PageLoader from '@/components/PageLoader';
 import ServicesGrid from '@/components/ServicesGrid';
 import ScrollableCategories from '@/components/ScrollableCategories';
+import GetInTouch from '@/components/GetInTouch';
 
 interface SubService {
   _id: string;
@@ -216,6 +217,9 @@ const ProjectsPage = () => {
             </div>
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
     </div>
   );

@@ -103,7 +103,7 @@ export default function Home() {
               return section.enabled !== false ? <OurServices key={index} /> : null;
             
             case 'getInTouchSection':
-              return section.email ? (
+              return (
                 <GetInTouch 
                   key={index} 
                   sectionId={section.sectionId}
@@ -112,12 +112,17 @@ export default function Home() {
                   buttonText={section.buttonText}
                   email={section.email}
                 />
-              ) : null;
+              );
             
             default:
               return null;
           }
         })}
+        
+        {/* Show GetInTouch with placeholder if no getInTouchSection in content */}
+        {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection') && (
+          <GetInTouch />
+        )}
         
         {/* Fallback static content if no dynamic content */}
         {/* {(!pageData?.content || pageData.content.length === 0) && (

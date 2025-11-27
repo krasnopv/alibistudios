@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import GetInTouch from '@/components/GetInTouch';
 import { useState } from 'react';
 
 export default function Portfolio() {
@@ -37,7 +38,10 @@ export default function Portfolio() {
             </div>
           </div>
         </div>
-          </main>
-        </div>
-      );
-    }
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
+      </main>
+    </div>
+  );
+}

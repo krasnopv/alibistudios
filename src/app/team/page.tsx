@@ -6,6 +6,7 @@ import Hero from '@/components/Hero';
 import PageLoader from '@/components/PageLoader';
 import ContentGrid from '@/components/ContentGrid';
 import TeamMemberOverlay from '@/components/TeamMemberOverlay';
+import GetInTouch from '@/components/GetInTouch';
 
 interface TeamMember {
   _id: string;
@@ -139,6 +140,9 @@ const Team = () => {
             {/* </div> */}
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
         </main>
         
         {/* Team Member Overlay */}

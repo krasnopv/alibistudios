@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import PageLoader from '@/components/PageLoader';
+import GetInTouch from '@/components/GetInTouch';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { getAssetPath } from '@/lib/assets';
 
@@ -87,8 +88,8 @@ export default function Studios() {
 
         {/* Studios Content - 50/50 Grid Layout */}
         <section className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="row">
+              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="row">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0">
                 {studios.map((studio) => (
                   <div key={studio._id}>
@@ -119,19 +120,19 @@ export default function Studios() {
                       {/* Content below image */}
                       <div className="w-full p-6 bg-[#ffffff]">
                         <h2 className="display_h6 !mb-6">
-                          {studio.studioName || studio.name || studio.title}
-                        </h2>
-                        {studio.description && studio.description.length > 0 && (
-                          <div 
+                      {studio.studioName || studio.name || studio.title}
+                    </h2>
+                          {studio.description && studio.description.length > 0 && (
+                            <div 
                             className="text-[16px] md:text-[18px] font-[400] leading-[150%] tracking-[0%]"
-                            style={{ fontFamily: 'Plus Jakarta Sans' }}
-                          >
+                              style={{ fontFamily: 'Plus Jakarta Sans' }}
+                            >
                             <div className="prose max-w-none">
-                              <PortableText value={studio.description} />
+                                <PortableText value={studio.description} />
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
+                          )}
+                        </div>
                     </div>
 
                     {/* Desktop Layout - Overlay with hover effect */}
@@ -149,20 +150,20 @@ export default function Studios() {
                             <div className="prose max-w-none">
                               <PortableText value={studio.description} />
                             </div>
-                          </div>
-                        )}
-                      </div>
+                            </div>
+                          )}
+                        </div>
 
                       {/* Image Layer - Covers content, disappears on hover */}
-                      {studio.imageUrl && (
+                          {studio.imageUrl && (
                         <div className="absolute inset-0 z-20 group-hover:opacity-0 transition-opacity duration-300">
-                          <Image
-                            src={studio.imageUrl}
-                            alt={studio.imageAlt || studio.studioName || studio.name || studio.title || 'Studio image'}
-                            fill
-                            className="object-cover"
+                              <Image
+                                src={studio.imageUrl}
+                                alt={studio.imageAlt || studio.studioName || studio.name || studio.title || 'Studio image'}
+                                fill
+                                className="object-cover"
                             sizes="50vw"
-                          />
+                              />
                           {/* White Logo Overlay */}
                           <div className="absolute inset-0 flex items-center justify-center z-30">
                             <Image
@@ -172,16 +173,19 @@ export default function Studios() {
                               height={35}
                               className="w-[30%] h-auto"
                             />
-                          </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
     </div>
   );

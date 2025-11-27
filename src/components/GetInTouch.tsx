@@ -7,11 +7,15 @@ interface GetInTouchProps {
   title?: string;
   description?: unknown[];
   buttonText?: string;
-  email: string;
+  email?: string;
 }
 
 const GetInTouch = ({ sectionId, title, description, buttonText, email }: GetInTouchProps) => {
-  const { handleMailtoClick, copied } = useMailto(email);
+  // Use placeholder content if description is not provided
+  const hasDescription = description && Array.isArray(description) && description.length > 0;
+  const placeholderEmail = 'production@allibistudios.co.uk';
+  const displayEmail = email || placeholderEmail;
+  const { handleMailtoClick, copied } = useMailto(displayEmail);
 
   const renderRichText = (content: unknown[]): React.ReactNode => {
     if (!content || content.length === 0) {
@@ -36,26 +40,30 @@ const GetInTouch = ({ sectionId, title, description, buttonText, email }: GetInT
     <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
-          <div className="mb-16">
+          <div className="mb-0">
             {title && (
               <h1 className="display_h1 brand-color text-center">
                 {title}
               </h1>
             )}
-            {description && description.length > 0 && (
+            {hasDescription ? (
               <h6 className="display_h6 text-center">
                 {renderRichText(description)}
               </h6>
+            ) : (
+              <h6 className="display_h6 text-center">
+                We&apos;d love to hear from you
+              </h6>
             )}
-            <div className="text-center mt-8">
+            <div className="text-center mt-4">
               <h6 className="display_h6 brand-color">
                 <a 
-                  href={`mailto:${email}`}
+                  href={`mailto:${displayEmail}`}
                   onClick={handleMailtoClick}
                   className="hover:underline cursor-pointer"
-                  title={copied ? 'Email copied to clipboard!' : `Click to copy ${email}`}
+                  title={copied ? 'Email copied to clipboard!' : `Click to copy ${displayEmail}`}
                 >
-                  {copied ? 'Email copied!' : (buttonText || 'Get in Touch')}
+                  {copied ? 'Email copied!' : (hasDescription ? (buttonText || 'Get in Touch') : 'Get in Touch')}
                 </a> →
               </h6>
             </div>

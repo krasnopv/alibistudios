@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ServiceAccordion from '@/components/ServiceAccordion';
+import GetInTouch from '@/components/GetInTouch';
 
 interface SubService {
   _id: string;
@@ -96,6 +97,9 @@ export default function Services() {
             </div>
           </div>
         </section>
+        
+        {/* Get in Touch Section */}
+        <GetInTouch />
       </main>
     </div>
   );
