@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { generateSEO } from "@/lib/seo";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         {children}
         <Footer />
+        <BackToTop />
       </body>
     </html>
   );

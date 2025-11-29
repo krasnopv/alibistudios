@@ -25,6 +25,7 @@ interface ServicesGridProps {
   gridCols?: string;
   className?: string;
   enableParallax?: boolean;
+  referrerServiceSlug?: string;
 }
 
 const ServicesGrid = ({ 
@@ -32,7 +33,8 @@ const ServicesGrid = ({
   schemaUrl,
   gridCols = "md:grid-cols-2",
   className = "",
-  enableParallax = false
+  enableParallax = false,
+  referrerServiceSlug
 }: ServicesGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -164,7 +166,12 @@ const ServicesGrid = ({
         // Get optimal image size based on container width
         const containerWidth = isMobile ? 300 : 600;
         const imageUrl = getOptimalImage(item, containerWidth);
-        const url = item.slug ? `/${schemaUrl}/${item.slug}` : `/${schemaUrl}/${item.title.toLowerCase().replace(/\s+/g, '-')}`;
+        let url = item.slug ? `/${schemaUrl}/${item.slug}` : `/${schemaUrl}/${item.title.toLowerCase().replace(/\s+/g, '-')}`;
+        
+        // Add referrer service slug as query parameter if provided
+        if (referrerServiceSlug) {
+          url += `?from=${referrerServiceSlug}`;
+        }
         
         // Handle description/subtitle that might be a Sanity Portable Text object
         const getDescription = (desc: unknown) => {

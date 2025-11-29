@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import PageLoader from '@/components/PageLoader';
@@ -171,11 +171,14 @@ const IframeWithThumbnail = ({
 
 const ProjectPage = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
   const projectSlug = params.slug;
+  const referrerServiceSlug = searchParams?.get('from') || null;
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [showVideoOverlay, setShowVideoOverlay] = useState(false);
   const [videoLoadingStates, setVideoLoadingStates] = useState<{[key: string]: boolean}>({});
+  const [referrerService, setReferrerService] = useState<{title: string; slug: string} | null>(null);
 
   const renderRichText = (description: string | unknown) => {
     // Handle null/undefined
@@ -250,6 +253,22 @@ const ProjectPage = () => {
         console.log('Project images:', data.images);
         setProject(data);
         
+        // If we have a referrer service slug, fetch its details
+        if (referrerServiceSlug) {
+          try {
+            const serviceResponse = await fetch(`/api/services/slug/${referrerServiceSlug}`);
+            const serviceData = await serviceResponse.json();
+            if (serviceData && serviceData.title) {
+              setReferrerService({
+                title: serviceData.title,
+                slug: referrerServiceSlug
+              });
+            }
+          } catch (error) {
+            console.error('Error fetching referrer service:', error);
+          }
+        }
+        
         // Initialize loading states for all video types
         if (data.videoTrailer) {
           const videoUrl = data.videoTrailer.type === 'upload' 
@@ -284,7 +303,7 @@ const ProjectPage = () => {
     if (projectSlug) {
       fetchProject();
     }
-  }, [projectSlug]);
+  }, [projectSlug, referrerServiceSlug]);
 
   if (loading) {
     return <PageLoader />;
@@ -315,13 +334,17 @@ const ProjectPage = () => {
               <div className="flex flex-col md:hidden gap-6 mb-8">
                 {/* Back Link */}
                 <div>
-                  {project.services && project.services.length > 0 ? (
+                  {referrerService ? (
+                    <Link href={`/services/${referrerService.slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                      <span className="text-[#FF0066] text-xl">←</span> {referrerService.title}
+                    </Link>
+                  ) : project.services && project.services.length > 0 ? (
                     <Link href={`/services/${project.services[0].slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
-                      <span className="text-[#FF0066] text-3xl">←</span> {project.services[0].title}
+                      <span className="text-[#FF0066] text-xl">←</span> {project.services[0].title}
                     </Link>
                   ) : (
                     <Link href="/projects" className="body_regular text-black hover:text-[#FF0066] transition-colors">
-                      <span className="text-[#FF0066] text-3xl">←</span> All Projects
+                      <span className="text-[#FF0066] text-xl">←</span> All Projects
                     </Link>
                   )}
                 </div>
@@ -503,13 +526,17 @@ const ProjectPage = () => {
                 <div className="w-1/3">
                   {/* Back Link */}
                   <div className="mb-12">
-                    {project.services && project.services.length > 0 ? (
+                    {referrerService ? (
+                      <Link href={`/services/${referrerService.slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
+                        <span className="text-[#FF0066] text-xl">←</span> {referrerService.title}
+                      </Link>
+                    ) : project.services && project.services.length > 0 ? (
                       <Link href={`/services/${project.services[0].slug}`} className="body_regular text-black hover:text-[#FF0066] transition-colors">
-                        <span className="text-[#FF0066] text-3xl">←</span> {project.services[0].title}
+                        <span className="text-[#FF0066] text-xl">←</span> {project.services[0].title}
                       </Link>
                     ) : (
                       <Link href="/projects" className="body_regular text-black hover:text-[#FF0066] transition-colors">
-                        <span className="text-[#FF0066] text-3xl">←</span> All Projects
+                        <span className="text-[#FF0066] text-xl">←</span> All Projects
                       </Link>
                     )}
                   </div>
