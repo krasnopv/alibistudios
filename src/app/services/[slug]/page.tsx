@@ -433,18 +433,22 @@ const ServicePage = () => {
 
               {/* Categories Filter */}
               {service.projects && service.projects.length > 0 && (() => {
-                // Collect all unique subServices from projects
-                const projectSubServices = service.projects
-                  .filter(project => project != null) // Filter out null projects
-                  .flatMap(project => project.subServices || [])
-                  .filter((sub, index, self) => 
-                    index === self.findIndex(s => s.title === sub.title)
-                  );
+                // Get all subServices used by projects (for filtering)
+                const projectSubServiceTitles = new Set(
+                  service.projects
+                    .filter(project => project != null)
+                    .flatMap(project => project.subServices || [])
+                    .map(sub => sub.title)
+                );
                 
-                return projectSubServices.length > 0 ? (
+                // Use service.subServices in Sanity order, filtered to only those used by projects
+                const orderedSubServices = (service.subServices || [])
+                  .filter(sub => projectSubServiceTitles.has(sub.title));
+                
+                return orderedSubServices.length > 0 ? (
                 <div className="mb-12">
                   <ScrollableCategories
-                      categories={['All', ...projectSubServices.map(sub => sub.title)]}
+                      categories={['All', ...orderedSubServices.map(sub => sub.title)]}
                     activeCategory={activeCategory}
                     onCategoryChange={setActiveCategory}
                   />

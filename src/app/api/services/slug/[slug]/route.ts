@@ -47,11 +47,12 @@ export async function GET(
           "thumbnailAlt": thumbnail.alt,
           "thumbnailCaption": thumbnail.caption
         },
-        "projects": *[_type == "project" && _id in ^.projects[]._ref && (!defined(hideProject) || hideProject != true)] {
+        "projects": projects[]->{
           _id,
           title,
           subtitle,
           "slug": slug.current,
+          hideProject,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt,
           "imageSmall": image.asset->url + "?w=300&h=169&fit=crop&auto=format",
@@ -73,6 +74,13 @@ export async function GET(
 
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
+    }
+
+    // Filter out projects where hideProject is true, preserving the order from Sanity
+    if (service.projects) {
+      service.projects = service.projects
+        .filter(project => project && (!project.hideProject || project.hideProject !== true))
+        .map(({ hideProject, ...project }) => project); // Remove hideProject from response
     }
 
     return NextResponse.json(service);
