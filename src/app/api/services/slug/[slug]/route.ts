@@ -3,6 +3,24 @@ import { client } from '@/lib/sanity';
 
 export const dynamic = 'force-dynamic';
 
+interface ProjectWithHideFlag {
+  _id: string;
+  title: string;
+  subtitle: string;
+  slug: string;
+  hideProject?: boolean;
+  imageUrl: string;
+  imageAlt: string;
+  imageSmall?: string;
+  imageMedium?: string;
+  imageLarge?: string;
+  subServices?: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+  }>;
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -78,9 +96,9 @@ export async function GET(
 
     // Filter out projects where hideProject is true, preserving the order from Sanity
     if (service.projects) {
-      service.projects = service.projects
-        .filter(project => project && (!project.hideProject || project.hideProject !== true))
-        .map(({ hideProject, ...project }) => project); // Remove hideProject from response
+      service.projects = (service.projects as ProjectWithHideFlag[])
+        .filter((project: ProjectWithHideFlag) => project && (!project.hideProject || project.hideProject !== true))
+        .map(({ hideProject: _, ...project }) => project); // Remove hideProject from response
     }
 
     return NextResponse.json(service);
