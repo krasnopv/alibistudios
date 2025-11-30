@@ -544,17 +544,6 @@ const Header = () => {
                    </motion.div>
                  )}
                </AnimatePresence>
-               <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Directors
-                   {/* <span className="menu-text-duplicate">Directors</span> */}
-                 </div>
-               </Link>
                <Link href="/studios" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
                  <div className="relative justify-center text-[20px] md:text-[28px]" style={{
                    color: '#000',
@@ -564,6 +553,17 @@ const Header = () => {
                  }}>
                    Studios<br/>
                    {/* <span className="menu-text-duplicate">Studios<br/></span> */}
+                 </div>
+               </Link>
+               <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
+                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
+                   color: '#000',
+                   fontFamily: 'Plus Jakarta Sans',
+                   fontStyle: 'normal',
+                   fontWeight: 400,
+                 }}>
+                   Directors
+                   {/* <span className="menu-text-duplicate">Directors</span> */}
                  </div>
                </Link>
                <Link href="/tax-rebate" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
