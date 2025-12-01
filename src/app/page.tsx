@@ -11,10 +11,13 @@ import Awards from '@/components/Awards';
 import Films from '@/components/Films';
 import Team from '@/components/Team';
 import GetInTouch from '@/components/GetInTouch';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface Page {
   _id: string;
   title: string;
+  subTitle?: unknown[];
   slug: string;
   content?: Array<{
     _type: string;
@@ -90,9 +93,14 @@ export default function Home() {
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="row">
                       <div className="mb-16">
-                        <h1 className="display_h1 brand-color text-center">
+                        <h1 className="display_h1 brand-color text-center mb-6">
                           {pageData.title}
                         </h1>
+                        {pageData.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 && (
+                          <h6 className="display_h6 text-center">
+                            <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                          </h6>
+                        )}
                       </div>
                     </div>
                   </div>

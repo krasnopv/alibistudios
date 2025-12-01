@@ -6,6 +6,8 @@ import PageLoader from '@/components/PageLoader';
 import ServicesGrid from '@/components/ServicesGrid';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import GetInTouch from '@/components/GetInTouch';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface SubService {
   _id: string;
@@ -31,6 +33,7 @@ interface Project {
 interface Page {
   _id: string;
   title: string;
+  subTitle?: unknown[];
   slug: string;
 }
 
@@ -124,9 +127,15 @@ const ProjectsPage = () => {
                 <h1 className="display_h1 brand-color text-center mb-6">
                   {pageData?.title || 'All Projects'}
                 </h1>
-                <h6 className="display_h6 text-center">
-                  Explore our portfolio of creative work
-                </h6>
+                {pageData?.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 ? (
+                  <h6 className="display_h6 text-center">
+                    <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                  </h6>
+                ) : (
+                  <h6 className="display_h6 text-center">
+                    Explore our portfolio of creative work
+                  </h6>
+                )}
               </div>
 
               {/* Categories Filter */}

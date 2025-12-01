@@ -7,6 +7,8 @@ import PageLoader from '@/components/PageLoader';
 import ContentGrid from '@/components/ContentGrid';
 import TeamMemberOverlay from '@/components/TeamMemberOverlay';
 import GetInTouch from '@/components/GetInTouch';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface TeamMember {
   _id: string;
@@ -33,6 +35,7 @@ interface TeamMember {
 interface Page {
   _id: string;
   title: string;
+  subTitle?: unknown[];
   slug: string;
 }
 
@@ -110,9 +113,14 @@ const Team = () => {
             <div className="row">
               {/* Page Title */}
               <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
+                <h1 className="display_h1 brand-color text-center mb-6">
                   {pageData?.title || 'Seasoned industry veterans'}
                 </h1>
+                {pageData?.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 && (
+                  <h6 className="display_h6 text-center">
+                    <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                  </h6>
+                )}
               </div>
             </div>
           {/* </div>

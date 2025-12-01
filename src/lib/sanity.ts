@@ -165,6 +165,7 @@ export const queries = {
   pageBySlug: (slug: string) => `*[_type == "page" && slug.current == "${slug}"][0] {
     _id,
     title,
+    subTitle,
     slug,
     description,
     heroVideo,

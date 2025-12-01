@@ -13,10 +13,13 @@ import GetInTouch from '@/components/GetInTouch';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface Page {
   _id: string;
   title: string;
+  subTitle?: unknown[];
   slug: string;
   description?: string;
   heroTitle?: string;
@@ -180,12 +183,18 @@ export default function TaxRebate() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="row">
                 <div className="mb-16">
-                  <h1 className="display_h1 brand-color text-center">
+                  <h1 className="display_h1 brand-color text-center mb-6">
                     {pageData.title}
                   </h1>
-                  <h6 className="display_h6 text-center">
-                    Alibi is here to help you with the tax rebate incentives in France and the UK.
-                  </h6>
+                  {pageData.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 ? (
+                    <h6 className="display_h6 text-center">
+                      <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                    </h6>
+                  ) : (
+                    <h6 className="display_h6 text-center">
+                      Alibi is here to help you with the tax rebate incentives in France and the UK.
+                    </h6>
+                  )}
                 </div>
               </div>
             </div>
@@ -354,9 +363,14 @@ export default function TaxRebate() {
                   <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="row">
                       <div className="mb-16">
-                        <h1 className="display_h1 brand-color text-center">
+                        <h1 className="display_h1 brand-color text-center mb-6">
                           {pageData.title}
                         </h1>
+                        {pageData.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 && (
+                          <h6 className="display_h6 text-center">
+                            <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                          </h6>
+                        )}
                       </div>
                     </div>
                   </div>

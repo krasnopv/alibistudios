@@ -219,6 +219,13 @@ const ServicePage = () => {
     return (
       <div key={index} className="w-full">
         {videoContent()}
+        {reel.thumbnailCaption && String(reel.thumbnailCaption).trim() !== '' && (
+          <div className="mt-4">
+            <p className="text-left" style={{ color: '#FF0066', fontFamily: 'Plus Jakarta Sans', fontSize: '16px' }}>
+              {reel.thumbnailCaption}
+            </p>
+          </div>
+        )}
       </div>
     );
   };

@@ -5,6 +5,8 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import VideoOverlay from '@/components/VideoOverlay';
 import GetInTouch from '@/components/GetInTouch';
+import BlockContent from '@sanity/block-content-to-react';
+import { serializers } from '@/lib/serializers';
 
 interface Trophy {
   _id: string;
@@ -36,6 +38,7 @@ interface Director {
 interface Page {
   _id: string;
   title: string;
+  subTitle?: unknown[];
   slug: string;
 }
 
@@ -125,9 +128,14 @@ export default function Directors() {
             <div className="row">
               {/* Header */}
               <div className="mb-16">
-                <h1 className="display_h1 brand-color text-center">
+                <h1 className="display_h1 brand-color text-center mb-6">
                   {pageData?.title || "Directing Tomorrow's Visual World"}
                 </h1>
+                {pageData?.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 && (
+                  <h6 className="display_h6 text-center">
+                    <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                  </h6>
+                )}
               </div>
 
               {/* Directors List */}
