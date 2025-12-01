@@ -7,7 +7,6 @@ import Hero from '@/components/Hero';
 import PageLoader from '@/components/PageLoader';
 import GetInTouch from '@/components/GetInTouch';
 import { PortableText, PortableTextBlock } from '@portabletext/react';
-import { getAssetPath } from '@/lib/assets';
 
 interface Studio {
   _id: string;
@@ -17,6 +16,8 @@ interface Studio {
   description: PortableTextBlock[];
   imageUrl?: string;
   imageAlt?: string;
+  logoUrl?: string;
+  logoAlt?: string;
   order?: number;
 }
 
@@ -105,16 +106,18 @@ export default function Studios() {
                             className="object-cover"
                             sizes="100vw"
                           />
-                          {/* White Logo Overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center z-30">
-                            <Image
-                              src={getAssetPath('logo_white.svg')}
-                              alt="Alibi Studios"
-                              width={93}
-                              height={35}
-                              className="w-[30%] h-auto"
-                            />
-                          </div>
+                          {/* Studio Logo Overlay */}
+                          {studio.logoUrl && (
+                            <div className="absolute inset-0 flex items-center justify-center z-30">
+                              <Image
+                                src={studio.logoUrl}
+                                alt={studio.logoAlt || studio.studioName || studio.name || studio.title || 'Studio logo'}
+                                width={93}
+                                height={35}
+                                className="w-[30%] h-auto object-contain"
+                              />
+                            </div>
+                          )}
                         </div>
                       )}
                       {/* Content below image */}
@@ -164,16 +167,18 @@ export default function Studios() {
                                 className="object-cover"
                             sizes="50vw"
                               />
-                          {/* White Logo Overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center z-30">
-                            <Image
-                              src={getAssetPath('logo_white.svg')}
-                              alt="Alibi Studios"
-                              width={93}
-                              height={35}
-                              className="w-[30%] h-auto"
-                            />
-                              </div>
+                          {/* Studio Logo Overlay */}
+                          {studio.logoUrl && (
+                            <div className="absolute inset-0 flex items-center justify-center z-30">
+                              <Image
+                                src={studio.logoUrl}
+                                alt={studio.logoAlt || studio.studioName || studio.name || studio.title || 'Studio logo'}
+                                width={93}
+                                height={35}
+                                className="w-[30%] h-auto object-contain"
+                              />
+                            </div>
+                          )}
                             </div>
                           )}
                         </div>

@@ -17,6 +17,15 @@ export async function GET() {
       },
       "imageUrl": image.asset->url,
       "imageAlt": image.alt,
+      logo {
+        asset->{
+          _id,
+          url
+        },
+        alt
+      },
+      "logoUrl": logo.asset->url,
+      "logoAlt": logo.alt,
       order
     }`;
 
