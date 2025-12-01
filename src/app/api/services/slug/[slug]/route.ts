@@ -98,7 +98,8 @@ export async function GET(
     if (service.projects) {
       service.projects = (service.projects as ProjectWithHideFlag[])
         .filter((project: ProjectWithHideFlag) => project && (!project.hideProject || project.hideProject !== true))
-        .map(({ hideProject: _, ...project }) => project); // Remove hideProject from response
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map(({ hideProject, ...project }: ProjectWithHideFlag) => project); // Remove hideProject from response
     }
 
     return NextResponse.json(service);

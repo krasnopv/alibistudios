@@ -95,6 +95,36 @@ export const queries = {
     showInServices
   }`,
 
+  // Get primary menu (first menu document)
+  menu: `*[_type == "menu"][0]{
+    _id,
+    title,
+    items[]{
+      _key,
+      label,
+      linkType,
+      url,
+      page->{
+        "slug": slug.current
+      },
+      service->{
+        "slug": slug.current
+      },
+      subItems[]{
+        _key,
+        label,
+        linkType,
+        url,
+        page->{
+          "slug": slug.current
+        },
+        service->{
+          "slug": slug.current
+        }
+      }
+    }
+  }`,
+
   // Get services for homepage
   homepageServices: `*[_type == "service" && defined(featured) && featured == true] | order(featuredOrder asc, order asc) {
     _id,

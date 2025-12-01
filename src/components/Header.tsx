@@ -14,8 +14,26 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [hasHero, setHasHero] = useState(true);
-  const [featuredServices, setFeaturedServices] = useState<Array<{_id: string; title: string; slug: string}>>([]);
-  const [isOurWorkExpanded, setIsOurWorkExpanded] = useState(false);
+  const [menuData, setMenuData] = useState<{
+    title?: string;
+    items?: Array<{
+      _key: string;
+      label: string;
+      linkType: 'page' | 'service' | 'custom' | 'expander';
+      url?: string;
+      page?: { slug?: string };
+      service?: { slug?: string };
+      subItems?: Array<{
+        _key: string;
+        label: string;
+        linkType: 'page' | 'service' | 'custom';
+        url?: string;
+        page?: { slug?: string };
+        service?: { slug?: string };
+      }>;
+    }>;
+  } | null>(null);
+  const [expandedMenuItemKey, setExpandedMenuItemKey] = useState<string | null>(null);
   const email = 'production@alibistudios.co.uk';
   const { handleMailtoClick, copied } = useMailto(email);
 
@@ -51,18 +69,22 @@ const Header = () => {
   }, [hasHero]);
 
   useEffect(() => {
-    // Fetch featured services
-    const fetchFeaturedServices = async () => {
+    // Fetch sidebar menu configuration from Sanity
+    const fetchMenu = async () => {
       try {
-        const response = await fetch('/api/homepage-services');
+        const response = await fetch('/api/menu');
+        if (!response.ok) {
+          console.error('Error fetching menu:', response.status, response.statusText);
+          return;
+        }
         const data = await response.json();
-        setFeaturedServices(data);
+        setMenuData(data);
       } catch (error) {
-        console.error('Error fetching featured services:', error);
+        console.error('Error fetching menu:', error);
       }
     };
 
-    fetchFeaturedServices();
+    fetchMenu();
   }, []);
 
   useEffect(() => {
@@ -326,6 +348,32 @@ const Header = () => {
     }
   };
 
+  const resolvePageHref = (slug?: string) => {
+    if (!slug) return '/';
+    if (slug === 'home') return '/';
+    return `/${slug}`;
+  };
+
+  const resolveServiceHref = (slug?: string) => {
+    if (!slug) return '/services';
+    return `/services/${slug}`;
+  };
+
+  const renderMenuLabel = (label: string) => (
+    <div
+      className="relative justify-center text-[20px] md:text-[28px]"
+      style={{
+        color: '#000',
+        fontFamily: 'Plus Jakarta Sans',
+        fontStyle: 'normal',
+        fontWeight: 400,
+      }}
+    >
+      {label}
+      <br />
+    </div>
+  );
+
 
   return (
     <>
@@ -458,142 +506,269 @@ const Header = () => {
             </div>
             
             {/* Menu Items */}
-             <div className="flex flex-col justify-start items-start w-full">
-               <Link href="/#services" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleServicesClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400
-                 }}>
-                   Services<br/>
-                   {/* <span className="menu-text-duplicate">Services<br/></span> */}
-                 </div>
-               </Link>
-               <Link href="/team" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Team<br/>
-                   {/* <span className="menu-text-duplicate">Team<br/></span> */}
-                 </div>
-               </Link>
-               <button 
-                 className="w-full inline-flex justify-start items-center gap-2.5 menu-item-hover" 
-                 style={{ cursor: 'pointer' }}
-                 onClick={() => setIsOurWorkExpanded(!isOurWorkExpanded)}
-               >
-                 <div className="relative justify-center text-[20px] md:text-[28px] inline-flex items-center gap-8" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Our Work
-                     <span className="text-[18px] md:text-[24px]" style={{
-                       color: '#000',
-                       fontFamily: 'Plus Jakarta Sans',
-                       fontStyle: 'normal',
-                       fontWeight: 300,
-                       textDecoration: 'none'
-                     }}>{isOurWorkExpanded ? '−' : '+'}</span>
-                   <br/>
-                   {/* <span className="menu-text-duplicate">
-                     Our Work<br/>
-                   </span> */}
-               </div>
-               </button>
-               <AnimatePresence>
-                 {isOurWorkExpanded && (
-                   <motion.div
-                     initial={{ height: 0, opacity: 0 }}
-                     animate={{ height: 'auto', opacity: 1 }}
-                     exit={{ height: 0, opacity: 0 }}
-                     transition={{ duration: 0.3, ease: 'easeInOut' }}
-                     style={{ overflow: 'hidden' }}
-                   >
-                     <div className="flex flex-col">
-               {featuredServices.map((service) => (
-                 <Link key={service._id} href={`/services/${service.slug}`} className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                           <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                     color: '#000',
-                     fontFamily: 'Plus Jakarta Sans',
-                     fontStyle: 'normal',
-                     fontWeight: 400,
-                   }}>
-                     - {service.title}<br/>
-                     {/* <span className="menu-text-duplicate">- {service.title}<br/></span> */}
-                   </div>
-                 </Link>
-               ))}
-               <Link href="/#films" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleFilmsClick}>
-                         <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   - Film & Episodic<br/>
-                   {/* <span className="menu-text-duplicate">- Film & Episodic<br/></span> */}
-                 </div>
-               </Link>
-                     </div>
-                   </motion.div>
-                 )}
-               </AnimatePresence>
-               <Link href="/studios" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Studios<br/>
-                   {/* <span className="menu-text-duplicate">Studios<br/></span> */}
-                 </div>
-               </Link>
-               <Link href="/directors" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Directors
-                   {/* <span className="menu-text-duplicate">Directors</span> */}
-                 </div>
-               </Link>
-               <Link href="/tax-rebate" className="inline-flex justify-start items-center gap-2.5 menu-item-hover" style={{ cursor: 'pointer' }} onClick={handleMenuItemClick}>
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Tax Rebate<br/>
-                   {/* <span className="menu-text-duplicate">Tax Rebate<br/></span> */}
-                 </div>
-               </Link>
-               <a 
-                 href="#footer"
-                 onClick={handleContactUsClick}
-                 className="inline-flex justify-start items-center gap-2.5 menu-item-hover" 
-                 style={{ cursor: 'pointer' }}
-               >
-                 <div className="relative justify-center text-[20px] md:text-[28px]" style={{
-                   color: '#000',
-                   fontFamily: 'Plus Jakarta Sans',
-                   fontStyle: 'normal',
-                   fontWeight: 400,
-                 }}>
-                   Contact Us<br/>
-                   {/* <span className="menu-text-duplicate">Contact Us<br/></span> */}
-                 </div>
-               </a>
-             </div>
+            <div className="flex flex-col justify-start items-start w-full">
+              {menuData?.items?.map((item) => {
+                const key = item._key;
+
+                if (item.linkType === 'expander') {
+                  const isExpanded = expandedMenuItemKey === key;
+                  return (
+                    <div key={key} className="w-full">
+                      <button
+                        className="w-full inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() =>
+                          setExpandedMenuItemKey(isExpanded ? null : key)
+                        }
+                      >
+                        <div
+                          className="relative justify-center text-[20px] md:text-[28px] inline-flex items-center gap-8"
+                          style={{
+                            color: '#000',
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontStyle: 'normal',
+                            fontWeight: 400,
+                          }}
+                        >
+                          {item.label}
+                          <span
+                            className="text-[18px] md:text-[24px]"
+                            style={{
+                              color: '#000',
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontStyle: 'normal',
+                              fontWeight: 300,
+                              textDecoration: 'none',
+                            }}
+                          >
+                            {isExpanded ? '−' : '+'}
+                          </span>
+                          <br />
+                        </div>
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && item.subItems && item.subItems.length > 0 && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            style={{ overflow: 'hidden' }}
+                          >
+                            <div className="flex flex-col">
+                              {item.subItems.map((sub) => {
+                                const subKey = sub._key;
+                                const label = `- ${sub.label}`;
+
+                                if (sub.linkType === 'custom' && sub.url) {
+                                  if (sub.url === '#films') {
+                                    return (
+                                      <Link
+                                        key={subKey}
+                                        href="/#films"
+                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={handleFilmsClick}
+                                      >
+                                        {renderMenuLabel(label)}
+                                      </Link>
+                                    );
+                                  }
+                                  if (sub.url === '#services') {
+                                    return (
+                                      <Link
+                                        key={subKey}
+                                        href="/#services"
+                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={handleServicesClick}
+                                      >
+                                        {renderMenuLabel(label)}
+                                      </Link>
+                                    );
+                                  }
+                                  if (sub.url === '#footer') {
+                                    return (
+                                      <a
+                                        key={subKey}
+                                        href="#footer"
+                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={handleContactUsClick}
+                                      >
+                                        {renderMenuLabel(label)}
+                                      </a>
+                                    );
+                                  }
+
+                                  if (sub.url.startsWith('/')) {
+                                    return (
+                                      <Link
+                                        key={subKey}
+                                        href={sub.url}
+                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={handleMenuItemClick}
+                                      >
+                                        {renderMenuLabel(label)}
+                                      </Link>
+                                    );
+                                  }
+
+                                  return (
+                                    <a
+                                      key={subKey}
+                                      href={sub.url}
+                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={handleMenuItemClick}
+                                    >
+                                      {renderMenuLabel(label)}
+                                    </a>
+                                  );
+                                }
+
+                                if (sub.linkType === 'page') {
+                                  const href = resolvePageHref(sub.page?.slug);
+                                  return (
+                                    <Link
+                                      key={subKey}
+                                      href={href}
+                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={handleMenuItemClick}
+                                    >
+                                      {renderMenuLabel(label)}
+                                    </Link>
+                                  );
+                                }
+
+                                if (sub.linkType === 'service') {
+                                  const href = resolveServiceHref(sub.service?.slug);
+                                  return (
+                                    <Link
+                                      key={subKey}
+                                      href={href}
+                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={handleMenuItemClick}
+                                    >
+                                      {renderMenuLabel(label)}
+                                    </Link>
+                                  );
+                                }
+
+                                return null;
+                              })}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                if (item.linkType === 'custom' && item.url) {
+                  if (item.url === '#films') {
+                    return (
+                      <Link
+                        key={key}
+                        href="/#films"
+                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleFilmsClick}
+                      >
+                        {renderMenuLabel(item.label)}
+                      </Link>
+                    );
+                  }
+                  if (item.url === '#services') {
+                    return (
+                      <Link
+                        key={key}
+                        href="/#services"
+                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleServicesClick}
+                      >
+                        {renderMenuLabel(item.label)}
+                      </Link>
+                    );
+                  }
+                  if (item.url === '#footer') {
+                    return (
+                      <a
+                        key={key}
+                        href="#footer"
+                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleContactUsClick}
+                      >
+                        {renderMenuLabel(item.label)}
+                      </a>
+                    );
+                  }
+
+                  if (item.url.startsWith('/')) {
+                    return (
+                      <Link
+                        key={key}
+                        href={item.url}
+                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                        style={{ cursor: 'pointer' }}
+                        onClick={handleMenuItemClick}
+                      >
+                        {renderMenuLabel(item.label)}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <a
+                      key={key}
+                      href={item.url}
+                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                      style={{ cursor: 'pointer' }}
+                      onClick={handleMenuItemClick}
+                    >
+                      {renderMenuLabel(item.label)}
+                    </a>
+                  );
+                }
+
+                if (item.linkType === 'page') {
+                  const href = resolvePageHref(item.page?.slug);
+                  return (
+                    <Link
+                      key={key}
+                      href={href}
+                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                      style={{ cursor: 'pointer' }}
+                      onClick={handleMenuItemClick}
+                    >
+                      {renderMenuLabel(item.label)}
+                    </Link>
+                  );
+                }
+
+                if (item.linkType === 'service') {
+                  const href = resolveServiceHref(item.service?.slug);
+                  return (
+                    <Link
+                      key={key}
+                      href={href}
+                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+                      style={{ cursor: 'pointer' }}
+                      onClick={handleMenuItemClick}
+                    >
+                      {renderMenuLabel(item.label)}
+                    </Link>
+                  );
+                }
+
+                return null;
+              })}
+            </div>
           </div>
         </div>
       )}
