@@ -121,6 +121,7 @@ const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
             itemsPerPageDesktop={24}
             itemsPerPageTablet={12}
             itemsPerPageMobile={6}
+            hideLoadMore={true}
           />
         {/* </div> */}
       </div>

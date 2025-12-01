@@ -35,6 +35,7 @@ interface ContentGridProps {
   itemsPerPageDesktop?: number;
   itemsPerPageTablet?: number;
   itemsPerPageMobile?: number;
+  hideLoadMore?: boolean;
 }
 
 const ContentGrid = ({
@@ -51,7 +52,8 @@ const ContentGrid = ({
   paginationMode = 'pages',
   itemsPerPageDesktop = 24,
   itemsPerPageTablet = 12,
-  itemsPerPageMobile = 6
+  itemsPerPageMobile = 6,
+  hideLoadMore = false
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
   const [currentPage, setCurrentPage] = useState(1);
@@ -253,7 +255,7 @@ const ContentGrid = ({
           {/* Pagination Controls */}
           {enablePagination && (
             paginationMode === 'loadMore' ? (
-              hasMoreItems && (
+              hasMoreItems && !hideLoadMore && (
                 <div className="mt-12 flex items-center justify-center">
                   <button
                     onClick={handleLoadMore}

@@ -85,7 +85,7 @@ const Awards = ({ sectionId, title, subtitle }: AwardsProps) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group cursor-pointer"
+                className="group cursor-default"
                 onClick={() => setActiveAward(activeAward === award._id ? null : award._id)}
               >
                 {/* Award Icon */}

@@ -138,7 +138,7 @@ export default function Studios() {
                     {/* Desktop Layout - Overlay with hover effect */}
                     <div className="hidden lg:block group relative w-full aspect-[4/3] max-h-[360px] overflow-hidden cursor-pointer">
                       {/* Content Layer - Title and Description */}
-                      <div className="absolute inset-0 z-10 flex flex-col justify-start p-6 bg-[#ffffff] overflow-auto">
+                      <div className="absolute inset-0 z-10 flex flex-col justify-start p-6 bg-[#ffffff]">
                         <h2 className="display_h6 !mb-6">
                           {studio.studioName || studio.name || studio.title}
                         </h2>

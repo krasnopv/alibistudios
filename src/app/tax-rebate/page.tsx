@@ -194,10 +194,10 @@ export default function TaxRebate() {
 
         {/* Rebates Navigation */}
         {rebates.length > 0 && (
-          <section className="w-full">
+          <section className="w-full sticky top-14 z-40 bg-[#F8F9FA]">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="row">
-                <div className="mb-12">
+                <div className="pt-4 pb-4">
                   <ScrollableCategories
                     categories={rebates.map(rebate => rebate.title)}
                     activeCategory={rebates.find(r => r.slug.current === activeCategory)?.title || rebates[0]?.title || ''}

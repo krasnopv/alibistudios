@@ -78,6 +78,7 @@ const ServicePage = () => {
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeReelIndex, setActiveReelIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
 
@@ -215,21 +216,9 @@ const ServicePage = () => {
       return null;
     };
 
-    const hasCaption = reel.thumbnailCaption && String(reel.thumbnailCaption).trim() !== '';
-    
     return (
       <div key={index} className="w-full">
         {videoContent()}
-        {hasCaption && (
-          <div className="mt-4">
-            <p 
-              className="text-[20px] font-[400] leading-[150%] tracking-[0%] brand-color"
-              style={{ fontFamily: 'Plus Jakarta Sans' }}
-            >
-              {reel.thumbnailCaption}
-            </p>
-          </div>
-        )}
       </div>
     );
   };
@@ -242,6 +231,8 @@ const ServicePage = () => {
         const serviceResponse = await fetch(`/api/services/slug/${serviceSlug}`);
         const serviceData = await serviceResponse.json();
         setService(serviceData);
+        // Reset active reel index when service changes
+        setActiveReelIndex(0);
       } catch (error) {
         console.error('Error fetching data:', error);
         setService(null);
@@ -417,17 +408,60 @@ const ServicePage = () => {
                 <h1 className="display_h1 brand-color text-center mb-6">
                   {service.title}
                 </h1>
-                <h6 className="display_h6 text-center">
-                  {renderRichText(service.subtitle)}
-                </h6>
+                {/* Show subtitle here only if no reels */}
+                {(!service.reels || service.reels.length === 0) && (
+                  <h6 className="display_h6 text-center">
+                    {renderRichText(service.subtitle)}
+                  </h6>
+                )}
               </div>
 
               {/* Reels Section */}
               {service.reels && service.reels.length > 0 && (
                 <div className="mb-16 pt-0 lg:pt-32 pb-0 lg:pb-32">
-                  <div className="grid grid-cols-1 gap-16 lg:gap-48">
-                    {service.reels.map((reel, index) => renderReel(reel, index))}
+                  {/* Reels Filter */}
+                  <div className="mb-12">
+                    <ScrollableCategories
+                      categories={service.reels.map((reel, index) => 
+                        reel.thumbnailCaption && String(reel.thumbnailCaption).trim() !== '' 
+                          ? reel.thumbnailCaption 
+                          : `Reel ${index + 1}`
+                      )}
+                      activeCategory={
+                        service.reels[activeReelIndex]?.thumbnailCaption && 
+                        String(service.reels[activeReelIndex].thumbnailCaption).trim() !== ''
+                          ? service.reels[activeReelIndex].thumbnailCaption!
+                          : `Reel ${activeReelIndex + 1}`
+                      }
+                      onCategoryChange={(category) => {
+                        if (!service.reels) return;
+                        const reelIndex = service.reels.findIndex((reel, index) => {
+                          const reelLabel = reel.thumbnailCaption && String(reel.thumbnailCaption).trim() !== ''
+                            ? reel.thumbnailCaption
+                            : `Reel ${index + 1}`;
+                          return reelLabel === category;
+                        });
+                        if (reelIndex !== -1) {
+                          setActiveReelIndex(reelIndex);
+                        }
+                      }}
+                    />
                   </div>
+                  {/* Single Reel Display */}
+                  {service.reels[activeReelIndex] && (
+                    <div className="grid grid-cols-1 gap-16 lg:gap-48">
+                      {renderReel(service.reels[activeReelIndex], activeReelIndex)}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Subtitle - Show here when reels are available */}
+              {service.reels && service.reels.length > 0 && (
+                <div className="mb-16">
+                  <h6 className="display_h6 text-center">
+                    {renderRichText(service.subtitle)}
+                  </h6>
                 </div>
               )}
 
