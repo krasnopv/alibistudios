@@ -506,7 +506,7 @@ const Header = () => {
             </div>
             
             {/* Menu Items */}
-            <div className="flex flex-col justify-start items-start w-full">
+             <div className="flex flex-col justify-start items-start w-full">
               {menuData?.items?.map((item) => {
                 const key = item._key;
 
@@ -514,48 +514,48 @@ const Header = () => {
                   const isExpanded = expandedMenuItemKey === key;
                   return (
                     <div key={key} className="w-full">
-                      <button
+               <button 
                         className="w-full inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                        style={{ cursor: 'pointer' }}
+                 style={{ cursor: 'pointer' }}
                         onClick={() =>
                           setExpandedMenuItemKey(isExpanded ? null : key)
                         }
-                      >
+               >
                         <div
                           className="relative justify-center text-[20px] md:text-[28px] inline-flex items-center gap-8"
                           style={{
-                            color: '#000',
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontStyle: 'normal',
-                            fontWeight: 400,
+                   color: '#000',
+                   fontFamily: 'Plus Jakarta Sans',
+                   fontStyle: 'normal',
+                   fontWeight: 400,
                           }}
                         >
                           {item.label}
                           <span
                             className="text-[18px] md:text-[24px]"
                             style={{
-                              color: '#000',
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontStyle: 'normal',
-                              fontWeight: 300,
+                       color: '#000',
+                       fontFamily: 'Plus Jakarta Sans',
+                       fontStyle: 'normal',
+                       fontWeight: 300,
                               textDecoration: 'none',
                             }}
                           >
                             {isExpanded ? '−' : '+'}
                           </span>
                           <br />
-                        </div>
-                      </button>
-                      <AnimatePresence>
+               </div>
+               </button>
+               <AnimatePresence>
                         {isExpanded && item.subItems && item.subItems.length > 0 && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            style={{ overflow: 'hidden' }}
-                          >
-                            <div className="flex flex-col">
+                   <motion.div
+                     initial={{ height: 0, opacity: 0 }}
+                     animate={{ height: 'auto', opacity: 1 }}
+                     exit={{ height: 0, opacity: 0 }}
+                     transition={{ duration: 0.3, ease: 'easeInOut' }}
+                     style={{ overflow: 'hidden' }}
+                   >
+                     <div className="flex flex-col">
                               {item.subItems.map((sub) => {
                                 const subKey = sub._key;
                                 const label = `- ${sub.label}`;
@@ -639,7 +639,7 @@ const Header = () => {
                                       onClick={handleMenuItemClick}
                                     >
                                       {renderMenuLabel(label)}
-                                    </Link>
+                 </Link>
                                   );
                                 }
 
@@ -654,16 +654,16 @@ const Header = () => {
                                       onClick={handleMenuItemClick}
                                     >
                                       {renderMenuLabel(label)}
-                                    </Link>
+               </Link>
                                   );
                                 }
 
                                 return null;
                               })}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                     </div>
+                   </motion.div>
+                 )}
+               </AnimatePresence>
                     </div>
                   );
                 }
@@ -679,7 +679,7 @@ const Header = () => {
                         onClick={handleFilmsClick}
                       >
                         {renderMenuLabel(item.label)}
-                      </Link>
+               </Link>
                     );
                   }
                   if (item.url === '#services') {
@@ -692,7 +692,7 @@ const Header = () => {
                         onClick={handleServicesClick}
                       >
                         {renderMenuLabel(item.label)}
-                      </Link>
+               </Link>
                     );
                   }
                   if (item.url === '#footer') {
@@ -719,16 +719,16 @@ const Header = () => {
                         onClick={handleMenuItemClick}
                       >
                         {renderMenuLabel(item.label)}
-                      </Link>
+               </Link>
                     );
                   }
 
                   return (
-                    <a
+               <a 
                       key={key}
                       href={item.url}
-                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                      style={{ cursor: 'pointer' }}
+                 className="inline-flex justify-start items-center gap-2.5 menu-item-hover" 
+                 style={{ cursor: 'pointer' }}
                       onClick={handleMenuItemClick}
                     >
                       {renderMenuLabel(item.label)}
@@ -768,7 +768,7 @@ const Header = () => {
 
                 return null;
               })}
-            </div>
+             </div>
           </div>
         </div>
       )}

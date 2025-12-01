@@ -39,14 +39,14 @@ const ServiceCard = ({
             : '/placeholder.jpeg';
           return (
             <>
-              <img 
-                src={resolvedSrc} 
-                alt={title}
+            <img 
+              src={resolvedSrc} 
+              alt={title}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = '/placeholder.jpeg';
-                }}
-              />
+              onError={(e) => {
+                e.currentTarget.src = '/placeholder.jpeg';
+              }}
+            />
               <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             </>
           );

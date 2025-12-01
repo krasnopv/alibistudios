@@ -410,9 +410,9 @@ const ServicePage = () => {
                 </h1>
                 {/* Show subtitle here only if no reels */}
                 {(!service.reels || service.reels.length === 0) && (
-                  <h6 className="display_h6 text-center">
-                    {renderRichText(service.subtitle)}
-                  </h6>
+                <h6 className="display_h6 text-center">
+                  {renderRichText(service.subtitle)}
+                </h6>
                 )}
               </div>
 
@@ -471,9 +471,9 @@ const ServicePage = () => {
                 const projectSubServiceTitles = new Set(
                   service.projects
                     .filter(project => project != null)
-                    .flatMap(project => project.subServices || [])
+                  .flatMap(project => project.subServices || [])
                     .map(sub => sub.title)
-                );
+                  );
                 
                 // Use service.subServices in Sanity order, filtered to only those used by projects
                 const orderedSubServices = (service.subServices || [])

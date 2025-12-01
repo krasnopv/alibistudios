@@ -114,7 +114,7 @@ export default function Studios() {
                                 alt={studio.logoAlt || studio.studioName || studio.name || studio.title || 'Studio logo'}
                                 width={93}
                                 height={35}
-                                className="w-[30%] h-auto object-contain"
+                                className="w-[30%] h-auto max-h-[20%] object-contain"
                               />
                             </div>
                           )}
@@ -122,12 +122,12 @@ export default function Studios() {
                       )}
                       {/* Content below image */}
                       <div className="w-full p-6 bg-[#ffffff]">
-                        <h2 className="display_h6 !mb-6">
+                        <h2 className="display_h6 !mb-6 lg:text-[36px]">
                       {studio.studioName || studio.name || studio.title}
                     </h2>
                           {studio.description && studio.description.length > 0 && (
                             <div 
-                            className="text-[16px] md:text-[18px] font-[400] leading-[150%] tracking-[0%]"
+                            className="text-[16px] lg:text-[14px] font-[400] leading-[150%] tracking-[0%]"
                               style={{ fontFamily: 'Plus Jakarta Sans' }}
                             >
                             <div className="prose max-w-none">
@@ -142,12 +142,12 @@ export default function Studios() {
                     <div className="hidden lg:block group relative w-full aspect-[4/3] max-h-[360px] overflow-hidden cursor-pointer">
                       {/* Content Layer - Title and Description */}
                       <div className="absolute inset-0 z-10 flex flex-col justify-start p-6 bg-[#ffffff]">
-                        <h2 className="display_h6 !mb-6">
+                        <h2 className="display_h6 !mb-6 lg:text-[36px]">
                           {studio.studioName || studio.name || studio.title}
                         </h2>
                         {studio.description && studio.description.length > 0 && (
                           <div 
-                            className="text-[16px] md:text-[18px] font-[400] leading-[150%] tracking-[0%]"
+                            className="text-[16px] lg:text-[12px] xl:text-[14px] font-[400] leading-[150%] tracking-[0%]"
                             style={{ fontFamily: 'Plus Jakarta Sans' }}
                           >
                             <div className="prose max-w-none">
@@ -175,7 +175,7 @@ export default function Studios() {
                                 alt={studio.logoAlt || studio.studioName || studio.name || studio.title || 'Studio logo'}
                                 width={93}
                                 height={35}
-                                className="w-[30%] h-auto object-contain"
+                                className="w-[30%] h-auto max-h-[20%] object-contain"
                               />
                             </div>
                           )}
