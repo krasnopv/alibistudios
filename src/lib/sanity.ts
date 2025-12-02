@@ -169,6 +169,10 @@ export const queries = {
     slug,
     description,
     heroVideo,
+    heroVideoLink {
+      type,
+      url
+    },
     image,
     heroTitle,
     heroSubtitle,

@@ -1,13 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import { getEmbedUrl } from '@/lib/videoUtils';
+import { useEmbeddedVideoPlayer } from '@/hooks/useEmbeddedVideoPlayer';
 
 interface HeroVideo {
   videoUrl: string;
+  originalUrl?: string; // Store original URL for embedded videos
   posterUrl?: string;
   title?: string;
   subtitle?: string;
+  videoType?: 'vimeo' | 'youtube' | 'custom';
+  isEmbeddable?: boolean;
 }
 
 interface HeroProps {
@@ -26,6 +31,15 @@ const Hero = ({
   const [heroData, setHeroData] = useState<HeroVideo | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
+
+  // Use embedded video player hook for YouTube/Vimeo
+  const { setMuted: setPlayerMuted, isReady: isPlayerReady } = useEmbeddedVideoPlayer({
+    iframeRef,
+    videoType: heroData?.videoType,
+    videoUrl: heroData?.originalUrl
+  });
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -40,12 +54,23 @@ const Hero = ({
             const pageData = await response.json();
             console.log('Hero data for', actualSlug, ':', pageData);
             // Always set heroData if we have a page, even without video
-            setHeroData({
+            const videoData = {
               videoUrl: pageData.videoUrl || null,
+              originalUrl: pageData.heroVideoLink?.url || pageData.videoUrl || null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
-              subtitle: pageData.heroSubtitle
-            });
+              subtitle: pageData.heroSubtitle,
+              videoType: pageData.videoType,
+              isEmbeddable: pageData.isEmbeddable
+            };
+            setHeroData(videoData);
+            
+            // Generate initial embed URL if it's embeddable
+            if (videoData.isEmbeddable && videoData.videoType && videoData.originalUrl) {
+              setEmbedUrl(getEmbedUrl(videoData.originalUrl, videoData.videoType, true));
+            } else if (videoData.videoUrl) {
+              setEmbedUrl(videoData.videoUrl);
+            }
           }
         } else {
           // For production, also use API route to avoid CORS issues
@@ -53,12 +78,23 @@ const Hero = ({
           if (response.ok) {
             const pageData = await response.json();
             console.log('Hero data for', actualSlug, ':', pageData);
-            setHeroData({
+            const videoData = {
               videoUrl: pageData.videoUrl || null,
+              originalUrl: pageData.heroVideoLink?.url || pageData.videoUrl || null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
-              subtitle: pageData.heroSubtitle
-            });
+              subtitle: pageData.heroSubtitle,
+              videoType: pageData.videoType,
+              isEmbeddable: pageData.isEmbeddable
+            };
+            setHeroData(videoData);
+            
+            // Generate initial embed URL if it's embeddable
+            if (videoData.isEmbeddable && videoData.videoType && videoData.originalUrl) {
+              setEmbedUrl(getEmbedUrl(videoData.originalUrl, videoData.videoType, true));
+            } else if (videoData.videoUrl) {
+              setEmbedUrl(videoData.videoUrl);
+            }
           }
         }
       } catch (error) {
@@ -73,15 +109,22 @@ const Hero = ({
     console.error('Video failed to load');
   };
 
-  const toggleSound = () => {
+  const toggleSound = async () => {
     if (videoRef) {
+      // Direct video file
       videoRef.muted = !isMuted;
       setIsMuted(!isMuted);
+    } else if (heroData?.isEmbeddable && isPlayerReady) {
+      // Embedded video - use player API to control mute without reloading
+      const newMuted = !isMuted;
+      setIsMuted(newMuted);
+      await setPlayerMuted(newMuted);
     }
   };
 
   // Determine what to show based on Sanity data only
   const isSanityVideo = heroData?.videoUrl;
+  const isEmbeddable = heroData?.isEmbeddable === true;
   const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
   const hasAnyMedia = isSanityVideo || hasPosterOnly;
   
@@ -109,26 +152,59 @@ const Hero = ({
       <div className="relative w-full">
         <div className="relative scale-120">
           {isSanityVideo ? (
-            // Show Sanity video
-            <video
-              ref={setVideoRef}
-              src={heroData.videoUrl}
-              poster={heroData?.posterUrl}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              className="w-full block landscape:max-h-[75vh]"
-              style={{
-                aspectRatio: '16/9',
-                minHeight: '400px',
-                maxHeight: '75vh',
-                margin: 0,
-                padding: 0,
-                objectFit: 'cover'
-              }}
-              onError={handleVideoError}
-            />
+            // Show Sanity video - either embedded (iframe) or direct video file
+            isEmbeddable ? (
+              // Embedded video (Vimeo/YouTube) - wrapped to match video stretch
+              <div 
+                className="w-screen block landscape:max-h-[75vh] relative overflow-hidden"
+                style={{
+                  aspectRatio: '16/9',
+                  minHeight: '400px',
+                  maxHeight: '75vh',
+                  margin: 0,
+                  padding: 0
+                }}
+              >
+                <iframe
+                  ref={iframeRef}
+                  id={`hero-video-${heroData.videoType}-${actualSlug}`}
+                  src={embedUrl || heroData.videoUrl}
+                  className="absolute top-1/2 left-1/2"
+                  style={{
+                    width: '100vw',
+                    height: '56.25vw',
+                    minHeight: '100%',
+                    transform: 'translate(-50%, -50%)',
+                    border: 'none',
+                    pointerEvents: 'auto'
+                  }}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={heroData.title || 'Hero video'}
+                />
+              </div>
+            ) : (
+              // Direct video file
+              <video
+                ref={setVideoRef}
+                src={heroData.videoUrl}
+                poster={heroData?.posterUrl}
+                autoPlay
+                loop
+                muted={isMuted}
+                playsInline
+                className="w-full block landscape:max-h-[75vh]"
+                style={{
+                  aspectRatio: '16/9',
+                  minHeight: '400px',
+                  maxHeight: '75vh',
+                  margin: 0,
+                  padding: 0,
+                  objectFit: 'cover'
+                }}
+                onError={handleVideoError}
+              />
+            )
           ) : hasPosterOnly ? (
             // Show Sanity poster image
             <img
@@ -177,7 +253,7 @@ const Hero = ({
               </div>
           )}
         </div>
-        {/* Sound Toggle Button - Only show for videos */}
+        {/* Sound Toggle Button - Show for both direct video files and embedded videos */}
         {isSanityVideo && (
             <div className="absolute bottom-2 left-0 right-0 z-10">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8">

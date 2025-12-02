@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/lib/sanity';
+import { getEmbedUrl, isEmbeddableVideo } from '@/lib/videoUtils';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +19,10 @@ export async function GET(
         slug,
         description,
         heroVideo,
+        heroVideoLink {
+          type,
+          url
+        },
         "heroVideoUrl": heroVideo.asset->url,
         image,
         "imageUrl": image.asset->url,
@@ -43,6 +48,24 @@ export async function GET(
 
     if (!page) {
       return NextResponse.json({ error: 'Page not found' }, { status: 404 });
+    }
+
+    // Process heroVideoLink: prioritize it over heroVideo if it exists
+    if (page.heroVideoLink && page.heroVideoLink.url && page.heroVideoLink.type) {
+      const videoType = page.heroVideoLink.type as 'vimeo' | 'youtube' | 'custom';
+      const embedUrl = getEmbedUrl(page.heroVideoLink.url, videoType, true); // Start muted
+      
+      // Set videoUrl to the embed URL and mark it as embeddable
+      page.videoUrl = embedUrl;
+      page.videoType = videoType;
+      page.isEmbeddable = isEmbeddableVideo(videoType);
+      page.heroVideoLink = {
+        ...page.heroVideoLink,
+        url: page.heroVideoLink.url // Keep original URL for mute/unmute control
+      };
+      
+      // Clear heroVideoUrl since we're using heroVideoLink instead
+      page.heroVideoUrl = null;
     }
 
     console.log('Page fetched:', page.title, 'slug:', slug);

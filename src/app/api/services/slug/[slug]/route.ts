@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/lib/sanity';
+import { getEmbedUrl, isEmbeddableVideo } from '@/lib/videoUtils';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,10 @@ export async function GET(
         url,
         features,
         heroVideo,
+        heroVideoLink {
+          type,
+          url
+        },
         "heroVideoUrl": heroVideo.asset->url,
         heroImage,
         "heroImageUrl": heroImage.asset->url,
@@ -100,6 +105,22 @@ export async function GET(
         .filter((project: ProjectWithHideFlag) => project && (!project.hideProject || project.hideProject !== true))
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(({ hideProject, ...project }: ProjectWithHideFlag) => project); // Remove hideProject from response
+    }
+
+    // Process heroVideoLink: prioritize it over heroVideo if it exists
+    if (service.heroVideoLink && service.heroVideoLink.url && service.heroVideoLink.type) {
+      const videoType = service.heroVideoLink.type as 'vimeo' | 'youtube' | 'custom';
+      const embedUrl = getEmbedUrl(service.heroVideoLink.url, videoType, true); // Start muted
+      
+      // Set heroVideoUrl to the embed URL and mark it as embeddable
+      service.heroVideoUrl = embedUrl;
+      service.videoType = videoType;
+      service.isEmbeddable = isEmbeddableVideo(videoType);
+      // Keep original URL for mute/unmute control
+      service.heroVideoLink = {
+        ...service.heroVideoLink,
+        url: service.heroVideoLink.url
+      };
     }
 
     return NextResponse.json(service);
