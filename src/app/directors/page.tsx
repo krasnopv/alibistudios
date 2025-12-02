@@ -38,7 +38,7 @@ interface Director {
 interface Page {
   _id: string;
   title: string;
-  subTitle?: unknown[];
+  subtitle?: unknown[];
   slug: string;
 }
 
@@ -131,9 +131,9 @@ export default function Directors() {
                 <h1 className="display_h1 brand-color text-center mb-6">
                   {pageData?.title || "Directing Tomorrow's Visual World"}
                 </h1>
-                {pageData?.subTitle && Array.isArray(pageData.subTitle) && pageData.subTitle.length > 0 && (
+                {pageData?.subtitle && Array.isArray(pageData.subtitle) && pageData.subtitle.length > 0 && (
                   <h6 className="display_h6 text-center">
-                    <BlockContent blocks={pageData.subTitle} serializers={serializers} />
+                    <BlockContent blocks={pageData.subtitle} serializers={serializers} />
                   </h6>
                 )}
               </div>

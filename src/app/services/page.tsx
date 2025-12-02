@@ -28,7 +28,7 @@ interface Service {
 interface Page {
   _id: string;
   title: string;
-  subTitle?: unknown[];
+  subtitle?: unknown[];
   slug: string;
   description?: string;
   heroTitle?: string;
@@ -87,9 +87,9 @@ export default function Services() {
                 <h1 className="display_h1 brand-color text-center mb-6">
                   {page?.title || 'All under one \'Virtual Roof\''}
                 </h1>
-                {page?.subTitle && Array.isArray(page.subTitle) && page.subTitle.length > 0 && (
+                {page?.subtitle && Array.isArray(page.subtitle) && page.subtitle.length > 0 && (
                   <h6 className="display_h6 text-center">
-                    <BlockContent blocks={page.subTitle} serializers={serializers} />
+                    <BlockContent blocks={page.subtitle} serializers={serializers} />
                   </h6>
                 )}
               </div>

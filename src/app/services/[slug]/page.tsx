@@ -32,7 +32,7 @@ interface Service {
   _id: string;
   title: string;
   slug: string;
-  subtitle: string | unknown;
+  subtitle?: unknown[];
   description: string | unknown;
   url?: string;
   features?: string[];
@@ -528,10 +528,10 @@ const ServicePage = () => {
               )}
 
               {/* Subtitle - Show here when reels are available */}
-              {service.reels && service.reels.length > 0 && (
+              {service.reels && service.reels.length > 0 && service.subtitle && Array.isArray(service.subtitle) && service.subtitle.length > 0 && (
                 <div className="mb-16">
                   <h6 className="display_h6 text-center">
-                    {renderRichText(service.subtitle)}
+                    <BlockContent blocks={service.subtitle} serializers={serializers} />
                   </h6>
                 </div>
               )}
