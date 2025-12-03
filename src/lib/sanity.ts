@@ -209,11 +209,13 @@ export const queries = {
           "imageAlt": icon.alt
         },
         works[]->{
+          _type,
           _id,
           title,
           subtitle,
           year,
           url,
+          "slug": slug.current,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt
         }

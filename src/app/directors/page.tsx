@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import VideoOverlay from '@/components/VideoOverlay';
@@ -18,21 +19,36 @@ interface Trophy {
 }
 
 interface DirectorWork {
+  _type: 'directorWork';
   _id: string;
   title: string;
   subtitle: string;
   imageUrl: string;
   imageAlt: string;
-  year: number;
+  year?: number;
   url?: string; // External URL for video
 }
+
+interface ProjectWork {
+  _type: 'project';
+  _id: string;
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  imageAlt: string;
+  year?: number;
+  slug?: string; // Project slug for navigation
+  url?: string; // External URL if available
+}
+
+type WorkItem = DirectorWork | ProjectWork;
 
 interface Director {
   _id: string;
   name: string;
   bio: string | unknown; // Can be string or rich text object
   trophies?: Trophy[]; // Optional - can be null or undefined
-  works?: DirectorWork[]; // Optional - can be null or undefined
+  works?: WorkItem[]; // Optional - can be null or undefined
 }
 
 interface Page {
@@ -43,6 +59,7 @@ interface Page {
 }
 
 export default function Directors() {
+  const router = useRouter();
   const [directors, setDirectors] = useState<Director[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -171,11 +188,11 @@ export default function Directors() {
                           {director.trophies && director.trophies.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                               {director.trophies.map((trophy) => (
-                                <div key={trophy._id} className="w-full">
+                                <div key={trophy._id} className="w-full aspect-square">
                                   <img
                                     src={trophy.imageUrl}
                                     alt={trophy.imageAlt}
-                                    className="w-full h-auto object-contain"
+                                    className="w-full h-full object-contain"
                                   />
                                 </div>
                               ))}
@@ -188,62 +205,69 @@ export default function Directors() {
                       {director.works && director.works.length > 0 && (
                         <div>
                           <div className="grid md:grid-cols-2 gap-8">
-                            {director.works.map((work) => (
-                              <div 
-                                key={work._id} 
-                                className="group cursor-pointer service-card"
-                                onClick={() => {
-                                  console.log('Work clicked:', work);
-                                  console.log('Work URL:', work.url);
-                                  if (work.url) {
-                                    setSelectedVideo(work.url);
-                                  } else {
-                                    console.log('No URL found for work:', work.title);
-                                  }
-                                }}
-                              >
-                                {/* Work Image */}
-                                <div className="relative h-[372px] overflow-hidden mb-6">
-                                  <img
-                                    src={work.imageUrl}
-                                    alt={work.imageAlt}
-                                    className="w-full h-full object-cover"
-                                  />
-                                  {/* Play Icon - Only show if URL exists */}
-                                  {work.url && (
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
-                                      <img
-                                        src="/play.svg"
-                                        alt="Play video"
-                                        className="w-[43px] h-[50px]"
-                                      />
+                            {director.works.map((work) => {
+                              const isProject = work._type === 'project';
+                              const handleClick = () => {
+                                if (isProject && 'slug' in work && work.slug) {
+                                  // Navigate to project page
+                                  router.push(`/projects/${work.slug}`);
+                                } else if (work.url) {
+                                  // Open video overlay for director work
+                                  setSelectedVideo(work.url);
+                                } else {
+                                  console.log('No URL or slug found for work:', work.title);
+                                }
+                              };
+
+                              return (
+                                <div 
+                                  key={work._id} 
+                                  className="group cursor-pointer service-card"
+                                  onClick={handleClick}
+                                >
+                                  {/* Work Image */}
+                                  <div className="relative h-[372px] overflow-hidden mb-6">
+                                    <img
+                                      src={work.imageUrl}
+                                      alt={work.imageAlt}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    {/* Play Icon - Only show if URL exists (for director works) */}
+                                    {!isProject && work.url && (
+                                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
+                                        <img
+                                          src="/play.svg"
+                                          alt="Play video"
+                                          className="w-[43px] h-[50px]"
+                                        />
+                                      </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                      <div className="text-white text-center">
+                                        <div className="text-2xl font-bold mb-2">{work.title}</div>
+                                        {work.subtitle && (
+                                          <div className="text-sm opacity-90">{work.subtitle}</div>
+                                        )}
+                                      </div>
                                     </div>
-                                  )}
-                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <div className="text-white text-center">
-                                      <div className="text-2xl font-bold mb-2">{work.title}</div>
+                                  </div>
+
+                                  {/* Work Info */}
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <div className="text-[#FF0066] text-base font-[300] leading-6">
+                                        {work.title}
+                                      </div>
                                       {work.subtitle && (
-                                        <div className="text-sm opacity-90">{work.subtitle}</div>
+                                        <div className="text-[#000000] text-base font-[300] leading-6 mt-1">
+                                          {work.subtitle}
+                                        </div>
                                       )}
                                     </div>
                                   </div>
                                 </div>
-
-                                {/* Work Info */}
-                                <div className="flex items-center justify-between">
-                                  <div>
-                                    <div className="text-[#FF0066] text-base font-[300] leading-6">
-                                      {work.title}
-                                    </div>
-                                    {work.subtitle && (
-                                      <div className="text-[#000000] text-base font-[300] leading-6 mt-1">
-                                        {work.subtitle}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </div>
                       )}
