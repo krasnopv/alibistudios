@@ -479,11 +479,11 @@ const ServicePage = () => {
                 <h1 className="display_h1 brand-color text-center mb-6">
                   {service.title}
                 </h1>
-                {/* Show subtitle here only if no reels */}
-                {(!service.reels || service.reels.length === 0) && (
-                <h6 className="display_h6 text-center">
-                  {renderRichText(service.subtitle)}
-                </h6>
+                {/* Subtitle - always show under title */}
+                {service.subtitle && Array.isArray(service.subtitle) && service.subtitle.length > 0 && (
+                  <h6 className="display_h6 text-center">
+                    <BlockContent blocks={service.subtitle} serializers={serializers} />
+                  </h6>
                 )}
               </div>
 
@@ -524,15 +524,6 @@ const ServicePage = () => {
                       {renderReel(service.reels[activeReelIndex], activeReelIndex)}
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* Subtitle - Show here when reels are available */}
-              {service.reels && service.reels.length > 0 && service.subtitle && Array.isArray(service.subtitle) && service.subtitle.length > 0 && (
-                <div className="mb-16">
-                  <h6 className="display_h6 text-center">
-                    <BlockContent blocks={service.subtitle} serializers={serializers} />
-                  </h6>
                 </div>
               )}
 

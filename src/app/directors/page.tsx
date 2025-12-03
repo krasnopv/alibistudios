@@ -39,6 +39,11 @@ interface ProjectWork {
   year?: number;
   slug?: string; // Project slug for navigation
   url?: string; // External URL if available
+  videoTrailer?: {
+    type?: 'youtube' | 'vimeo' | 'upload';
+    url?: string;
+    videoFileUrl?: string;
+  };
 }
 
 type WorkItem = DirectorWork | ProjectWork;
@@ -207,15 +212,35 @@ export default function Directors() {
                           <div className="grid md:grid-cols-2 gap-8">
                             {director.works.map((work) => {
                               const isProject = work._type === 'project';
+                              
+                              // Get video URL based on type
+                              const getVideoUrl = (): string | null => {
+                                if (isProject && 'videoTrailer' in work && work.videoTrailer) {
+                                  // For Projects, use videoTrailer
+                                  if (work.videoTrailer.type === 'upload' && work.videoTrailer.videoFileUrl) {
+                                    return work.videoTrailer.videoFileUrl;
+                                  } else if (work.videoTrailer.url) {
+                                    return work.videoTrailer.url;
+                                  }
+                                } else if (!isProject && work.url) {
+                                  // For Director Works, use url field
+                                  return work.url;
+                                }
+                                return null;
+                              };
+
+                              const videoUrl = getVideoUrl();
+                              const hasVideo = videoUrl !== null;
+
                               const handleClick = () => {
-                                if (isProject && 'slug' in work && work.slug) {
-                                  // Navigate to project page
+                                if (hasVideo) {
+                                  // Open video overlay for both Projects and Director Works
+                                  setSelectedVideo(videoUrl);
+                                } else if (isProject && 'slug' in work && work.slug) {
+                                  // Navigate to project page if no video trailer
                                   router.push(`/projects/${work.slug}`);
-                                } else if (work.url) {
-                                  // Open video overlay for director work
-                                  setSelectedVideo(work.url);
                                 } else {
-                                  console.log('No URL or slug found for work:', work.title);
+                                  console.log('No video URL or slug found for work:', work.title);
                                 }
                               };
 
@@ -232,8 +257,8 @@ export default function Directors() {
                                       alt={work.imageAlt}
                                       className="w-full h-full object-cover"
                                     />
-                                    {/* Play Icon - Only show if URL exists (for director works) */}
-                                    {!isProject && work.url && (
+                                    {/* Play Icon - Show if video exists (for both Projects and Director Works) */}
+                                    {hasVideo && (
                                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                                         <img
                                           src="/play.svg"

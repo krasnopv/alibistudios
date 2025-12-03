@@ -217,7 +217,13 @@ export const queries = {
           url,
           "slug": slug.current,
           "imageUrl": image.asset->url,
-          "imageAlt": image.alt
+          "imageAlt": image.alt,
+          videoTrailer {
+            type,
+            url,
+            videoFile,
+            "videoFileUrl": videoFile.asset->url
+          }
         }
       }`,
 

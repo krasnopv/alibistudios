@@ -97,7 +97,7 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                         return null;
                       })}
                       {' '}
-                      <span className="text-black group-hover:text-[#FF0066] transition-colors duration-200">Meet our Team →</span>
+                      <span className="text-black group-hover:text-[#FF0066] group-hover:underline transition-colors duration-200">Meet our Team →</span>
                     </h6>
                   </a>
                 ) : url.type === 'external' && url.externalUrl ? (
@@ -121,7 +121,7 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                         return null;
                       })}
                       {' '}
-                      <span className="text-black group-hover:text-[#FF0066] transition-colors duration-200">Meet our Team →</span>
+                      <span className="text-black group-hover:text-[#FF0066] group-hover:underline transition-colors duration-200">Meet our Team →</span>
                     </h6>
                   </a>
                 ) : (
