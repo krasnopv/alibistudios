@@ -150,13 +150,13 @@ const Hero = ({
     <div id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
       {/* Background Video/Image */}
       <div className="relative w-full">
-        <div className="relative scale-120">
+        <div className="relative">
           {isSanityVideo ? (
             // Show Sanity video - either embedded (iframe) or direct video file
             isEmbeddable ? (
-              // Embedded video (Vimeo/YouTube) - wrapped to match video stretch
+              // Embedded video (Vimeo/YouTube)
               <div 
-                className="w-screen block landscape:max-h-[75vh] relative overflow-hidden"
+                className="w-full block landscape:max-h-[75vh] relative overflow-hidden"
                 style={{
                   aspectRatio: '16/9',
                   minHeight: '400px',
@@ -169,12 +169,8 @@ const Hero = ({
                   ref={iframeRef}
                   id={`hero-video-${heroData.videoType}-${actualSlug}`}
                   src={embedUrl || heroData.videoUrl}
-                  className="absolute top-1/2 left-1/2"
+                  className="w-full h-full"
                   style={{
-                    width: '100vw',
-                    height: '56.25vw',
-                    minHeight: '100%',
-                    transform: 'translate(-50%, -50%)',
                     border: 'none',
                     pointerEvents: 'auto'
                   }}
