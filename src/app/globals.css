@@ -257,11 +257,12 @@ h2 {
       animation-fill-mode: forwards;
     }
 
-    /* Menu item hover effect with strikethrough */
+    /* Menu item hover effect with underline */
     .menu-item-hover:hover > div {
-      text-decoration: line-through;
+      text-decoration: underline;
       text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
+      color: #FF0066 !important;
     }
 
     /* Menu item hover effect with duplicate text - COMMENTED OUT */
@@ -289,18 +290,20 @@ h2 {
       opacity: 1;
     } */
 
-    /* Films filter active state - red stroke */
+    /* Films filter active state - red underline */
     .active-filter {
-      text-decoration: line-through;
+      text-decoration: underline;
       text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
+      color: #FF0066 !important;
     }
 
-    /* Films filter hover state - black stroke */
+    /* Films filter hover state - red underline */
     .hover-filter:hover {
-      text-decoration: line-through;
-      text-decoration-color: #000000;
+      text-decoration: underline;
+      text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
+      color: #FF0066 !important;
     }
 
     /* Services grid staggered margins */

@@ -24,6 +24,7 @@ interface Page {
     title?: string | unknown[];
     subtitle?: string;
     enabled?: boolean;
+    hide?: boolean;
     copy?: unknown[];
     description?: unknown[];
     buttonText?: string;
@@ -70,10 +71,13 @@ export default function Home() {
         
         {/* Dynamic Content Sections */}
         {pageData?.content && (() => {
-          // Find the index of the first CTA section
-          const firstCTASectionIndex = pageData.content.findIndex(s => s._type === 'ctaSection');
+          // Filter out hidden sections
+          const visibleContent = pageData.content.filter(section => !section.hide);
           
-          return pageData.content.map((section, index) => {
+          // Find the index of the first CTA section in visible content
+          const firstCTASectionIndex = visibleContent.findIndex(s => s._type === 'ctaSection');
+          
+          return visibleContent.map((section, index) => {
             switch (section._type) {
               case 'ctaSection':
                 const isFirstCTA = index === firstCTASectionIndex;
@@ -133,7 +137,7 @@ export default function Home() {
         })()}
         
         {/* Show GetInTouch with placeholder if no getInTouchSection in content */}
-        {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection') && (
+        {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection' && !section.hide) && (
           <GetInTouch />
         )}
         

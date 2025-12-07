@@ -46,6 +46,7 @@ interface Page {
       limit?: number;
     };
     enabled?: boolean;
+    hide?: boolean;
     subtitle?: string;
   }>;
 }
@@ -340,8 +341,10 @@ export default function TaxRebate() {
         ))}
 
         {/* Dynamic Content Sections from Sanity */}
-        {pageData?.content && pageData.content.map((section, index) => {
-          switch (section._type) {
+        {pageData?.content && pageData.content
+          .filter(section => !section.hide)
+          .map((section, index) => {
+            switch (section._type) {
             case 'ctaSection':
               return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} />;
             
@@ -395,7 +398,7 @@ export default function TaxRebate() {
         })}
         
         {/* Show GetInTouch with placeholder if no getInTouchSection in content */}
-        {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection') && (
+        {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection' && !section.hide) && (
           <GetInTouch />
         )}
         </main>
