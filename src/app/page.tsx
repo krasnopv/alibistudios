@@ -9,7 +9,6 @@ import TextSection from '@/components/TextSection';
 import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
-import Team from '@/components/Team';
 import GetInTouch from '@/components/GetInTouch';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
@@ -70,10 +69,15 @@ export default function Home() {
         <Hero pageSlug="home" onRenderChange={setHasHeroContent} />
         
         {/* Dynamic Content Sections */}
-        {pageData?.content && pageData.content.map((section, index) => {
-          switch (section._type) {
-            case 'ctaSection':
-              return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} />;
+        {pageData?.content && (() => {
+          // Find the index of the first CTA section
+          const firstCTASectionIndex = pageData.content.findIndex(s => s._type === 'ctaSection');
+          
+          return pageData.content.map((section, index) => {
+            switch (section._type) {
+              case 'ctaSection':
+                const isFirstCTA = index === firstCTASectionIndex;
+                return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} className={isFirstCTA ? 'mb-24' : ''} />;
             
             case 'gridSection':
               return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} />;
@@ -122,10 +126,11 @@ export default function Home() {
                 />
               );
             
-            default:
-              return null;
-          }
-        })}
+              default:
+                return null;
+            }
+          });
+        })()}
         
         {/* Show GetInTouch with placeholder if no getInTouchSection in content */}
         {pageData?.content && !pageData.content.some(section => section._type === 'getInTouchSection') && (

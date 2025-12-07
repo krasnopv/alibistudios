@@ -230,7 +230,7 @@ const ContentGrid = ({
                     {/* Team Member Information - Only show if showMemberInfo is true */}
                     {showMemberInfo && (
                       <div className="mt-4 text-left">
-                        <div className="text-lg font-semibold text-black mb-1">
+                        <div className="text-lg font-semibold text-black mb-1 group-hover:underline group-hover:text-[#FF0066] transition-colors">
                           {item.title}
                         </div>
                         <div className="text-sm text-gray-600 mb-1">
