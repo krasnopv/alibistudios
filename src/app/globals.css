@@ -259,10 +259,21 @@ h2 {
 
     /* Menu item hover effect with underline */
     .menu-item-hover:hover > div {
+      color: #FF0066 !important;
+    }
+
+    /* Apply underline only to label text, not expander symbol */
+    .menu-item-hover:hover > div > .menu-label-text {
       text-decoration: underline;
       text-decoration-color: #FF0066;
       text-decoration-thickness: 2px;
       color: #FF0066 !important;
+    }
+
+    /* Ensure expander symbol is not affected */
+    .menu-item-hover:hover > div > .menu-expander-symbol {
+      text-decoration: none !important;
+      color: #000000 !important;
     }
 
     /* Menu item hover effect with duplicate text - COMMENTED OUT */

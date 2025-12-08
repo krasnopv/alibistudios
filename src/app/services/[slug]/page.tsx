@@ -91,6 +91,7 @@ const ServicePage = () => {
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
+  const [reelLoadingStates, setReelLoadingStates] = useState<Record<number, boolean>>({});
 
   // Use embedded video player hook for YouTube/Vimeo
   const { setMuted: setPlayerMuted, isReady: isPlayerReady } = useEmbeddedVideoPlayer({
@@ -179,26 +180,93 @@ const ServicePage = () => {
   };
 
   // Helper function to get embed URL for YouTube/Vimeo (for reels)
-  const getReelEmbedUrl = (url: string, type: 'youtube' | 'vimeo'): string => {
+  const getReelEmbedUrl = (url: string, type: 'youtube' | 'vimeo', autoplay: boolean = false): string => {
     if (type === 'youtube') {
       // Handle YouTube URLs
+      let videoId = '';
       if (url.includes('youtube.com/watch?v=')) {
-        const videoId = url.split('v=')[1].split('&')[0];
-        return `https://www.youtube.com/embed/${videoId}`;
+        videoId = url.split('v=')[1].split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
       }
-      if (url.includes('youtu.be/')) {
-        const videoId = url.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${videoId}`;
+      
+      if (videoId) {
+        const autoplayParam = autoplay ? '&autoplay=1' : '';
+        return `https://www.youtube.com/embed/${videoId}?enablejsapi=1${autoplayParam}`;
       }
     } else if (type === 'vimeo') {
       // Handle Vimeo URLs
       const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
       if (videoId) {
-        return `https://player.vimeo.com/video/${videoId}`;
+        const autoplayParam = autoplay ? '?autoplay=1' : '';
+        return `https://player.vimeo.com/video/${videoId}${autoplayParam}`;
       }
     }
     return url;
   };
+
+  // Handle thumbnail click to start video
+  const handleThumbnailClick = (reelIndex: number, reel: Reel) => {
+    // Hide thumbnail
+    setReelLoadingStates(prev => ({
+      ...prev,
+      [reelIndex]: false
+    }));
+    
+    // Update iframe src to include autoplay
+    if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
+      const iframe = document.getElementById(`reel-${reelIndex}`) as HTMLIFrameElement;
+      if (iframe) {
+        const newEmbedUrl = getReelEmbedUrl(reel.url, reel.type, true);
+        iframe.src = newEmbedUrl;
+      }
+    }
+  };
+
+  // Initialize loading state for reels when service data is loaded
+  useEffect(() => {
+    if (service?.reels) {
+      const initialLoadingStates: Record<number, boolean> = {};
+      service.reels.forEach((reel, index) => {
+        if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.thumbnailUrl) {
+          initialLoadingStates[index] = true;
+        }
+      });
+      setReelLoadingStates(initialLoadingStates);
+    }
+  }, [service?.reels]);
+
+  // Reset thumbnail when switching reels
+  useEffect(() => {
+    if (service?.reels && service.reels[activeReelIndex]) {
+      const reel = service.reels[activeReelIndex];
+      // Show thumbnail for the new active reel
+      if (reel.thumbnailUrl) {
+        setReelLoadingStates(prev => ({
+          ...prev,
+          [activeReelIndex]: true
+        }));
+        
+        // Reset iframe src to remove autoplay for YouTube/Vimeo
+        if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
+          const iframe = document.getElementById(`reel-${activeReelIndex}`) as HTMLIFrameElement;
+          if (iframe) {
+            const newEmbedUrl = getReelEmbedUrl(reel.url, reel.type, false);
+            iframe.src = newEmbedUrl;
+          }
+        }
+        
+        // Pause and reset uploaded videos when switching
+        if (reel.type === 'upload') {
+          const video = document.getElementById(`reel-video-${activeReelIndex}`) as HTMLVideoElement;
+          if (video) {
+            video.pause();
+            video.currentTime = 0;
+          }
+        }
+      }
+    }
+  }, [activeReelIndex, service?.reels]);
 
   // Render a single reel video
   const renderReel = (reel: Reel, index: number) => {
@@ -208,24 +276,89 @@ const ServicePage = () => {
     const videoContent = () => {
       if (reel.type === 'upload' && reel.videoFileUrl) {
         // Uploaded video - use HTML5 video player
+        const showThumbnail = reelLoadingStates[index] !== false;
+        const videoId = `reel-video-${index}`;
         return (
-          <div className="relative w-full aspect-video bg-black">
+          <div className="relative w-full aspect-video bg-black" id={`reel-container-${index}`}>
             <video
+              id={videoId}
               src={reel.videoFileUrl}
               controls
               className="w-full h-full object-contain"
               poster={reel.thumbnailUrl}
+              onPlay={() => {
+                // Hide thumbnail when video starts playing
+                setReelLoadingStates(prev => ({
+                  ...prev,
+                  [index]: false
+                }));
+              }}
+              onEnded={() => {
+                // Show thumbnail again when video ends
+                if (reel.thumbnailUrl) {
+                  setReelLoadingStates(prev => ({
+                    ...prev,
+                    [index]: true
+                  }));
+                }
+              }}
             >
               Your browser does not support the video tag.
             </video>
+            {/* Thumbnail Overlay - Show until video starts or when video ends */}
+            {showThumbnail && reel.thumbnailUrl && (
+              <div 
+                className="absolute inset-0 bg-black cursor-pointer z-10"
+                onClick={() => {
+                  const video = document.getElementById(videoId) as HTMLVideoElement;
+                  if (video) {
+                    video.muted = false; // Ensure sound is on
+                    video.play();
+                  }
+                }}
+              >
+                <img
+                  src={reel.thumbnailUrl}
+                  alt={reel.thumbnailAlt || 'Video thumbnail'}
+                  className="w-full h-full object-cover"
+                />
+                {/* White play triangle overlay */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div 
+                    className="play-button-triangle"
+                    style={{
+                      width: 0,
+                      height: 0,
+                      borderLeft: 'clamp(32px, 5vw, 64px) solid white',
+                      borderTop: 'clamp(20px, 3vw, 40px) solid transparent',
+                      borderBottom: 'clamp(20px, 3vw, 40px) solid transparent',
+                      marginLeft: 'clamp(8px, 1.2vw, 16px)',
+                      filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         );
       } else if ((reel.type === 'youtube' || reel.type === 'vimeo') && reel.url) {
-        // YouTube or Vimeo - use iframe embed
-        const embedUrl = getReelEmbedUrl(reel.url, reel.type);
+        // YouTube or Vimeo - use iframe embed with thumbnail preview
+        const embedUrl = getReelEmbedUrl(reel.url, reel.type, false); // No autoplay initially
+        const showThumbnail = reelLoadingStates[index] !== false; // Default to true if not set
+        const reelId = `reel-${index}`;
+        
         return (
           <div className="relative w-full aspect-video bg-black">
             <iframe
+              id={reelId}
               src={embedUrl}
               className="w-full h-full"
               frameBorder="0"
@@ -233,6 +366,42 @@ const ServicePage = () => {
               allowFullScreen
               title={reel.thumbnailCaption || `Video ${index + 1}`}
             />
+            {/* Thumbnail Overlay - Show until clicked, with play button */}
+            {showThumbnail && reel.thumbnailUrl && (
+              <div 
+                className="absolute inset-0 bg-black cursor-pointer z-10"
+                onClick={() => handleThumbnailClick(index, reel)}
+              >
+                <img
+                  src={reel.thumbnailUrl}
+                  alt={reel.thumbnailAlt || 'Video thumbnail'}
+                  className="w-full h-full object-cover"
+                />
+                {/* White play triangle overlay */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div 
+                    className="play-button-triangle"
+                    style={{
+                      width: 0,
+                      height: 0,
+                      borderLeft: 'clamp(32px, 5vw, 64px) solid white',
+                      borderTop: 'clamp(20px, 3vw, 40px) solid transparent',
+                      borderBottom: 'clamp(20px, 3vw, 40px) solid transparent',
+                      marginLeft: 'clamp(8px, 1.2vw, 16px)',
+                      filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))',
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         );
       }

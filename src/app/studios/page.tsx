@@ -99,7 +99,7 @@ export default function Studios() {
         <section className="w-full">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="row">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 mb-8">
                 {studios.map((studio) => (
                   <div key={studio._id}>
                     {/* Mobile/Tablet Layout - Image above, content below */}

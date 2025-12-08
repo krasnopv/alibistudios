@@ -530,9 +530,9 @@ const Header = () => {
                    fontWeight: 400,
                           }}
                         >
-                          {item.label}
+                          <span className="menu-label-text">{item.label}</span>
                           <span
-                            className="text-[18px] md:text-[24px]"
+                            className="text-[18px] md:text-[24px] menu-expander-symbol"
                             style={{
                        color: '#000',
                        fontFamily: 'Plus Jakarta Sans',
