@@ -5,6 +5,8 @@ The app fails to deploy because `next` command is not found. This happens becaus
 1. Dependencies aren't installed on the server
 2. The app hasn't been built before starting
 
+**Current Issue**: The deployment installs dependencies but doesn't automatically build the app.
+
 ## Solution
 
 ### Option 1: Using Git Hooks (Recommended)
@@ -43,17 +45,16 @@ npm run build
 # The app should now start automatically
 ```
 
-### Option 3: Update package.json scripts
+### Option 3: Automatic Build on Install (IMPLEMENTED) ✅
 
-If Gandi's bootstrap script runs `npm install` automatically, you can add a postinstall script:
+A `postinstall` script has been added that automatically builds the app after `npm install` runs:
 
-```json
-"scripts": {
-  "postinstall": "npm run build"
-}
-```
+- **File**: `scripts/postinstall-build.js`
+- **Behavior**: Automatically detects Gandi server by checking the deployment path (`/srv/data/web/vhosts`)
+- **Also builds if**: `NODE_ENV=production`, `SERVER_DEPLOY=true`, or if `.next` directory doesn't exist
+- **Result**: The app will be built automatically during Gandi's deployment process
 
-**Note:** This might cause issues if you don't want to build on every install, so use with caution.
+**No configuration needed!** The script automatically detects when it's running on Gandi's server.
 
 ## Important Notes
 
@@ -61,11 +62,15 @@ If Gandi's bootstrap script runs `npm install` automatically, you can add a post
 
 2. **Standalone Output**: The Next.js config uses `output: 'standalone'` which is optimal for server deployments.
 
-3. **Environment Variables**: Make sure all required environment variables are set on Gandi's hosting panel:
+3. **Environment Variables**: Make sure all required environment variables are set in Gandi's hosting panel:
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`
    - `NEXT_PUBLIC_SANITY_DATASET`
    - `SANITY_API_TOKEN` (if needed)
-   - `NODE_ENV=production`
+   - `NODE_ENV=production` (optional - the build script will detect Gandi server automatically)
+
+4. **Node.js Version**: The deployment log shows Node.js v18.14.2, but Next.js 15.5.7 requires Node.js 20+. You may need to:
+   - Contact Gandi support to upgrade Node.js version
+   - Or downgrade Next.js to a version compatible with Node 18
 
 4. **Dual Git Repositories**: 
    - `origin`: Your main development repository
