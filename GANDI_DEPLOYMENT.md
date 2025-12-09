@@ -68,9 +68,16 @@ A `postinstall` script has been added that automatically builds the app after `n
    - `SANITY_API_TOKEN` (if needed)
    - `NODE_ENV=production` (optional - the build script will detect Gandi server automatically)
 
-4. **Node.js Version**: The deployment log shows Node.js v18.14.2, but Next.js 15.5.7 requires Node.js 20+. You may need to:
-   - Contact Gandi support to upgrade Node.js version
-   - Or downgrade Next.js to a version compatible with Node 18
+4. **Node.js Version Issue** ⚠️ **CRITICAL**: 
+   - Gandi is currently using Node.js v18.14.2
+   - Next.js 15.5.7 requires Node.js ^18.18.0 || ^19.8.0 || >= 20.0.0
+   - **Current Status**: Build fails with "Node.js version not supported" error
+   
+   **Solutions**:
+   - ✅ Created `.nvmrc` and `.node-version` files specifying Node.js 20
+   - ✅ Added `engines` field to `package.json` requiring Node.js >= 20.0.0
+   - 📧 **Action Required**: Contact Gandi support to upgrade Node.js to version 20+
+   - See `GANDI_NODE_VERSION_FIX.md` for detailed solutions
 
 4. **Dual Git Repositories**: 
    - `origin`: Your main development repository
