@@ -318,7 +318,7 @@ h2 {
     }
 
     /* Services grid staggered margins */
-    @media (min-width: 768px) and (max-width: 1023px) {
+    /* @media (min-width: 768px) and (max-width: 1023px) {
       .service-card:nth-child(2) {
         margin-top: 50%;
       }
@@ -367,7 +367,7 @@ h2 {
         margin-top: 32%;
       }
     }
-    
+        
     @media (min-width: 1536px)  {
       .service-card:nth-child(2) {
         margin-top: 45%;
@@ -380,7 +380,7 @@ h2 {
       .service-card:nth-child(2n+4) {
         margin-top: 28%;
       }
-    }
+    } */
 
 /* Hide scrollbar for scrollable categories */
 .scrollbar-hide {

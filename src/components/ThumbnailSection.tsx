@@ -26,9 +26,10 @@ interface ThumbnailSectionProps {
     featured?: boolean;
     limit?: number;
   };
+  enableParallax?: boolean;
 }
 
-const ThumbnailSection = ({ sectionId, schemaType = 'service', filters }: ThumbnailSectionProps) => {
+const ThumbnailSection = ({ sectionId, schemaType = 'service', filters, enableParallax = false }: ThumbnailSectionProps) => {
   const [items, setItems] = useState<GridItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -196,7 +197,7 @@ const ThumbnailSection = ({ sectionId, schemaType = 'service', filters }: Thumbn
           </div> */}
 
         {/* Grid */}
-        <ServicesGrid gridData={items} schemaUrl={schemaType === 'service' ? 'services' : schemaType} />
+        <ServicesGrid gridData={items} schemaUrl={schemaType === 'service' ? 'services' : schemaType} enableParallax={enableParallax} />
         </div>
       </div>
     </section>

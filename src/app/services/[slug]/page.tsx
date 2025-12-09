@@ -734,6 +734,8 @@ const ServicePage = () => {
                   schemaUrl="projects"
                   gridCols="md:grid-cols-2"
                   referrerServiceSlug={params.slug as string}
+                  enableParallax={true}
+                  className="md:mb-[60px]"
                 />
               )}
             </div>

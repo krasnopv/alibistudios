@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, MotionValue } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
 import { ArrowRight } from 'lucide-react';
 
@@ -10,7 +11,7 @@ interface ServiceCardProps {
   url: string;
   description?: string;
   index?: number;
-  parallaxY?: MotionValue<number> | number;
+  enableParallax?: boolean;
 }
 
 const ServiceCard = ({ 
@@ -19,15 +20,53 @@ const ServiceCard = ({
   url, 
   description, 
   index = 0,
-  parallaxY
+  enableParallax = false
 }: ServiceCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+  
+  // Track individual card's position in viewport
+  // "start end" = when top of element reaches bottom of viewport
+  // "end start" = when bottom of element reaches top of viewport
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "start start"]
+  });
+  
+  // Transform parallax effect based on item position
+  // Odd items (index 0, 2, 4...): parallax from +50% to 0% (normal)
+  // Even items (index 1, 3, 5...): parallax from +75% to +25%
+  // On mobile: all items stay at normal position (0%)
+  const isEvenItem = index % 2 === 1; // 2nd, 4th, 6th items (indexes 1, 3, 5)
+  const startOffset = isEvenItem ? "75%" : "50%";
+  const endOffset = isEvenItem ? "25%" : "0%";
+  
+  // Disable parallax on mobile - all items at normal position
+  const shouldApplyParallax = enableParallax && !isMobile;
+  const parallaxY = useTransform(
+    scrollYProgress, 
+    [0, 1], 
+    shouldApplyParallax ? [startOffset, endOffset] : ["0%", "0%"]
+  );
+
   const handleClick = () => {
     window.location.href = url;
   };
 
   return (
     <motion.div
-      style={{ y: parallaxY }}
+      ref={cardRef}
+      style={{ y: parallaxY, position: 'relative' }}
       className="group cursor-pointer service-card"
       onClick={handleClick}
     >

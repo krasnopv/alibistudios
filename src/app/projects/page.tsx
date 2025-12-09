@@ -155,6 +155,7 @@ const ProjectsPage = () => {
                   gridData={currentProjects}
                   schemaUrl="projects"
                   gridCols="md:grid-cols-2"
+                  enableParallax={true}
                 />
               ) : (
                 <div className="text-center py-12">
