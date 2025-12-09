@@ -48,7 +48,7 @@ const ServicesGrid = ({
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
-
+  
   // Helper function to get optimal image size
   const getOptimalImage = (item: GridItem, containerWidth: number = 600) => {
     if (containerWidth <= 300) {
@@ -59,7 +59,7 @@ const ServicesGrid = ({
       return item.imageLarge || item.imageUrl;
     }
   };
-
+  
   // Disable parallax on mobile
   const isParallaxEnabled = enableParallax && !isMobile;
 
