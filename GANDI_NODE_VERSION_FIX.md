@@ -13,16 +13,16 @@ Contact Gandi support and request to upgrade Node.js to version 20 or higher. Th
 - Mention that your Next.js 15 application requires Node.js 20+
 - Reference that Node.js 18.14.2 is below the minimum required version (18.18.0)
 
-### Option 2: Use .nvmrc or .node-version File
+### Option 2: Use .nvmrc or .node-version File (CURRENTLY TRYING)
 
-Create a `.nvmrc` or `.node-version` file in the project root to specify the required Node.js version:
+Created `.nvmrc` and `.node-version` files specifying Node.js 18.18.0 (minimum required version).
 
-```bash
-# Create .nvmrc file
-echo "20" > .nvmrc
-```
+**Status**: Gandi detects and tries to install, but GLIBC compatibility issues may occur.
 
-Gandi might respect this file and use the specified version.
+**If GLIBC errors persist**, try:
+- Remove `.nvmrc` and `.node-version` files
+- Contact Gandi support to install Node.js 18.18+ system-wide
+- Or request a system with newer GLIBC
 
 ### Option 3: Downgrade Next.js (NOT RECOMMENDED)
 
@@ -43,6 +43,11 @@ If Gandi supports Docker containers, you could use the existing Dockerfile which
 
 ✅ Postinstall script is working - it detects Gandi server correctly
 ❌ Build fails due to Node.js version incompatibility
+⚠️ **GLIBC Issue**: Node.js 20 requires GLIBC 2.27+, but Gandi's system has an older version
+
+## Latest Update
+
+Tried using `.nvmrc` with Node.js 20, but Gandi's system GLIBC is too old. Updated to Node.js 18.18.0 (minimum required) which should have lower GLIBC requirements.
 
 ## Next Steps
 
