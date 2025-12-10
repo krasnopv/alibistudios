@@ -1,13 +1,23 @@
-name: Deploy to Old Server (159.69.81.179)
+name: Deploy to Production Server
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
 
 jobs:
-  deploy:
+  deploy-production:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'production'
     
     steps:
     - name: Checkout code
@@ -36,13 +46,13 @@ jobs:
     - name: Save Docker image
       run: docker save alibi-app:${{ github.sha }} | gzip > alibi-app.tar.gz
       
-    - name: Deploy to server
+    - name: Deploy to production server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: 159.69.81.179
+        host: 46.62.255.49
         port: 2219
         username: deployer
-        key: ${{ secrets.SERVER_SSH_KEY }}
+        key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
         script: |
           # Create deployment directory if it doesn't exist
           sudo mkdir -p /opt/alibi
@@ -57,23 +67,23 @@ jobs:
           # Clean up old images
           docker image prune -f || true
           
-    - name: Copy files to server
+    - name: Copy files to production server
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: 159.69.81.179
+        host: 46.62.255.49
         port: 2219
         username: deployer
-        key: ${{ secrets.SERVER_SSH_KEY }}
+        key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
         source: "alibi-app.tar.gz,docker-compose.yml"
         target: "/opt/alibi"
         
-    - name: Load and start containers
+    - name: Load and start containers on production
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: 159.69.81.179
+        host: 46.62.255.49
         port: 2219
         username: deployer
-        key: ${{ secrets.SERVER_SSH_KEY }}
+        key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
         script: |
           cd /opt/alibi
           
@@ -92,3 +102,8 @@ jobs:
           
           # Show status
           docker-compose ps
+          
+          # Health check
+          sleep 5
+          curl -f http://localhost:3100 || exit 1
+
