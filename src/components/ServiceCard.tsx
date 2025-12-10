@@ -44,15 +44,17 @@ const ServiceCard = ({
   });
   
   // Transform parallax effect based on item position
-  // Odd items (index 0, 2, 4...): parallax from +50% to 0% (normal)
-  // Even items (index 1, 3, 5...): parallax from +75% to +25%
+  // Odd items (index 0, 2, 4...): parallax from +75% to 0% (normal)
+  // Even items (index 1, 3, 5...): parallax from +100% to +50%
+  // First item (index 0): no parallax
   // On mobile: all items stay at normal position (0%)
   const isEvenItem = index % 2 === 1; // 2nd, 4th, 6th items (indexes 1, 3, 5)
-  const startOffset = isEvenItem ? "75%" : "50%";
-  const endOffset = isEvenItem ? "25%" : "0%";
+  const isFirstItem = index === 0;
+  const startOffset = isEvenItem ? "100%" : "75%";
+  const endOffset = isEvenItem ? "50%" : "0%";
   
-  // Disable parallax on mobile - all items at normal position
-  const shouldApplyParallax = enableParallax && !isMobile;
+  // Disable parallax on mobile or for first item - all items at normal position
+  const shouldApplyParallax = enableParallax && !isMobile && !isFirstItem;
   const parallaxY = useTransform(
     scrollYProgress, 
     [0, 1], 
