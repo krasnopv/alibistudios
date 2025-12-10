@@ -90,6 +90,14 @@ export function generateSEO({
       yandex: process.env.YANDEX_VERIFICATION,
       yahoo: process.env.YAHOO_VERIFICATION,
     },
+    icons: {
+      icon: [
+        { url: '/icon.png', sizes: 'any' },
+      ],
+      apple: [
+        { url: '/icon.png', sizes: '180x180', type: 'image/png' },
+      ],
+    },
   };
 }
 
