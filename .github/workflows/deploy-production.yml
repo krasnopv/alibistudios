@@ -1,23 +1,18 @@
 name: Deploy to Production Server
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment environment'
+      confirm:
+        description: 'Type "deploy" to confirm production deployment'
         required: true
-        default: 'production'
-        type: choice
-        options:
-          - production
-          - staging
+        type: string
 
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'production'
+    # Only allow deployment from main branch
+    if: github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'deploy'
     
     steps:
     - name: Checkout code
@@ -54,9 +49,8 @@ jobs:
         username: deployer
         key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
         script: |
-          # Create deployment directory if it doesn't exist
-          sudo mkdir -p /opt/alibi
-          sudo chown deployer:deployer /opt/alibi
+          # Create deployment directory if it doesn't exist (deployer owns this)
+          mkdir -p /opt/alibi
           
           # Stop existing containers
           cd /opt/alibi
@@ -106,4 +100,7 @@ jobs:
           # Health check
           sleep 5
           curl -f http://localhost:3100 || exit 1
+          
+          echo "✅ Production deployment completed successfully!"
+          echo "🌐 Application should be available at: https://alibistudios.co"
 
