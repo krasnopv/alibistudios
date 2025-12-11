@@ -36,6 +36,7 @@ interface ContentGridProps {
   itemsPerPageTablet?: number;
   itemsPerPageMobile?: number;
   hideLoadMore?: boolean;
+  showLoadMoreOnMobileOnly?: boolean;
 }
 
 const ContentGrid = ({
@@ -53,18 +54,23 @@ const ContentGrid = ({
   itemsPerPageDesktop = 24,
   itemsPerPageTablet = 12,
   itemsPerPageMobile = 6,
-  hideLoadMore = false
+  hideLoadMore = false,
+  showLoadMoreOnMobileOnly = false
 }: ContentGridProps) => {
   const [activeFilter, setActiveFilter] = useState(defaultCategory);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsToShow, setItemsToShow] = useState(itemsPerPageDesktop);
   const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageDesktop);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
 
   // Detect screen size and update items per page
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (typeof window !== 'undefined') {
         const width = window.innerWidth;
+        setIsMobile(width < 768);
+        setIsTabletOrMobile(width < 1024);
         if (width >= 1024) {
           // Desktop (lg and above)
           setItemsPerPage(itemsPerPageDesktop);
@@ -255,7 +261,7 @@ const ContentGrid = ({
           {/* Pagination Controls */}
           {enablePagination && (
             paginationMode === 'loadMore' ? (
-              hasMoreItems && !hideLoadMore && (
+              hasMoreItems && (!hideLoadMore || (showLoadMoreOnMobileOnly && isTabletOrMobile)) && (
                 <div className="mt-12 flex items-center justify-center">
                   <button
                     onClick={handleLoadMore}

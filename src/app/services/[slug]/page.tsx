@@ -438,8 +438,8 @@ const ServicePage = () => {
           setEmbedUrl(serviceData.heroVideoUrl);
         }
         
-        // Reset active reel index when service changes
-        setActiveReelIndex(0);
+        // Reset active reel index when service changes (no selection initially)
+        setActiveReelIndex(-1);
       } catch (error) {
         console.error('Error fetching data:', error);
         setService(null);
@@ -668,10 +668,12 @@ const ServicePage = () => {
                           : `Reel ${index + 1}`
                       )}
                       activeCategory={
-                        service.reels[activeReelIndex]?.thumbnailCaption && 
-                        String(service.reels[activeReelIndex].thumbnailCaption).trim() !== ''
-                          ? service.reels[activeReelIndex].thumbnailCaption!
-                          : `Reel ${activeReelIndex + 1}`
+                        activeReelIndex >= 0 && service.reels[activeReelIndex]
+                          ? (service.reels[activeReelIndex].thumbnailCaption && 
+                             String(service.reels[activeReelIndex].thumbnailCaption).trim() !== ''
+                              ? service.reels[activeReelIndex].thumbnailCaption!
+                              : `Reel ${activeReelIndex + 1}`)
+                          : ''
                       }
                       onCategoryChange={(category) => {
                         if (!service.reels) return;
@@ -685,14 +687,22 @@ const ServicePage = () => {
                           setActiveReelIndex(reelIndex);
                         }
                       }}
+                      dropdownPlaceholder="Select Reel"
+                      showPlaceholderWhenClosed={activeReelIndex < 0}
                     />
                   </div>
                   {/* Single Reel Display */}
-                  {service.reels[activeReelIndex] && (
-                    <div className="grid grid-cols-1 gap-16 lg:gap-48">
-                      {renderReel(service.reels[activeReelIndex], activeReelIndex)}
-                    </div>
-                  )}
+                  {service.reels && service.reels.length > 0 && (() => {
+                    // Show first reel by default if no reel is selected, otherwise show selected reel
+                    const reelIndexToShow = activeReelIndex >= 0 ? activeReelIndex : 0;
+                    const reelToShow = service.reels[reelIndexToShow];
+                    
+                    return reelToShow ? (
+                      <div className="grid grid-cols-1 gap-16 lg:gap-48">
+                        {renderReel(reelToShow, reelIndexToShow)}
+                      </div>
+                    ) : null;
+                  })()}
                 </div>
               )}
 

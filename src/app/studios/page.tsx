@@ -130,7 +130,7 @@ export default function Studios() {
                       )}
                       {/* Content below image */}
                       <div className="w-full p-6 bg-[#ffffff]">
-                        <h2 className="display_h6 !mb-6 lg:text-[36px]">
+                        <h2 className="display_h6 !mb-6 lg:text-[36px] brand-color">
                       {studio.studioName || studio.name || studio.title}
                     </h2>
                           {studio.description && studio.description.length > 0 && (
@@ -150,7 +150,7 @@ export default function Studios() {
                     <div className="hidden lg:block group relative w-full aspect-[4/3] max-h-[360px] overflow-hidden cursor-pointer">
                       {/* Content Layer - Title and Description */}
                       <div className="absolute inset-0 z-10 flex flex-col justify-start p-6 bg-[#ffffff]">
-                        <h2 className="display_h6 !mb-6 lg:text-[36px]">
+                        <h2 className="display_h6 !mb-6 lg:text-[36px] brand-color">
                           {studio.studioName || studio.name || studio.title}
                         </h2>
                         {studio.description && studio.description.length > 0 && (

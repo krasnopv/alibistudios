@@ -10,13 +10,19 @@ interface ScrollableCategoriesProps {
   onCategoryChange: (category: string) => void;
   className?: string;
   layout?: 'scroll' | 'rows';
+  disableMobileDropdown?: boolean;
+  dropdownPlaceholder?: string;
+  showPlaceholderWhenClosed?: boolean;
 }
 
 const ScrollableCategories = ({
   categories,
   activeCategory,
   onCategoryChange,
-  className = ''
+  className = '',
+  disableMobileDropdown = false,
+  dropdownPlaceholder,
+  showPlaceholderWhenClosed = false
 }: ScrollableCategoriesProps) => {
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -39,11 +45,20 @@ const ScrollableCategories = ({
   // Determine if dropdown should be used based on height (or always on mobile)
   useEffect(() => {
     const calculateDropdown = () => {
-      // Always use dropdown on mobile
-      if (isMobile) {
+      // Always use dropdown on mobile unless disabled
+      if (isMobile && !disableMobileDropdown) {
         if (previousStateRef.current !== true) {
           previousStateRef.current = true;
           setUseDropdown(true);
+        }
+        return;
+      }
+      
+      // If mobile dropdown is disabled, skip dropdown logic on mobile
+      if (isMobile && disableMobileDropdown) {
+        if (previousStateRef.current !== false) {
+          previousStateRef.current = false;
+          setUseDropdown(false);
         }
         return;
       }
@@ -162,7 +177,7 @@ const ScrollableCategories = ({
       }
       previousStateRef.current = null;
     };
-  }, [categories, isMobile]);
+  }, [categories, isMobile, disableMobileDropdown]);
 
 
   // Close dropdown when clicking outside
@@ -201,7 +216,9 @@ const ScrollableCategories = ({
               color: '#000000'
             }}
           >
-            {activeCategory}
+            {isDropdownOpen 
+              ? activeCategory 
+              : (showPlaceholderWhenClosed && dropdownPlaceholder ? dropdownPlaceholder : activeCategory)}
             <ChevronDown 
               className={`w-5 h-5 transition-transform duration-300 ${
                 isDropdownOpen ? 'rotate-180' : ''

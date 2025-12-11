@@ -83,6 +83,9 @@ const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
     ...categories.map(cat => ({ id: cat._id, name: cat.name }))
   ];
 
+  // Limit films to 24 total
+  const limitedFilms = films.slice(0, 24);
+
   return (
     <section id={sectionId} className="w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +106,7 @@ const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
           <ContentGrid
             title=""
             categories={allCategories.map(cat => cat.name)}
-            items={films.map(film => {
+            items={limitedFilms.map(film => {
               const imageUrl = film.imageUrl || `/api/placeholder/207/307`;
               return {
                 id: film._id,
@@ -122,6 +125,7 @@ const Films = ({ sectionId, title, subtitle }: FilmsProps) => {
             itemsPerPageTablet={12}
             itemsPerPageMobile={6}
             hideLoadMore={true}
+            showLoadMoreOnMobileOnly={true}
           />
         {/* </div> */}
       </div>

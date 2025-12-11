@@ -221,6 +221,7 @@ export default function TaxRebate() {
                         }
                       }
                     }}
+                    disableMobileDropdown={true}
                   />
                 </div>
               </div>
