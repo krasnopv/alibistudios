@@ -687,7 +687,7 @@ const ServicePage = () => {
                           setActiveReelIndex(reelIndex);
                         }
                       }}
-                      dropdownPlaceholder="Select Reel"
+                      dropdownPlaceholder="Our Reels"
                       showPlaceholderWhenClosed={activeReelIndex < 0}
                     />
                   </div>
