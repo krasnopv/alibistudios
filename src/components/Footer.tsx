@@ -31,6 +31,17 @@ const Footer = () => {
 
   return (
     <footer id="footer" className="w-full text-black" style={{ paddingTop: '15%' }}>
+      {locations.length > 0 && (
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @media (min-width: 1024px) {
+              #footer-addresses-grid {
+                grid-template-columns: repeat(${locations.length}, minmax(0, 1fr));
+              }
+            }
+          `
+        }} />
+      )}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <div className="row">
           {/* Layer Image Row */}
@@ -52,11 +63,12 @@ const Footer = () => {
 
           {/* Locations Grid */}
           <motion.div
+            id="footer-addresses-grid"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-0 py-8 z-10"
+            className="relative grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-0 py-8 z-10"
             style={{ backgroundColor: '#F8F9FA' }}
           >
             {locations.map((location, index) => (

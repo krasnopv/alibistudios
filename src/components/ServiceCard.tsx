@@ -73,7 +73,7 @@ const ServiceCard = ({
       onClick={handleClick}
     >
       {/* Service Image */}
-      <div className="relative aspect-[1.8/1] overflow-hidden mb-6 group-hover:scale-105 transition-transform duration-700">
+      <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
         {(() => {
           const resolvedSrc = image
             ? (image.startsWith('http') ? image : getAssetPath(image))
@@ -83,7 +83,7 @@ const ServiceCard = ({
             <img 
               src={resolvedSrc} 
               alt={title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-700"
               onError={(e) => {
                 e.currentTarget.src = '/placeholder.jpeg';
               }}
