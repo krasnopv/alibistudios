@@ -55,14 +55,15 @@ const Hero = ({
             console.log('Hero data for', actualSlug, ':', pageData);
             // Always set heroData if we have a page, even without video
             // originalUrl is only needed for embedded videos (heroVideoLink), not for uploaded files (heroVideo)
+            // Only set originalUrl if we're actually using heroVideoLink (isEmbeddable === true)
             const videoData = {
               videoUrl: pageData.videoUrl || null,
-              originalUrl: pageData.isEmbeddable ? pageData.heroVideoLink?.url : null,
+              originalUrl: pageData.isEmbeddable && pageData.heroVideoLink?.url ? pageData.heroVideoLink.url : null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle,
               videoType: pageData.videoType,
-              isEmbeddable: pageData.isEmbeddable
+              isEmbeddable: pageData.isEmbeddable || false
             };
             setHeroData(videoData);
             
@@ -80,14 +81,15 @@ const Hero = ({
             const pageData = await response.json();
             console.log('Hero data for', actualSlug, ':', pageData);
             // originalUrl is only needed for embedded videos (heroVideoLink), not for uploaded files (heroVideo)
+            // Only set originalUrl if we're actually using heroVideoLink (isEmbeddable === true)
             const videoData = {
               videoUrl: pageData.videoUrl || null,
-              originalUrl: pageData.isEmbeddable ? pageData.heroVideoLink?.url : null,
+              originalUrl: pageData.isEmbeddable && pageData.heroVideoLink?.url ? pageData.heroVideoLink.url : null,
               posterUrl: pageData.posterUrl,
               title: pageData.heroTitle,
               subtitle: pageData.heroSubtitle,
               videoType: pageData.videoType,
-              isEmbeddable: pageData.isEmbeddable
+              isEmbeddable: pageData.isEmbeddable || false
             };
             setHeroData(videoData);
             
