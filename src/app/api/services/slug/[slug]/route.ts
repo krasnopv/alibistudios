@@ -107,8 +107,13 @@ export async function GET(
         .map(({ hideProject, ...project }: ProjectWithHideFlag) => project); // Remove hideProject from response
     }
 
-    // Process heroVideoLink: prioritize it over heroVideo if it exists
-    if (service.heroVideoLink && service.heroVideoLink.url && service.heroVideoLink.type) {
+    // Process video: prioritize heroVideo (uploaded file) first, fallback to heroVideoLink if no uploaded file
+    if (service.heroVideoUrl) {
+      // Use uploaded video file (heroVideo) - heroVideoUrl is already set from the query
+      // No additional processing needed for direct video files
+      service.isEmbeddable = false;
+    } else if (service.heroVideoLink && service.heroVideoLink.url && service.heroVideoLink.type) {
+      // Fallback to heroVideoLink if no uploaded video file exists
       const videoType = service.heroVideoLink.type as 'vimeo' | 'youtube' | 'custom';
       const embedUrl = getEmbedUrl(service.heroVideoLink.url, videoType, true); // Start muted
       

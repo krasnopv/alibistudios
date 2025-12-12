@@ -84,7 +84,7 @@ export default function Home() {
                 return <CTASection key={index} sectionId={section.sectionId} title={Array.isArray(section.title) ? section.title : undefined} className={isFirstCTA ? 'mb-24' : ''} />;
             
             case 'gridSection':
-              return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} enableParallax={true} />;
+              return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} enableParallax={true} className="mb-8 md:mb-[60px]" />;
             
             case 'textSection':
               return <TextSection key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;

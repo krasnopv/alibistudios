@@ -745,7 +745,7 @@ const ServicePage = () => {
                   gridCols="md:grid-cols-2"
                   referrerServiceSlug={params.slug as string}
                   enableParallax={true}
-                  className="md:mb-[60px]"
+                  className="mb-8 md:mb-[60px]"
                 />
               )}
             </div>

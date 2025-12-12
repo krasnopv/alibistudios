@@ -50,8 +50,13 @@ export async function GET(
       return NextResponse.json({ error: 'Page not found' }, { status: 404 });
     }
 
-    // Process heroVideoLink: prioritize it over heroVideo if it exists
-    if (page.heroVideoLink && page.heroVideoLink.url && page.heroVideoLink.type) {
+    // Process video: prioritize heroVideo (uploaded file) first, fallback to heroVideoLink if no uploaded file
+    if (page.heroVideoUrl) {
+      // Use uploaded video file (heroVideo) - set videoUrl from heroVideoUrl
+      page.videoUrl = page.heroVideoUrl;
+      page.isEmbeddable = false;
+    } else if (page.heroVideoLink && page.heroVideoLink.url && page.heroVideoLink.type) {
+      // Fallback to heroVideoLink if no uploaded video file exists
       const videoType = page.heroVideoLink.type as 'vimeo' | 'youtube' | 'custom';
       const embedUrl = getEmbedUrl(page.heroVideoLink.url, videoType, true); // Start muted
       
@@ -63,9 +68,6 @@ export async function GET(
         ...page.heroVideoLink,
         url: page.heroVideoLink.url // Keep original URL for mute/unmute control
       };
-      
-      // Clear heroVideoUrl since we're using heroVideoLink instead
-      page.heroVideoUrl = null;
     }
 
     console.log('Page fetched:', page.title, 'slug:', slug);
