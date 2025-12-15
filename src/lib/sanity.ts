@@ -248,5 +248,45 @@ export const queries = {
         bio,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
+      }`,
+
+      // Get SEO metadata by page path
+      seoByPath: (path: string) => `*[_type == "seoMetadata" && pagePath == "${path}"][0] {
+        title,
+        description,
+        keywords,
+        ogImage {
+          asset->{
+            _ref,
+            url
+          },
+          alt
+        },
+        "ogImageUrl": ogImage.asset->url,
+        url,
+        type,
+        publishedTime,
+        modifiedTime,
+        author,
+        section,
+        tags,
+        robots {
+          index,
+          follow,
+          noindex,
+          nofollow
+        },
+        twitter {
+          card,
+          creator,
+          site
+        },
+        structuredData {
+          type,
+          name,
+          description,
+          logo,
+          sameAs
+        }
       }`
     }
