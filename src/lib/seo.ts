@@ -56,89 +56,41 @@ interface SanitySEOData {
  * Fetches SEO metadata from Sanity for a given page path.
  * Falls back to 'home' entry if no specific entry exists.
  * @param pagePath - The page path/slug (e.g., 'home', '/projects/my-project', '/services/animation')
- * @returns Object with SEO data and a flag indicating if it's from fallback
+ * @returns SEO data from Sanity or null if not found
  */
-export async function fetchSEOFromSanity(pagePath: string): Promise<{ seoData: SanitySEOData | null; isFallback: boolean }> {
+export async function fetchSEOFromSanity(pagePath: string): Promise<SanitySEOData | null> {
   try {
     // Try to fetch SEO for the specific page path
-    const seoData = await client.fetch(queries.seoByPath(pagePath), { pagePath });
-    
-    // If found, return it
-    if (seoData) {
-      return { seoData, isFallback: false };
-    }
+    let seoData = await client.fetch(queries.seoByPath(pagePath), { pagePath });
     
     // If not found and not already 'home', fallback to 'home'
-    if (pagePath !== 'home') {
-      const homeData = await client.fetch(queries.seoByPath('home'), { pagePath: 'home' });
-      return { seoData: homeData, isFallback: true };
+    if (!seoData && pagePath !== 'home') {
+      seoData = await client.fetch(queries.seoByPath('home'), { pagePath: 'home' });
     }
     
-    return { seoData: null, isFallback: false };
+    return seoData;
   } catch (error) {
     console.error('Error fetching SEO from Sanity:', error);
     // Try fallback to 'home' on error
     if (pagePath !== 'home') {
       try {
-        const homeData = await client.fetch(queries.seoByPath('home'), { pagePath: 'home' });
-        return { seoData: homeData, isFallback: true };
+        return await client.fetch(queries.seoByPath('home'), { pagePath: 'home' });
       } catch (fallbackError) {
         console.error('Error fetching fallback SEO from Sanity:', fallbackError);
-        return { seoData: null, isFallback: false };
+        return null;
       }
     }
-    return { seoData: null, isFallback: false };
+    return null;
   }
-}
-
-/**
- * Constructs a full URL from a page path.
- * @param pagePath - The page path/slug (e.g., 'home', '/projects/my-project')
- * @param baseUrl - The base URL (default: 'https://alibistudios.co')
- * @returns Full URL
- */
-function constructPageUrl(pagePath: string, baseUrl: string = 'https://alibistudios.co'): string {
-  // Normalize pagePath: remove leading/trailing slashes, handle 'home'
-  let normalizedPath = pagePath.trim();
-  
-  if (normalizedPath === 'home' || normalizedPath === '/') {
-    return baseUrl;
-  }
-  
-  // Ensure path starts with /
-  if (!normalizedPath.startsWith('/')) {
-    normalizedPath = '/' + normalizedPath;
-  }
-  
-  return `${baseUrl}${normalizedPath}`;
 }
 
 /**
  * Merges Sanity SEO data with hardcoded defaults.
  * Sanity data takes precedence, but missing fields use defaults.
- * If using fallback data, the URL is constructed from the actual pagePath.
  */
-function mergeSEOData(
-  sanityData: SanitySEOData | null, 
-  defaults: SEOProps, 
-  pagePath: string,
-  isFallback: boolean = false
-): SEOProps {
+function mergeSEOData(sanityData: SanitySEOData | null, defaults: SEOProps): SEOProps {
   if (!sanityData) {
-    // If no Sanity data at all, construct URL from pagePath
-    return {
-      ...defaults,
-      url: constructPageUrl(pagePath, defaults.url),
-    };
-  }
-
-  // If using fallback data and not on home page, use actual page URL
-  let url = sanityData.url;
-  if (isFallback && pagePath !== 'home') {
-    url = constructPageUrl(pagePath, defaults.url);
-  } else if (!url) {
-    // If no URL in Sanity data, construct from pagePath
-    url = constructPageUrl(pagePath, defaults.url);
+    return defaults;
   }
 
   return {
@@ -146,7 +98,7 @@ function mergeSEOData(
     description: sanityData.description || defaults.description,
     keywords: sanityData.keywords || defaults.keywords,
     image: sanityData.ogImageUrl || defaults.image,
-    url: url,
+    url: sanityData.url || defaults.url,
     type: sanityData.type || defaults.type,
     publishedTime: sanityData.publishedTime || defaults.publishedTime,
     modifiedTime: sanityData.modifiedTime || defaults.modifiedTime,
@@ -280,10 +232,10 @@ export async function generateMetadataFromSanity(
   };
 
   // Fetch SEO from Sanity (with fallback to 'home')
-  const { seoData, isFallback } = await fetchSEOFromSanity(pagePath);
+  const sanityData = await fetchSEOFromSanity(pagePath);
   
-  // Merge Sanity data with defaults, using actual page URL when using fallback
-  const mergedData = mergeSEOData(seoData, defaults, pagePath, isFallback);
+  // Merge Sanity data with defaults
+  const mergedData = mergeSEOData(sanityData, defaults);
   
   // Generate and return metadata
   return generateSEO(mergedData);
