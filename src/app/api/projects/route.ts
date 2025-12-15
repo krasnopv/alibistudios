@@ -6,11 +6,12 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const projects = await client.fetch(`
-      *[_type == "project" && (!defined(hideProject) || hideProject != true)] | order(order asc) {
+      *[_type == "project" && (!defined(hideProject) || hideProject != true)] {
         _id,
         title,
         subtitle,
         "slug": slug.current,
+        order,
         image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt,

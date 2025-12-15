@@ -16,6 +16,7 @@ interface GridItem {
   imageMedium?: string;
   imageLarge?: string;
   image?: unknown;
+  order?: number;
 }
 
 interface ServicesGridProps {
@@ -63,13 +64,27 @@ const ServicesGrid = ({
   // Disable parallax on mobile
   const isParallaxEnabled = enableParallax && !isMobile;
 
+  // Sort items by display order field if available
+  const sortedData = [...gridData].sort((a, b) => {
+    // If both have order, sort by order (lower numbers first)
+    if (a.order !== undefined && b.order !== undefined) {
+      return a.order - b.order;
+    }
+    // If only a has order, it comes first
+    if (a.order !== undefined) return -1;
+    // If only b has order, it comes first
+    if (b.order !== undefined) return 1;
+    // If neither has order, maintain original order
+    return 0;
+  });
+
   return (
     <div 
       id="services-grid"
       ref={containerRef} 
       className={`grid ${gridCols} gap-8 relative ${className}`}
     >
-      {gridData.map((item, index) => {
+      {sortedData.map((item, index) => {
         // Get optimal image size based on container width
         const containerWidth = isMobile ? 300 : 600;
         const imageUrl = getOptimalImage(item, containerWidth);

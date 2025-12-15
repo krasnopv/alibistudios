@@ -19,7 +19,7 @@ export function generateSEO({
   description = 'An elite group of award-winning artists all under one Virtual Roof. VFX, Animation, Film & Episodic, Immersive experiences, and Media & Generative Art.',
   keywords = ['VFX', 'Visual Effects', 'Animation', 'Film Production', 'Immersive Experiences', 'Creative Studio', 'Award Winning', 'Global Studios'],
   image = '/og-image.jpg',
-  url = 'https://alibistudios.com',
+  url = 'https://alibistudios.co',
   type = 'website',
   publishedTime,
   modifiedTime,

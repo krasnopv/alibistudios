@@ -76,6 +76,7 @@ export async function GET(
           subtitle,
           "slug": slug.current,
           hideProject,
+          order,
           "imageUrl": image.asset->url,
           "imageAlt": image.alt,
           "imageSmall": image.asset->url + "?w=300&h=169&fit=crop&auto=format",

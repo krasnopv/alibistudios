@@ -68,6 +68,7 @@ interface Service {
     title: string;
     subtitle: string;
     slug: string;
+    order?: number;
     imageUrl: string;
     imageAlt: string;
     imageSmall?: string;
