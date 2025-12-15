@@ -251,18 +251,21 @@ export const queries = {
       }`,
 
       // Get SEO metadata by page path
-      seoByPath: (path: string) => `*[_type == "seoMetadata" && pagePath == "${path}"][0] {
+      seoByPath: (pagePath: string) => `*[_type == "seoMetadata" && pagePath == $pagePath][0] {
+        _id,
+        pagePath,
         title,
         description,
         keywords,
         ogImage {
           asset->{
-            _ref,
+            _id,
             url
           },
           alt
         },
         "ogImageUrl": ogImage.asset->url,
+        "ogImageAlt": ogImage.alt,
         url,
         type,
         publishedTime,

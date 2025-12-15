@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { generateSEO } from "@/lib/seo";
+import { generateMetadataFromSanity } from "@/lib/seo";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 
@@ -12,7 +12,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = generateSEO();
+// Generate metadata from Sanity, falling back to 'home' entry
+export async function generateMetadata(): Promise<Metadata> {
+  return generateMetadataFromSanity('home');
+}
 
 export default function RootLayout({
   children,
