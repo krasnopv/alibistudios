@@ -174,35 +174,51 @@ export async function generateSEOWithSanity(
   const metadata = generateSEO(mergedProps as SEOProps);
 
   // Apply robots settings from Sanity if available
+  let updatedMetadata = metadata;
   if (sanityData?.robots) {
     const robots = sanityData.robots;
-    metadata.robots = {
-      index: robots.noindex ? false : (robots.index ?? true),
-      follow: robots.nofollow ? false : (robots.follow ?? true),
-      googleBot: {
+    updatedMetadata = {
+      ...updatedMetadata,
+      robots: {
         index: robots.noindex ? false : (robots.index ?? true),
         follow: robots.nofollow ? false : (robots.follow ?? true),
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        googleBot: {
+          index: robots.noindex ? false : (robots.index ?? true),
+          follow: robots.nofollow ? false : (robots.follow ?? true),
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
       },
     };
   }
 
   // Apply Twitter settings from Sanity if available
-  if (sanityData?.twitter && metadata.twitter) {
+  if (sanityData?.twitter && updatedMetadata.twitter) {
+    const twitterUpdates: Partial<typeof updatedMetadata.twitter> = {};
+    
     if (sanityData.twitter.card) {
-      metadata.twitter.card = sanityData.twitter.card as 'summary' | 'summary_large_image' | 'app' | 'player';
+      twitterUpdates.card = sanityData.twitter.card as 'summary' | 'summary_large_image' | 'app' | 'player';
     }
     if (sanityData.twitter.creator) {
-      metadata.twitter.creator = sanityData.twitter.creator;
+      twitterUpdates.creator = sanityData.twitter.creator;
     }
     if (sanityData.twitter.site) {
-      metadata.twitter.site = sanityData.twitter.site;
+      twitterUpdates.site = sanityData.twitter.site;
+    }
+
+    if (Object.keys(twitterUpdates).length > 0) {
+      updatedMetadata = {
+        ...updatedMetadata,
+        twitter: {
+          ...updatedMetadata.twitter,
+          ...twitterUpdates,
+        },
+      };
     }
   }
 
-  return metadata;
+  return updatedMetadata;
 }
 
 /**
