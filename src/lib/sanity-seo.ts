@@ -195,7 +195,11 @@ export async function generateSEOWithSanity(
 
   // Apply Twitter settings from Sanity if available
   if (sanityData?.twitter && updatedMetadata.twitter) {
-    const twitterUpdates: Partial<typeof updatedMetadata.twitter> = {};
+    const twitterUpdates: {
+      card?: 'summary' | 'summary_large_image' | 'app' | 'player';
+      creator?: string;
+      site?: string;
+    } = {};
     
     if (sanityData.twitter.card) {
       twitterUpdates.card = sanityData.twitter.card as 'summary' | 'summary_large_image' | 'app' | 'player';
