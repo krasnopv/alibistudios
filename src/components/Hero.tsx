@@ -255,8 +255,8 @@ const Hero = ({
           </div>
         )}
         
-        {/* Sound Toggle Button - Show for both direct video files and embedded videos */}
-        {isSanityVideo && (
+        {/* Sound Toggle Button - Show for both direct video files and embedded videos, but hide on homepage */}
+        {isSanityVideo && actualSlug !== 'home' && (
           <div className="absolute bottom-2 left-0 right-0 z-10">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-start">

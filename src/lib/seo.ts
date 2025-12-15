@@ -16,7 +16,7 @@ interface SEOProps {
 
 export function generateSEO({
   title = 'Alibi Studios - VFX & Creative Studio',
-  description = 'An elite group of award-winning artists all under one Virtual Roof. VFX, Animation, Film & Episodic, Immersive experiences, and Media & Generative Art.',
+  description = 'A group of award-winning studios, directors, artists & technologists all under one "Virtual Roof"',
   keywords = ['VFX', 'Visual Effects', 'Animation', 'Film Production', 'Immersive Experiences', 'Creative Studio', 'Award Winning', 'Global Studios'],
   image = '/og-image.jpg',
   url = 'https://alibistudios.co',
