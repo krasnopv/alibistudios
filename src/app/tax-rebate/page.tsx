@@ -235,9 +235,11 @@ export default function TaxRebate() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="row border-t-2 border-b border-black pt-8 pb-8" style={{ borderColor: '#000000' }}>
                 <div className="mb-16 w-full">
-                  <h1 className="display_h6 brand-color text-center mb-8">
-                    {rebate.intro?.title || rebate.title}
-                  </h1>
+                  <div className="mb-8">
+                    <h1 className="display_h6 brand-color text-center">
+                      {rebate.intro?.title || rebate.title}
+                    </h1>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:items-stretch items-start">
                     {/* Description on left (desktop), Description on top (mobile) */}
                     <div className="order-1">
@@ -246,7 +248,7 @@ export default function TaxRebate() {
                           className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
                           style={{ fontFamily: 'Plus Jakarta Sans' }}
                         >
-                          <div className="prose prose-gray max-w-none">
+                          <div className="prose prose-gray max-w-none [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-4 [&_ol]:space-y-2 [&_p]:mb-4">
                             <PortableText value={rebate.intro.description} />
                           </div>
                         </div>
@@ -274,13 +276,14 @@ export default function TaxRebate() {
             </div>
             
             {/* Render all sections for this rebate in chess format */}
-            {rebate.sections?.map((section, sectionIndex) => {
+            {rebate.sections?.map((section, sectionIndex, sectionsArray) => {
               // Chess format: first section (index 0) = Image-Content, second (index 1) = Content-Image, etc.
               const isEven = sectionIndex % 2 === 0;
               // Even index (0, 2, 4...): Image | Content
               // Odd index (1, 3, 5...): Content | Image
-              // Don't add bottom border for "How to apply" sections
-              const shouldShowBottomBorder = section._type !== 'howToApply';
+              // Don't add bottom border for "How to apply" sections or last customSection
+              const isLastCustomSection = section._type === 'customSection' && sectionIndex === sectionsArray.length - 1;
+              const shouldShowBottomBorder = section._type !== 'howToApply' && !isLastCustomSection;
 
               return (
                 <section key={sectionIndex} className="w-full">

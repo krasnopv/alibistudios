@@ -116,7 +116,7 @@ export default function RebateSection({ section }: RebateSectionProps) {
             )}
             {section.content && (
               <div 
-                className="text-[20px] font-[400] leading-[150%] tracking-[0%]"
+                className="text-[20px] font-[400] leading-[150%] tracking-[0%] [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-4 [&_ol]:space-y-2"
                 style={{ fontFamily: 'Plus Jakarta Sans' }}
               >
                 <PortableText value={section.content} />
