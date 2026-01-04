@@ -108,13 +108,9 @@ export async function GET(
         .map(({ hideProject, ...project }: ProjectWithHideFlag) => project); // Remove hideProject from response
     }
 
-    // Process video: prioritize heroVideo (uploaded file) first, fallback to heroVideoLink if no uploaded file
-    if (service.heroVideoUrl) {
-      // Use uploaded video file (heroVideo) - heroVideoUrl is already set from the query
-      // No additional processing needed for direct video files
-      service.isEmbeddable = false;
-    } else if (service.heroVideoLink && service.heroVideoLink.url && service.heroVideoLink.type) {
-      // Fallback to heroVideoLink if no uploaded video file exists
+    // Process video: prioritize heroVideoLink for all services, fallback to heroVideo (uploaded file)
+    if (service.heroVideoLink && service.heroVideoLink.url && service.heroVideoLink.type) {
+      // Prioritize heroVideoLink for all services
       const videoType = service.heroVideoLink.type as 'vimeo' | 'youtube' | 'custom';
       const embedUrl = getEmbedUrl(service.heroVideoLink.url, videoType, true); // Start muted
       
@@ -127,6 +123,10 @@ export async function GET(
         ...service.heroVideoLink,
         url: service.heroVideoLink.url
       };
+    } else if (service.heroVideoUrl) {
+      // Fallback to uploaded video file (heroVideo) - heroVideoUrl is already set from the query
+      // No additional processing needed for direct video files
+      service.isEmbeddable = false;
     }
 
     return NextResponse.json(service);

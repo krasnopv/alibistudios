@@ -1,17 +1,15 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 import Header from '@/components/Header';
+import Hero from '@/components/Hero';
 import PageLoader from '@/components/PageLoader';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import ServicesGrid from '@/components/ServicesGrid';
 import GetInTouch from '@/components/GetInTouch';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
-import { getEmbedUrl } from '@/lib/videoUtils';
-import { useEmbeddedVideoPlayer } from '@/hooks/useEmbeddedVideoPlayer';
 
 interface SubService {
   _id: string;
@@ -88,18 +86,8 @@ const ServicePage = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeReelIndex, setActiveReelIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
-  const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
   const [reelLoadingStates, setReelLoadingStates] = useState<Record<number, boolean>>({});
-
-  // Use embedded video player hook for YouTube/Vimeo
-  const { setMuted: setPlayerMuted, isReady: isPlayerReady } = useEmbeddedVideoPlayer({
-    iframeRef,
-    videoType: service?.videoType,
-    videoUrl: service?.heroVideoLink?.url
-  });
+  const [hasHeroContent, setHasHeroContent] = useState<boolean | null>(null);
 
   const renderRichText = (content: string | unknown) => {
     // Handle null/undefined
@@ -167,18 +155,6 @@ const ServicePage = () => {
     );
   };
 
-  const toggleSound = async () => {
-    if (videoRef) {
-      // Direct video file
-      videoRef.muted = !isMuted;
-      setIsMuted(!isMuted);
-    } else if (service?.isEmbeddable && isPlayerReady) {
-      // Embedded video - use player API to control mute without reloading
-      const newMuted = !isMuted;
-      setIsMuted(newMuted);
-      await setPlayerMuted(newMuted);
-    }
-  };
 
   // Helper function to get embed URL for YouTube/Vimeo (for reels)
   const getReelEmbedUrl = (url: string, type: 'youtube' | 'vimeo', autoplay: boolean = false): string => {
@@ -432,13 +408,6 @@ const ServicePage = () => {
         const serviceData = await serviceResponse.json();
         setService(serviceData);
         
-        // Generate initial embed URL if it's embeddable
-        if (serviceData.isEmbeddable && serviceData.videoType && serviceData.heroVideoLink?.url) {
-          setEmbedUrl(getEmbedUrl(serviceData.heroVideoLink.url, serviceData.videoType, true));
-        } else if (serviceData.heroVideoUrl) {
-          setEmbedUrl(serviceData.heroVideoUrl);
-        }
-        
         // Reset active reel index when service changes (no selection initially)
         setActiveReelIndex(-1);
       } catch (error) {
@@ -486,158 +455,15 @@ const ServicePage = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center">
       <Header />
-      <main className="w-full flex flex-col items-center">
-        {/* Hero with video/image priority logic */}
+      <main className={`w-full flex flex-col items-center ${hasHeroContent === false ? 'no-hero' : ''}`}>
+        {/* Hero component with service data source */}
         {service && (
-          <div id="hero" className="relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh]">
-            <div className="relative w-full">
-              {/* Priority 1: Hero Video */}
-              {service.heroVideoUrl ? (
-                service.isEmbeddable ? (
-                  // Embedded video (Vimeo/YouTube) - wrapped to match video stretch
-                  <div 
-                    className="w-screen block landscape:max-h-[75vh] relative overflow-hidden"
-                    style={{
-                      aspectRatio: '16/9',
-                      minHeight: '400px',
-                      maxHeight: '75vh',
-                      margin: 0,
-                      padding: 0
-                    }}
-                  >
-                    <iframe
-                      ref={iframeRef}
-                      id={`service-video-${service.videoType}-${serviceSlug}`}
-                      src={embedUrl || service.heroVideoUrl}
-                      className="absolute top-1/2 left-1/2"
-                      style={{
-                        width: '100vw',
-                        height: '56.25vw',
-                        minHeight: '100%',
-                        transform: 'translate(-50%, -50%)',
-                        border: 'none',
-                        pointerEvents: 'auto'
-                      }}
-                      allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen
-                      title={service.title}
-                    />
-                  </div>
-                ) : (
-                  // Direct video file
-                  <video
-                    ref={setVideoRef}
-                    autoPlay
-                    muted={isMuted}
-                    loop
-                    playsInline
-                    className="w-full block landscape:max-h-[75vh]"
-                    style={{
-                      aspectRatio: '16/9',
-                      minHeight: '400px',
-                      maxHeight: '75vh',
-                      margin: 0,
-                      padding: 0,
-                      objectFit: 'cover'
-                    }}
-                  >
-                    <source src={service.heroVideoUrl} type="video/mp4" />
-                    {/* Fallback to hero image if video fails */}
-                    <img
-                      src={service.heroImageUrl || service.imageUrl}
-                      alt={service.heroImageAlt || service.imageAlt || service.title}
-                      className="w-full block landscape:max-h-[75vh]"
-                      style={{
-                        aspectRatio: '16/9',
-                        minHeight: '400px',
-                        maxHeight: '75vh',
-                        margin: 0,
-                        padding: 0,
-                        objectFit: 'cover'
-                      }}
-                    />
-                  </video>
-                )
-              ) : service.heroImageUrl ? (
-                /* Priority 2: Hero Image */
-                <img
-                  src={service.heroImageUrl}
-                  alt={service.heroImageAlt || service.title}
-                  className="w-full block landscape:max-h-[75vh]"
-                  style={{
-                    aspectRatio: '16/9',
-                    minHeight: '400px',
-                    maxHeight: '75vh',
-                    margin: 0,
-                    padding: 0,
-                    objectFit: 'cover'
-                  }}
-                />
-              ) : service.imageUrl ? (
-                /* Priority 3: Fallback to regular image */
-                <img
-                  src={service.imageUrl}
-                  alt={service.imageAlt || service.title}
-                  className="w-full block landscape:max-h-[75vh]"
-                  style={{
-                    aspectRatio: '16/9',
-                    minHeight: '400px',
-                    maxHeight: '75vh',
-                    margin: 0,
-                    padding: 0,
-                    objectFit: 'cover'
-                  }}
-                />
-              ) : (
-                /* Priority 4: Placeholder if no media available */
-                <div 
-                  className="w-full flex items-center justify-center bg-gray-200"
-                  style={{
-                    aspectRatio: '16/9',
-                    minHeight: '400px',
-                    maxHeight: '75vh',
-                    margin: 0,
-                    padding: 0
-                  }}
-                >
-                  <p className="text-gray-500 text-lg">No media available</p>
-                </div>
-              )}
-              
-              {/* Sound Toggle Button - Show for both direct video files and embedded videos */}
-              {service.heroVideoUrl && (
-                <div className="absolute bottom-2 left-0 right-0 z-10">
-                  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-start">
-                      <button
-                        onClick={toggleSound}
-                        className="p-2 cursor-pointer"
-                        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-                      >
-                        {isMuted ? (
-                          // Muted icon
-                          <Image 
-                            src="/muted.svg" 
-                            alt="Muted" 
-                            width={28} 
-                            height={28}
-                          />
-                        ) : (
-                          // Playing icon
-                          <Image 
-                            src="/playing.svg" 
-                            alt="Playing" 
-                            width={28} 
-                            height={28}
-                          />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <Hero 
+            pageSlug={serviceSlug as string}
+            dataSource="service"
+            className="mb-8"
+            onRenderChange={setHasHeroContent}
+          />
         )}
         
         {/* Service Content */}

@@ -173,6 +173,7 @@ export const queries = {
       type,
       url
     },
+    heroVideoPoster,
     image,
     heroTitle,
     heroSubtitle,
@@ -181,7 +182,7 @@ export const queries = {
     publishedAt,
     isPublished,
     "videoUrl": heroVideo.asset->url,
-    "posterUrl": image.asset->url,
+    "posterUrl": heroVideoPoster.asset->url,
     "seoImageUrl": seoImage.asset->url
   }`,
 

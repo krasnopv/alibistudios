@@ -19,12 +19,14 @@ interface HeroProps {
   pageSlug?: string;
   className?: string;
   onRenderChange?: (hasContent: boolean) => void;
+  dataSource?: 'page' | 'service'; // 'page' for pages API, 'service' for services API
 }
 
 const Hero = ({ 
   pageSlug = 'home',
   className = '',
-  onRenderChange
+  onRenderChange,
+  dataSource = 'page' // Default to 'page' for backward compatibility
 }: HeroProps) => {
   // Handle root slug - convert '/' to 'home'
   const actualSlug = pageSlug === '/' ? 'home' : pageSlug;
@@ -33,6 +35,8 @@ const Hero = ({
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   // Use embedded video player hook for YouTube/Vimeo
   const { setMuted: setPlayerMuted, isReady: isPlayerReady } = useEmbeddedVideoPlayer({
@@ -44,61 +48,56 @@ const Hero = ({
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        // Try to fetch page data from Sanity
-        const isLocalDev = process.env.NODE_ENV === 'development';
+        // Determine API endpoint based on dataSource
+        const apiEndpoint = dataSource === 'service' 
+          ? `/api/services/slug/${actualSlug}`
+          : `/api/pages/${actualSlug}`;
         
-        if (isLocalDev) {
-          // Use API route for local development
-          const response = await fetch(`/api/pages/${actualSlug}`);
-          if (response.ok) {
-            const pageData = await response.json();
-            console.log('Hero data for', actualSlug, ':', pageData);
-            // Always set heroData if we have a page, even without video
-            // originalUrl is only needed for embedded videos (heroVideoLink), not for uploaded files (heroVideo)
-            // Only set originalUrl if we're actually using heroVideoLink (isEmbeddable === true)
-            const videoData = {
-              videoUrl: pageData.videoUrl || null,
-              originalUrl: pageData.isEmbeddable && pageData.heroVideoLink?.url ? pageData.heroVideoLink.url : null,
-              posterUrl: pageData.posterUrl,
-              title: pageData.heroTitle,
-              subtitle: pageData.heroSubtitle,
-              videoType: pageData.videoType,
-              isEmbeddable: pageData.isEmbeddable || false
-            };
-            setHeroData(videoData);
-            
-            // Generate initial embed URL if it's embeddable
-            if (videoData.isEmbeddable && videoData.videoType && videoData.originalUrl) {
-              setEmbedUrl(getEmbedUrl(videoData.originalUrl, videoData.videoType, true));
-            } else if (videoData.videoUrl) {
-              setEmbedUrl(videoData.videoUrl);
-            }
-          }
-        } else {
-          // For production, also use API route to avoid CORS issues
-          const response = await fetch(`/api/pages/${actualSlug}`);
-          if (response.ok) {
-            const pageData = await response.json();
-            console.log('Hero data for', actualSlug, ':', pageData);
-            // originalUrl is only needed for embedded videos (heroVideoLink), not for uploaded files (heroVideo)
-            // Only set originalUrl if we're actually using heroVideoLink (isEmbeddable === true)
-            const videoData = {
-              videoUrl: pageData.videoUrl || null,
-              originalUrl: pageData.isEmbeddable && pageData.heroVideoLink?.url ? pageData.heroVideoLink.url : null,
-              posterUrl: pageData.posterUrl,
-              title: pageData.heroTitle,
-              subtitle: pageData.heroSubtitle,
-              videoType: pageData.videoType,
-              isEmbeddable: pageData.isEmbeddable || false
-            };
-            setHeroData(videoData);
-            
-            // Generate initial embed URL if it's embeddable
-            if (videoData.isEmbeddable && videoData.videoType && videoData.originalUrl) {
-              setEmbedUrl(getEmbedUrl(videoData.originalUrl, videoData.videoType, true));
-            } else if (videoData.videoUrl) {
-              setEmbedUrl(videoData.videoUrl);
-            }
+        const response = await fetch(apiEndpoint);
+        if (response.ok) {
+          const apiData = await response.json();
+          console.log('Hero data for', actualSlug, 'dataSource:', dataSource, ':', apiData);
+          console.log('Poster URL check - apiData.posterUrl:', apiData.posterUrl, 'apiData.heroImageUrl:', apiData.heroImageUrl);
+          
+          // Normalize data mapping for both page and service responses
+          // Page API: videoUrl, posterUrl (Hero Video Poster), heroTitle, heroSubtitle
+          // Service API: heroVideoUrl, heroImageUrl (Hero Image), title (no subtitle)
+          const videoData = {
+            videoUrl: dataSource === 'page' 
+              ? (apiData.videoUrl || null)
+              : (apiData.heroVideoUrl || null),
+            originalUrl: (apiData.isEmbeddable && apiData.heroVideoLink?.url) 
+              ? apiData.heroVideoLink.url 
+              : null,
+            // For pages: use posterUrl (Hero Video Poster) or imageUrl as fallback, for services: use heroImageUrl (Hero Image)
+            posterUrl: dataSource === 'page' 
+              ? (apiData.posterUrl || apiData.imageUrl || null)
+              : (apiData.heroImageUrl || null),
+            title: dataSource === 'page' 
+              ? (apiData.heroTitle || null)
+              : (apiData.title || null),
+            subtitle: dataSource === 'page' 
+              ? (apiData.heroSubtitle || null)
+              : undefined, // Services don't have subtitle
+            videoType: apiData.videoType || null,
+            isEmbeddable: apiData.isEmbeddable || false
+          };
+          
+          setHeroData(videoData);
+          console.log('Video data set - posterUrl:', videoData.posterUrl);
+          
+          // Reset loading state when new video data is fetched
+          // Only show loading for actual videos, not poster images
+          setIsLoading(!!videoData.videoUrl);
+          
+          // Generate initial embed URL if it's embeddable
+          if (videoData.isEmbeddable && videoData.videoType && videoData.originalUrl) {
+            setEmbedUrl(getEmbedUrl(videoData.originalUrl, videoData.videoType, true));
+          } else if (videoData.videoUrl) {
+            setEmbedUrl(videoData.videoUrl);
+          } else {
+            // No video, so not loading
+            setIsLoading(false);
           }
         }
       } catch (error) {
@@ -107,11 +106,62 @@ const Hero = ({
     };
 
     fetchHeroData();
-  }, [actualSlug]);
+  }, [actualSlug, dataSource]);
 
   const handleVideoError = () => {
     console.error('Video failed to load');
+    startFadeOut();
   };
+
+  const handleVideoLoaded = () => {
+    // Wait 1 second after video loads before starting fade-out
+    setTimeout(() => {
+      startFadeOut();
+    }, 1000);
+  };
+
+  const handleIframeLoaded = () => {
+    // For iframes, wait a bit longer to ensure video is actually ready, then wait 1 second before fade-out
+    setTimeout(() => {
+      startFadeOut();
+    }, 1500); // 500ms for iframe + 1000ms delay
+  };
+
+  const startFadeOut = () => {
+    setIsFadingOut(true);
+    // Remove preloader after fade-out animation completes (1 second)
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsFadingOut(false);
+    }, 1000);
+  };
+
+  // Determine what to show based on Sanity data only
+  const isSanityVideo = heroData?.videoUrl;
+  const isEmbeddable = heroData?.isEmbeddable === true;
+  const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
+  const hasAnyMedia = isSanityVideo || hasPosterOnly;
+  
+  // Fallback timeout to hide preloader if load events don't fire
+  useEffect(() => {
+    if (isLoading && isSanityVideo && !isFadingOut) {
+      const timeout = setTimeout(() => {
+        console.log('Preloader timeout - hiding after 5 seconds');
+        startFadeOut();
+      }, 5000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading, isSanityVideo, isFadingOut]);
+  
+  console.log('Hero render for', actualSlug, ':', {
+    videoUrl: heroData?.videoUrl,
+    posterUrl: heroData?.posterUrl,
+    isSanityVideo,
+    hasPosterOnly,
+    hasAnyMedia,
+    isLoading
+  });
 
   const toggleSound = async () => {
     if (videoRef) {
@@ -126,19 +176,6 @@ const Hero = ({
     }
   };
 
-  // Determine what to show based on Sanity data only
-  const isSanityVideo = heroData?.videoUrl;
-  const isEmbeddable = heroData?.isEmbeddable === true;
-  const hasPosterOnly = !isSanityVideo && heroData?.posterUrl;
-  const hasAnyMedia = isSanityVideo || hasPosterOnly;
-  
-  console.log('Hero render for', actualSlug, ':', {
-    videoUrl: heroData?.videoUrl,
-    posterUrl: heroData?.posterUrl,
-    isSanityVideo,
-    hasPosterOnly,
-    hasAnyMedia
-  });
 
   // Notify parent about render state
   useEffect(() => {
@@ -152,14 +189,56 @@ const Hero = ({
 
   return (
     <div id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
+      {/* Preloader - Use Hero Video Poster (pages) or Hero Image (services) if available, otherwise Layer_1.svg */}
+      {isLoading && isSanityVideo && (
+        <div 
+          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-[1000ms] ease-out`}
+          style={{ 
+            zIndex: 50, 
+            backgroundColor: '#F8F9FA',
+            opacity: isFadingOut ? 0 : 1
+          }}
+        >
+          <div className="w-full h-full flex items-center justify-center">
+            {heroData?.posterUrl ? (
+              // Use Hero Video Poster (pages) or Hero Image (services) from Sanity
+              <img
+                src={heroData.posterUrl}
+                alt={heroData.title || 'Loading'}
+                className="w-full h-full object-cover"
+                style={{
+                  aspectRatio: '16/9',
+                  minHeight: '400px',
+                  maxHeight: '75vh',
+                  objectFit: 'cover'
+                }}
+                onError={() => {
+                  console.error('Preloader poster image failed to load:', heroData.posterUrl);
+                }}
+              />
+            ) : (
+              // Fallback to Layer_1.svg if no poster/image available
+              <Image
+                src="/Layer_1.svg"
+                alt="Loading"
+                width={1200}
+                height={200}
+                className={`w-full h-auto opacity-90 ${isFadingOut ? '' : 'animate-pulse'}`}
+                priority
+              />
+            )}
+          </div>
+        </div>
+      )}
+      
       {/* Background Video/Image */}
       <div className="relative w-full">
         {isSanityVideo ? (
           // Show Sanity video - either embedded (iframe) or direct video file
           isEmbeddable ? (
-            // Embedded video (Vimeo/YouTube) - wrapped to match video stretch
+            // Embedded video (Vimeo/YouTube) - fullwidth and fullheight to match video element
             <div 
-              className="w-screen block landscape:max-h-[75vh] relative overflow-hidden"
+              className="w-full block landscape:max-h-[75vh] relative overflow-hidden"
               style={{
                 aspectRatio: '16/9',
                 minHeight: '400px',
@@ -174,16 +253,20 @@ const Hero = ({
                 src={embedUrl || heroData.videoUrl}
                 className="absolute top-1/2 left-1/2"
                 style={{
-                  width: '100vw',
-                  height: '56.25vw',
+                  width: '177.77777778vh', // 16:9 aspect ratio based on viewport height
+                  height: '100vh',
+                  minWidth: '100%',
                   minHeight: '100%',
                   transform: 'translate(-50%, -50%)',
                   border: 'none',
-                  pointerEvents: 'auto'
+                  pointerEvents: 'auto',
+                  margin: 0,
+                  padding: 0
                 }}
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
                 title={heroData.title || 'Hero video'}
+                onLoad={handleIframeLoaded}
               />
             </div>
           ) : (
@@ -206,6 +289,7 @@ const Hero = ({
                 objectFit: 'cover'
               }}
               onError={handleVideoError}
+              onLoadedData={handleVideoLoaded}
             />
           )
         ) : hasPosterOnly ? (
@@ -238,7 +322,7 @@ const Hero = ({
         )}
         
         {/* Hero Content Overlay */}
-        {(heroData?.title || heroData?.subtitle) && (
+        {/* {(heroData?.title || heroData?.subtitle) && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
             <div className="text-center text-white">
               {heroData.title && (
@@ -253,7 +337,7 @@ const Hero = ({
               )}
             </div>
           </div>
-        )}
+        )} */}
         
         {/* Sound Toggle Button - Show for both direct video files and embedded videos, but hide on homepage */}
         {isSanityVideo && actualSlug !== 'home' && (
