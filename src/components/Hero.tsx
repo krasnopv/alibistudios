@@ -37,6 +37,7 @@ const Hero = ({
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [useFullWidth, setUseFullWidth] = useState(false);
 
   // Use embedded video player hook for YouTube/Vimeo
   const { setMuted: setPlayerMuted, isReady: isPlayerReady } = useEmbeddedVideoPlayer({
@@ -121,6 +122,19 @@ const Hero = ({
   };
 
   const handleIframeLoaded = () => {
+    // Check iframe dimensions and compare with screen width
+    if (iframeRef.current) {
+      // Calculate the width that would be used by the viewport-height-based approach
+      // 177.77777778vh = viewport height * (16/9) = viewport height * 1.7777777778
+      const calculatedWidth = window.innerHeight * (16 / 9);
+      const screenWidth = window.innerWidth;
+      
+      // If calculated width is smaller than screen width, use full width mode
+      // This ensures the iframe covers the full width without gaps
+      const shouldUseFullWidth = calculatedWidth < screenWidth;
+      setUseFullWidth(shouldUseFullWidth);
+    }
+    
     // For iframes, wait a bit longer to ensure video is actually ready, then wait 1 second before fade-out
     setTimeout(() => {
       startFadeOut();
@@ -153,6 +167,29 @@ const Hero = ({
       return () => clearTimeout(timeout);
     }
   }, [isLoading, isSanityVideo, isFadingOut]);
+
+  // Recalculate full width mode on window resize and when iframe loads
+  useEffect(() => {
+    if (!isEmbeddable || !iframeRef.current) return;
+
+    const checkWidth = () => {
+      // Calculate the width that would result from viewport-height-based approach
+      const calculatedWidth = window.innerHeight * (16 / 9);
+      const screenWidth = window.innerWidth;
+      
+      // If calculated width is smaller than screen width, use full width mode
+      const shouldUseFullWidth = calculatedWidth < screenWidth;
+      setUseFullWidth(shouldUseFullWidth);
+    };
+
+    // Check on mount and resize
+    checkWidth();
+    window.addEventListener('resize', checkWidth);
+    
+    return () => {
+      window.removeEventListener('resize', checkWidth);
+    };
+  }, [isEmbeddable, isSanityVideo]);
   
   console.log('Hero render for', actualSlug, ':', {
     videoUrl: heroData?.videoUrl,
@@ -252,7 +289,18 @@ const Hero = ({
                 id={`hero-video-${heroData.videoType}-${actualSlug}`}
                 src={embedUrl || heroData.videoUrl}
                 className="absolute top-1/2 left-1/2"
-                style={{
+                style={useFullWidth ? {
+                  // Full width mode: width 100%, height calculated to maintain 16:9 and cover parent
+                  width: '100%',
+                  height: '56.25vw', // 16:9 aspect ratio (9/16 = 0.5625)
+                  minHeight: '100%',
+                  transform: 'translate(-50%, -50%)',
+                  border: 'none',
+                  pointerEvents: 'auto',
+                  margin: 0,
+                  padding: 0
+                } : {
+                  // Original solution: viewport height based
                   width: '177.77777778vh', // 16:9 aspect ratio based on viewport height
                   height: '100vh',
                   minWidth: '100%',
