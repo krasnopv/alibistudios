@@ -1,8 +1,6 @@
-name: Deploy to Old Server (159.69.81.179)
+name: Pre-Live (Deploy to Old Server 159.69.81.179)
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:

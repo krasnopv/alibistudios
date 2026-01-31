@@ -1,0 +1,23 @@
+# Staging: same server as production, port 3300, Sanity dataset 'staging'
+# Deploy dir: /opt/staging-alibi
+
+version: '3.8'
+
+services:
+  alibi-staging-app:
+    image: alibi-staging-app:latest
+    container_name: alibi-staging-app
+    restart: unless-stopped
+    ports:
+      - "3300:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID}
+      - NEXT_PUBLIC_SANITY_DATASET=staging
+      - SANITY_API_TOKEN=${SANITY_API_TOKEN}
+    networks:
+      - staging-alibi-network
+
+networks:
+  staging-alibi-network:
+    driver: bridge

@@ -16,9 +16,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Set environment variables for build
-ENV NEXT_PUBLIC_SANITY_PROJECT_ID=srer6l4b
-ENV NEXT_PUBLIC_SANITY_DATASET=production
+# Build args for Sanity (defaults = production; override for staging)
+ARG NEXT_PUBLIC_SANITY_PROJECT_ID=srer6l4b
+ARG NEXT_PUBLIC_SANITY_DATASET=production
+ENV NEXT_PUBLIC_SANITY_PROJECT_ID=$NEXT_PUBLIC_SANITY_PROJECT_ID
+ENV NEXT_PUBLIC_SANITY_DATASET=$NEXT_PUBLIC_SANITY_DATASET
 ENV NODE_ENV=production
 ENV SERVER_DEPLOY=true
 
