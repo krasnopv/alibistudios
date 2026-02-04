@@ -2,9 +2,10 @@ import React from 'react';
 
 export const serializers = {
   marks: {
-    link: ({ children, value }: { children: React.ReactNode; value?: { href?: string } }) => {
-      // Handle cases where value might be undefined or href might be missing
-      const href = value?.href || '#';
+    // @sanity/block-content-to-react passes { children, mark } where mark contains href
+    link: ({ children, mark }: { children: React.ReactNode; mark?: { href?: string } }) => {
+      // Handle cases where mark might be undefined or href might be missing
+      const href = mark?.href;
       
       // If no valid href, just return children without link
       if (!href || href === '#') {
