@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
 import { useMailto } from '@/hooks/useMailto';
 
 const Header = () => {
-  const router = useRouter();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -101,79 +99,80 @@ const Header = () => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    // Handle films section scrolling when page loads with #films hash
-    const scrollToFilmsSection = () => {
-      const filmsSection = document.getElementById('films');
-      if (filmsSection) {
-        filmsSection.scrollIntoView({ behavior: 'smooth' });
+    // Unified handler for hash-based section scrolling (#films, #services, etc.)
+    const scrollToSection = (sectionId: string) => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
         return true;
       }
       return false;
     };
 
-    const handleFilmsHash = () => {
-      if (window.location.hash === '#films') {
-        // Try to scroll immediately first
-        if (!scrollToFilmsSection()) {
-          // If films section not found, wait for content to load
-          let attempts = 0;
-          const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
+    const handleHash = () => {
+      const hash = window.location.hash;
+      
+      // Map hash to section ID (remove the #)
+      const sectionId = hash.slice(1);
+      
+      if (!sectionId) return;
+      
+      // Only handle known sections to avoid conflicts
+      const knownSections = ['films', 'services', 'footer'];
+      if (!knownSections.includes(sectionId)) return;
+      
+      // Try to scroll immediately first
+      if (!scrollToSection(sectionId)) {
+        // If section not found, wait for content to load
+        let attempts = 0;
+        const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
+        
+        const checkForSection = () => {
+          attempts++;
+          if (scrollToSection(sectionId)) {
+            return; // Success, stop checking
+          }
           
-          const checkForFilmsSection = () => {
-            attempts++;
-            if (scrollToFilmsSection()) {
-              return; // Success, stop checking
-            }
-            
-            if (attempts < maxAttempts) {
-              // If still not found and haven't exceeded max attempts, check again
-              setTimeout(checkForFilmsSection, 200);
-            }
-          };
-          
-          // Start checking after initial delay
-          setTimeout(checkForFilmsSection, 300);
-        }
+          if (attempts < maxAttempts) {
+            // If still not found and haven't exceeded max attempts, check again
+            setTimeout(checkForSection, 200);
+          }
+        };
+        
+        // Start checking after initial delay
+        setTimeout(checkForSection, 300);
       }
     };
 
     // Check on mount
-    handleFilmsHash();
+    handleHash();
 
     // Listen for hash changes
-    window.addEventListener('hashchange', handleFilmsHash);
+    window.addEventListener('hashchange', handleHash);
     
     // Also listen for route changes (for Next.js navigation)
     const handleRouteChange = () => {
-      if (window.location.hash === '#films') {
-        if (!scrollToFilmsSection()) {
-          let attempts = 0;
-          const maxAttempts = 20;
-          
-          const checkForFilmsSection = () => {
-            attempts++;
-            if (scrollToFilmsSection()) {
-              return;
-            }
-            
-            if (attempts < maxAttempts) {
-              setTimeout(checkForFilmsSection, 200);
-            }
-          };
-          
-          setTimeout(checkForFilmsSection, 300);
-        }
-      }
+      handleHash();
     };
 
     // Listen for popstate events (back/forward navigation)
     window.addEventListener('popstate', handleRouteChange);
     
     // Also listen for DOM mutations to catch when content loads
+    // Use a debounce to avoid excessive calls
+    let mutationTimeout: NodeJS.Timeout;
     const observer = new MutationObserver(() => {
-      if (window.location.hash === '#films') {
-        scrollToFilmsSection();
-      }
+      clearTimeout(mutationTimeout);
+      mutationTimeout = setTimeout(() => {
+        const hash = window.location.hash;
+        if (hash) {
+          const sectionId = hash.slice(1);
+          const knownSections = ['films', 'services', 'footer'];
+          if (knownSections.includes(sectionId)) {
+            scrollToSection(sectionId);
+          }
+        }
+      }, 100); // Debounce mutations
     });
     
     // Observe the entire document for changes
@@ -183,98 +182,10 @@ const Header = () => {
     });
     
     return () => {
-      window.removeEventListener('hashchange', handleFilmsHash);
+      window.removeEventListener('hashchange', handleHash);
       window.removeEventListener('popstate', handleRouteChange);
       observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    // Handle services section scrolling when page loads with #services hash
-    const scrollToServicesSection = () => {
-      const servicesSection = document.getElementById('services');
-      if (servicesSection) {
-        servicesSection.scrollIntoView({ behavior: 'smooth' });
-        return true;
-      }
-      return false;
-    };
-
-    const handleServicesHash = () => {
-      if (window.location.hash === '#services') {
-        // Try to scroll immediately first
-        if (!scrollToServicesSection()) {
-          // If services section not found, wait for content to load
-          let attempts = 0;
-          const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
-          
-          const checkForServicesSection = () => {
-            attempts++;
-            if (scrollToServicesSection()) {
-              return; // Success, stop checking
-            }
-            
-            if (attempts < maxAttempts) {
-              // If still not found and haven't exceeded max attempts, check again
-              setTimeout(checkForServicesSection, 200);
-            }
-          };
-          
-          // Start checking after initial delay
-          setTimeout(checkForServicesSection, 300);
-        }
-      }
-    };
-
-    // Check on mount
-    handleServicesHash();
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleServicesHash);
-    
-    // Also listen for route changes (for Next.js navigation)
-    const handleRouteChange = () => {
-      if (window.location.hash === '#services') {
-        if (!scrollToServicesSection()) {
-          let attempts = 0;
-          const maxAttempts = 20;
-          
-          const checkForServicesSection = () => {
-            attempts++;
-            if (scrollToServicesSection()) {
-              return;
-            }
-            
-            if (attempts < maxAttempts) {
-              setTimeout(checkForServicesSection, 200);
-            }
-          };
-          
-          setTimeout(checkForServicesSection, 300);
-        }
-      }
-    };
-
-    // Listen for popstate events (back/forward navigation)
-    window.addEventListener('popstate', handleRouteChange);
-    
-    // Also listen for DOM mutations to catch when content loads
-    const observer = new MutationObserver(() => {
-      if (window.location.hash === '#services') {
-        scrollToServicesSection();
-      }
-    });
-    
-    // Observe the entire document for changes
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-    
-    return () => {
-      window.removeEventListener('hashchange', handleServicesHash);
-      window.removeEventListener('popstate', handleRouteChange);
-      observer.disconnect();
+      clearTimeout(mutationTimeout);
     };
   }, []);
 
@@ -320,14 +231,22 @@ const Header = () => {
     
     // Check if we're on the homepage
     if (window.location.pathname === '/') {
-      // If on homepage, just scroll to films section
+      // If on homepage, scroll directly first, then update hash for browser history
       const filmsSection = document.getElementById('films');
       if (filmsSection) {
         filmsSection.scrollIntoView({ behavior: 'smooth' });
+        // Update hash after a short delay to ensure scroll happens first
+        setTimeout(() => {
+          window.location.hash = '#films';
+        }, 100);
+      } else {
+        // Section not found, set hash and let the unified handler find it
+        window.location.hash = '#films';
       }
     } else {
-      // If on different page, navigate to homepage with films hash
-      router.push('/#films');
+      // If on different page, navigate to homepage with hash
+      // Use window.location for reliable hash navigation
+      window.location.href = '/#films';
     }
   };
 
@@ -337,14 +256,22 @@ const Header = () => {
     
     // Check if we're on the homepage
     if (window.location.pathname === '/') {
-      // If on homepage, just scroll to services section
+      // If on homepage, scroll directly first, then update hash for browser history
       const servicesSection = document.getElementById('services');
       if (servicesSection) {
         servicesSection.scrollIntoView({ behavior: 'smooth' });
+        // Update hash after a short delay to ensure scroll happens first
+        setTimeout(() => {
+          window.location.hash = '#services';
+        }, 100);
+      } else {
+        // Section not found, set hash and let the unified handler find it
+        window.location.hash = '#services';
       }
     } else {
-      // If on different page, navigate to homepage with services hash
-      router.push('/#services');
+      // If on different page, navigate to homepage with hash
+      // Use window.location for reliable hash navigation
+      window.location.href = '/#services';
     }
   };
 

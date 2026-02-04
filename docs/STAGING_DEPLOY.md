@@ -4,6 +4,14 @@ Staging runs on the **same server** as production, in `/opt/staging-alibi`, usin
 
 ## One-time server setup
 
+### 0. Create staging directory (required before first deploy)
+
+On the server (as root or with sudo), create the directory and give it to the deployer user. Without this, the workflow will fail with `drone-scp error: Process exited with status 1` when copying files.
+
+```bash
+sudo mkdir -p /opt/staging-alibi && sudo chown deployer:deployer /opt/staging-alibi
+```
+
 ### 1. DNS
 
 Add an A record:

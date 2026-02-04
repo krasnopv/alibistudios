@@ -165,9 +165,9 @@ export default function Studios() {
                           )}
                         </div>
 
-                      {/* Image Layer - Covers content, disappears on hover */}
+                      {/* Image Layer - Covers content, becomes semi-transparent on hover */}
                           {studio.imageUrl && (
-                        <div className="absolute inset-0 z-20 group-hover:opacity-0 transition-opacity duration-300">
+                        <div className="absolute inset-0 z-20 group-hover:opacity-10 transition-opacity duration-300">
                               <Image
                                 src={studio.imageUrl}
                                 alt={studio.imageAlt || studio.studioName || studio.name || studio.title || 'Studio image'}
