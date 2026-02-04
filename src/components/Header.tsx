@@ -482,10 +482,10 @@ const Header = () => {
                      transition={{ duration: 0.3, ease: 'easeInOut' }}
                      style={{ overflow: 'hidden' }}
                    >
-                     <div className="flex flex-col">
+                     <div className="flex flex-col pl-6">
                               {item.subItems.map((sub) => {
                                 const subKey = sub._key;
-                                const label = `- ${sub.label}`;
+                                const label = sub.label;
 
                                 if (sub.linkType === 'custom' && sub.url) {
                                   if (sub.url === '#films') {
