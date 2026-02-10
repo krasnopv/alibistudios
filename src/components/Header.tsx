@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
 import { useMailto } from '@/hooks/useMailto';
+import { useContactEmail } from '@/hooks/useContactEmail';
 
 const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -32,7 +33,7 @@ const Header = () => {
     }>;
   } | null>(null);
   const [expandedMenuItemKey, setExpandedMenuItemKey] = useState<string | null>(null);
-  const email = 'production@alibistudios.co.uk';
+  const { email } = useContactEmail();
   const { handleMailtoClick, copied } = useMailto(email);
 
   useEffect(() => {

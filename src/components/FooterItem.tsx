@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useMailto } from '@/hooks/useMailto';
+import { useContactEmail } from '@/hooks/useContactEmail';
 
 interface FooterItemProps {
   city: string;
@@ -11,7 +12,7 @@ interface FooterItemProps {
 }
 
 const FooterItem = ({ city, address, country, index }: FooterItemProps) => {
-  const email = 'production@alibistudios.co.uk';
+  const { email } = useContactEmail();
   const { handleMailtoClick, copied } = useMailto(email);
 
   return (

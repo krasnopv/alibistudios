@@ -1,6 +1,7 @@
 'use client';
 
 import { useMailto } from '@/hooks/useMailto';
+import { useContactEmail } from '@/hooks/useContactEmail';
 
 interface GetInTouchProps {
   sectionId?: string;
@@ -13,8 +14,8 @@ interface GetInTouchProps {
 const GetInTouch = ({ sectionId, title, description, buttonText, email }: GetInTouchProps) => {
   // Use placeholder content if description is not provided
   const hasDescription = description && Array.isArray(description) && description.length > 0;
-  const placeholderEmail = 'production@allibistudios.co.uk';
-  const displayEmail = email || placeholderEmail;
+  const { email: contactEmail } = useContactEmail();
+  const displayEmail = email || contactEmail;
   const { handleMailtoClick, copied } = useMailto(displayEmail);
 
   const renderRichText = (content: unknown[]): React.ReactNode => {
