@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
@@ -18,12 +19,12 @@ const ServiceCard = ({
   title, 
   image, 
   url, 
-  description, 
   index = 0,
   enableParallax = false
 }: ServiceCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -74,24 +75,15 @@ const ServiceCard = ({
     >
       {/* Service Image */}
       <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
-        {(() => {
-          const resolvedSrc = image
-            ? (image.startsWith('http') ? image : getAssetPath(image))
-            : '/placeholder.jpeg';
-          return (
-            <>
-            <img 
-              src={resolvedSrc} 
-              alt={title}
-                className="w-full h-full object-cover group-hover:scale-115 transition-transform duration-700"
-              onError={(e) => {
-                e.currentTarget.src = '/placeholder.jpeg';
-              }}
-            />
-              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            </>
-          );
-        })()}
+        <Image
+          src={imgError || !image ? '/placeholder.jpeg' : (image.startsWith('http') ? image : getAssetPath(image))}
+          alt={title}
+          fill
+          className="object-cover group-hover:scale-115 transition-transform duration-700"
+          onError={() => setImgError(true)}
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       </div>
 
       {/* Service Info */}

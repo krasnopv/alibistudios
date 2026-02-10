@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import BlockContent from '@sanity/block-content-to-react';
@@ -137,9 +138,11 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 gap: '10px'
               }}
             >
-              <img
+              <Image
                 src="/x.svg"
                 alt="Close"
+                width={20}
+                height={20}
                 className="w-5 h-5"
                 style={{
                   filter: 'brightness(0) saturate(100%)',
@@ -154,11 +157,13 @@ const TeamMemberOverlay = ({ member, isOpen, onClose }: TeamMemberOverlayProps) 
                 {/* Left Column - Image and Social Media (1/3) */}
                 <div className="w-1/3 flex flex-col">
                   {/* Image with 5:6 ratio */}
-                  <div className="w-full aspect-[5/6] mb-6">
-                    <img
+                  <div className="relative w-full aspect-[5/6] mb-6">
+                    <Image
                       src={member.imageUrl}
                       alt={member.imageAlt}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
 

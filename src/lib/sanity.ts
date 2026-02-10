@@ -251,7 +251,8 @@ export const queries = {
         "imageAlt": image.alt
       }`,
 
-      // Get SEO metadata by page path
+      // Get SEO metadata by page path (caller passes { pagePath } to client.fetch)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- param name must match GROQ $pagePath
       seoByPath: (pagePath: string) => `*[_type == "seoMetadata" && pagePath == $pagePath][0] {
         _id,
         pagePath,

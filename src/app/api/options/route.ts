@@ -49,11 +49,11 @@ export async function GET() {
     console.log('Contact Email value:', optionsMap['Contact Email']);
 
     // Return both the map and debug info in development
-    const response: Record<string, any> = { ...optionsMap };
+    const response: Record<string, string | { dataset: string; projectId: string; totalFound: number; contactEmailDirect: typeof contactEmailOption }> = { ...optionsMap };
     if (process.env.NODE_ENV === 'development') {
       response._debug = {
-        dataset,
-        projectId,
+        dataset: dataset ?? '',
+        projectId: projectId ?? '',
         totalFound: allOptions?.length || 0,
         contactEmailDirect: contactEmailOption,
       };
