@@ -8,7 +8,8 @@ import { ArrowRight } from 'lucide-react';
 
 interface ServiceCardProps {
   title: string;
-  image?: string; // image can be missing from CMS
+  /** Image URL, or null when Featured Image is "None", or undefined for placeholder */
+  image?: string | null;
   url: string;
   description?: string;
   index?: number;
@@ -73,18 +74,20 @@ const ServiceCard = ({
       className="group cursor-pointer service-card"
       onClick={handleClick}
     >
-      {/* Service Image */}
-      <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
-        <Image
-          src={imgError || !image ? '/placeholder.jpeg' : (image.startsWith('http') ? image : getAssetPath(image))}
-          alt={title}
-          fill
-          className="object-cover group-hover:scale-115 transition-transform duration-700"
-          onError={() => setImgError(true)}
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      </div>
+      {/* Service Image - omit when image is null (Featured Image: None) */}
+      {image !== null && (
+        <div className="relative aspect-[1.8/1] overflow-hidden mb-6">
+          <Image
+            src={imgError || !image ? '/placeholder.jpeg' : (image.startsWith('http') ? image : getAssetPath(image))}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-115 transition-transform duration-700"
+            onError={() => setImgError(true)}
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        </div>
+      )}
 
       {/* Service Info */}
       <div className="flex flex-col">

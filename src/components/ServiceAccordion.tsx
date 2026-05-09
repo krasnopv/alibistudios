@@ -14,8 +14,8 @@ interface Service {
   title: string;
   slug: string;
   description: string | unknown; // Can be string or rich text object
-  imageUrl: string;
-  imageAlt: string;
+  imageUrl: string | null;
+  imageAlt: string | null;
   subServices: SubService[];
   showInServices?: boolean;
 }
@@ -170,16 +170,18 @@ const ServiceAccordion = ({ services }: ServiceAccordionProps) => {
                       )}
                     </div>
 
-                    {/* Right Column - Service Image (2/3) */}
-                    <div className="lg:col-span-2">
-                      <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden">
-                        <img
-                          src={service.imageUrl}
-                          alt={service.imageAlt}
-                          className="w-full h-full object-cover"
-                        />
+                    {/* Right Column - Service Image (2/3); hidden when Featured Image is None */}
+                    {service.imageUrl && (
+                      <div className="lg:col-span-2">
+                        <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden">
+                          <img
+                            src={service.imageUrl}
+                            alt={service.imageAlt || service.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

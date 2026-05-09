@@ -10,8 +10,8 @@ interface GridItem {
   description?: string;
   subtitle?: string;
   url?: string;
-  imageUrl: string;
-  imageAlt: string;
+  imageUrl: string | null;
+  imageAlt: string | null;
   imageSmall?: string;
   imageMedium?: string;
   imageLarge?: string;
@@ -51,14 +51,12 @@ const ServicesGrid = ({
   }, []);
   
   // Helper function to get optimal image size
-  const getOptimalImage = (item: GridItem, containerWidth: number = 600) => {
-    if (containerWidth <= 300) {
-      return item.imageSmall || item.imageUrl;
-    } else if (containerWidth <= 600) {
-      return item.imageMedium || item.imageUrl;
-    } else {
-      return item.imageLarge || item.imageUrl;
-    }
+  const getOptimalImage = (item: GridItem, containerWidth: number = 600): string | null => {
+    const url = item.imageUrl;
+    if (!url) return null;
+    if (containerWidth <= 300) return item.imageSmall || url;
+    if (containerWidth <= 600) return item.imageMedium || url;
+    return item.imageLarge || url;
   };
   
   // Disable parallax on mobile
@@ -87,7 +85,7 @@ const ServicesGrid = ({
       {sortedData.map((item, index) => {
         // Get optimal image size based on container width
         const containerWidth = isMobile ? 300 : 600;
-        const imageUrl = getOptimalImage(item, containerWidth);
+        const imageUrl = getOptimalImage(item, containerWidth) ?? undefined;
         let url = item.slug ? `/${schemaUrl}/${item.slug}` : `/${schemaUrl}/${item.title.toLowerCase().replace(/\s+/g, '-')}`;
         
         // Add referrer service slug as query parameter if provided

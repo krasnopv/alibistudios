@@ -36,6 +36,9 @@ export async function GET(
         description,
         url,
         features,
+        featuredImageType,
+        featuredImageUrl,
+        featuredImageAlt,
         heroVideo,
         heroVideoLink {
           type,
@@ -46,8 +49,18 @@ export async function GET(
         "heroImageUrl": heroImage.asset->url,
         "heroImageAlt": heroImage.alt,
         image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt,
+        "imageUrl": select(
+          featuredImageType == "none" => null,
+          featuredImageType == "url" => featuredImageUrl,
+          featuredImageType == "Image from URL" => featuredImageUrl,
+          image.asset->url
+        ),
+        "imageAlt": select(
+          featuredImageType == "none" => null,
+          featuredImageType == "url" => featuredImageAlt,
+          featuredImageType == "Image from URL" => featuredImageAlt,
+          image.alt
+        ),
         reels[] {
           type,
           url,
@@ -98,6 +111,18 @@ export async function GET(
 
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
+    }
+
+    // Enforce featured image type (in case GROQ select or CDN is wrong)
+    const featuredType = (service as { featuredImageType?: string }).featuredImageType;
+    const featuredUrl = (service as { featuredImageUrl?: string | null }).featuredImageUrl;
+    const featuredAlt = (service as { featuredImageAlt?: string | null }).featuredImageAlt;
+    if (featuredType === 'none') {
+      (service as { imageUrl?: string | null }).imageUrl = null;
+      (service as { imageAlt?: string | null }).imageAlt = null;
+    } else if (featuredType === 'url' || featuredType === 'Image from URL') {
+      (service as { imageUrl?: string | null }).imageUrl = featuredUrl || null;
+      (service as { imageAlt?: string | null }).imageAlt = featuredAlt ?? null;
     }
 
     // Filter out projects where hideProject is true, preserving the order from Sanity

@@ -58,8 +58,8 @@ interface Service {
   };
   heroImageUrl?: string;
   heroImageAlt?: string;
-  imageUrl?: string;
-  imageAlt?: string;
+  imageUrl?: string | null;
+  imageAlt?: string | null;
   reels?: Reel[];
   projects?: {
     _id: string;

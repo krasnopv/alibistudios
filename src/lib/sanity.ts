@@ -75,16 +75,29 @@ export const queries = {
     "imageAlt": icon.alt
   }`,
 
-  // Get all services
+  // Get all services (featured image: none / upload / url)
   services: `*[_type == "service"] | order(order asc) {
     _id,
     title,
     "slug": slug.current,
     description,
     url,
+    featuredImageType,
+    featuredImageUrl,
+    featuredImageAlt,
     image,
-    "imageUrl": image.asset->url,
-    "imageAlt": image.alt,
+    "imageUrl": select(
+      featuredImageType == "none" => null,
+      featuredImageType == "url" => featuredImageUrl,
+      featuredImageType == "Image from URL" => featuredImageUrl,
+      image.asset->url
+    ),
+    "imageAlt": select(
+      featuredImageType == "none" => null,
+      featuredImageType == "url" => featuredImageAlt,
+      featuredImageType == "Image from URL" => featuredImageAlt,
+      image.alt
+    ),
     subServices[]->{
       _id,
       title,
@@ -120,21 +133,39 @@ export const queries = {
         },
         service->{
           "slug": slug.current
+        },
+        parentService->{
+          _id,
+          title,
+          "slug": slug.current
         }
       }
     }
   }`,
 
-  // Get services for homepage
+  // Get services for homepage (featured image: none / upload / url)
   homepageServices: `*[_type == "service" && defined(featured) && featured == true] | order(featuredOrder asc, order asc) {
     _id,
     title,
     "slug": slug.current,
     description,
     url,
+    featuredImageType,
+    featuredImageUrl,
+    featuredImageAlt,
     image,
-    "imageUrl": image.asset->url,
-    "imageAlt": image.alt,
+    "imageUrl": select(
+      featuredImageType == "none" => null,
+      featuredImageType == "url" => featuredImageUrl,
+      featuredImageType == "Image from URL" => featuredImageUrl,
+      image.asset->url
+    ),
+    "imageAlt": select(
+      featuredImageType == "none" => null,
+      featuredImageType == "url" => featuredImageAlt,
+      featuredImageType == "Image from URL" => featuredImageAlt,
+      image.alt
+    ),
     tags[]->{
       _id,
       name,

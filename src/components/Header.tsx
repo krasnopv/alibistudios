@@ -1,12 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
 import { useMailto } from '@/hooks/useMailto';
 import { useContactEmail } from '@/hooks/useContactEmail';
+
+/** Sidebar expander sub-item (matches Sanity menuSubItem + parentService) */
+type MenuSubItemLocal = {
+  _key: string;
+  label: string;
+  linkType: 'page' | 'service' | 'custom';
+  url?: string;
+  page?: { slug?: string };
+  service?: { slug?: string };
+  parentService?: { title?: string; slug?: string } | null;
+};
 
 const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -29,6 +40,7 @@ const Header = () => {
         url?: string;
         page?: { slug?: string };
         service?: { slug?: string };
+        parentService?: { title?: string; slug?: string } | null;
       }>;
     }>;
   } | null>(null);
@@ -302,6 +314,188 @@ const Header = () => {
     </div>
   );
 
+  const renderSubMenuLink = (sub: MenuSubItemLocal) => {
+    const subKey = sub._key;
+    const label = sub.label;
+
+    if (sub.linkType === 'custom' && sub.url) {
+      if (sub.url === '#films') {
+        return (
+          <Link
+            key={subKey}
+            href="/#films"
+            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={handleFilmsClick}
+          >
+            {renderMenuLabel(label)}
+          </Link>
+        );
+      }
+      if (sub.url === '#services') {
+        return (
+          <Link
+            key={subKey}
+            href="/#services"
+            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={handleServicesClick}
+          >
+            {renderMenuLabel(label)}
+          </Link>
+        );
+      }
+      if (sub.url === '#footer') {
+        return (
+          <a
+            key={subKey}
+            href="#footer"
+            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={handleContactUsClick}
+          >
+            {renderMenuLabel(label)}
+          </a>
+        );
+      }
+
+      if (sub.url.startsWith('/')) {
+        return (
+          <Link
+            key={subKey}
+            href={sub.url}
+            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={handleMenuItemClick}
+          >
+            {renderMenuLabel(label)}
+          </Link>
+        );
+      }
+
+      return (
+        <a
+          key={subKey}
+          href={sub.url}
+          className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+          style={{ cursor: 'pointer' }}
+          onClick={handleMenuItemClick}
+        >
+          {renderMenuLabel(label)}
+        </a>
+      );
+    }
+
+    if (sub.linkType === 'page') {
+      const href = resolvePageHref(sub.page?.slug);
+      return (
+        <Link
+          key={subKey}
+          href={href}
+          className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+          style={{ cursor: 'pointer' }}
+          onClick={handleMenuItemClick}
+        >
+          {renderMenuLabel(label)}
+        </Link>
+      );
+    }
+
+    if (sub.linkType === 'service') {
+      const href = resolveServiceHref(sub.service?.slug);
+      return (
+        <Link
+          key={subKey}
+          href={href}
+          className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+          style={{ cursor: 'pointer' }}
+          onClick={handleMenuItemClick}
+        >
+          {renderMenuLabel(label)}
+        </Link>
+      );
+    }
+
+    return null;
+  };
+
+  /**
+   * Groups sub-items by parentService (slug). If a sub-item without parentService is already a
+   * service link to that slug, it becomes the parent row once — children render indented below it.
+   * Otherwise a synthetic parent link is used (parent title from CMS reference).
+   */
+  const renderGroupedExpanderSubItems = (subItems: MenuSubItemLocal[]) => {
+    const byParentSlug = new Map<string, MenuSubItemLocal[]>();
+    for (const sub of subItems) {
+      const slug = sub.parentService?.slug;
+      if (!slug) continue;
+      const list = byParentSlug.get(slug);
+      if (list) list.push(sub);
+      else byParentSlug.set(slug, [sub]);
+    }
+
+    /** Sub-item rows that serve as the parent link (same service slug, no parentService) — skip duplicate ungrouped render. */
+    const explicitParentBySlug = new Map<string, MenuSubItemLocal | null>();
+    for (const slug of byParentSlug.keys()) {
+      const hit = subItems.find(
+        (s) =>
+          !s.parentService?.slug &&
+          s.linkType === 'service' &&
+          s.service?.slug === slug
+      );
+      explicitParentBySlug.set(slug, hit ?? null);
+    }
+
+    const skipUngroupedKeys = new Set<string>();
+    for (const row of explicitParentBySlug.values()) {
+      if (row) skipUngroupedKeys.add(row._key);
+    }
+
+    const renderedParentSlug = new Set<string>();
+    const out: ReactNode[] = [];
+
+    for (const sub of subItems) {
+      const slug = sub.parentService?.slug;
+      if (!slug) {
+        if (skipUngroupedKeys.has(sub._key)) continue;
+        const node = renderSubMenuLink(sub);
+        if (node) out.push(node);
+        continue;
+      }
+
+      if (renderedParentSlug.has(slug)) continue;
+      renderedParentSlug.add(slug);
+
+      const explicitParent = explicitParentBySlug.get(slug) ?? null;
+      const children = byParentSlug.get(slug) ?? [];
+
+      const parentRow =
+        explicitParent != null ? (
+          renderSubMenuLink(explicitParent)
+        ) : (
+          <Link
+            key={`parent-synthetic-${slug}`}
+            href={resolveServiceHref(slug)}
+            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={handleMenuItemClick}
+          >
+            {renderMenuLabel(sub.parentService!.title?.trim() || slug)}
+          </Link>
+        );
+
+      out.push(
+        <div key={`parent-group-${slug}`} className="flex flex-col w-full">
+          {parentRow}
+          <div className="flex flex-col pl-6">
+            {children.map((child) => renderSubMenuLink(child))}
+          </div>
+        </div>
+      );
+    }
+
+    return out;
+  };
 
   return (
     <>
@@ -388,7 +582,7 @@ const Header = () => {
         />
         {/* Sidebar */}
         <div 
-          className={`absolute top-0 left-0 bg-white transform w-full md:w-[428px] h-full z-20 ${
+          className={`absolute top-0 left-0 bg-white transform w-full md:w-[450px] h-full z-20 ${
             isMenuOpen ? 'sidebar-slide-in' : 'sidebar-slide-out'
           }`} 
           style={{
@@ -484,110 +678,9 @@ const Header = () => {
                      style={{ overflow: 'hidden' }}
                    >
                      <div className="flex flex-col pl-6">
-                              {item.subItems.map((sub) => {
-                                const subKey = sub._key;
-                                const label = sub.label;
-
-                                if (sub.linkType === 'custom' && sub.url) {
-                                  if (sub.url === '#films') {
-                                    return (
-                                      <Link
-                                        key={subKey}
-                                        href="/#films"
-                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={handleFilmsClick}
-                                      >
-                                        {renderMenuLabel(label)}
-                                      </Link>
-                                    );
-                                  }
-                                  if (sub.url === '#services') {
-                                    return (
-                                      <Link
-                                        key={subKey}
-                                        href="/#services"
-                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={handleServicesClick}
-                                      >
-                                        {renderMenuLabel(label)}
-                                      </Link>
-                                    );
-                                  }
-                                  if (sub.url === '#footer') {
-                                    return (
-                                      <a
-                                        key={subKey}
-                                        href="#footer"
-                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={handleContactUsClick}
-                                      >
-                                        {renderMenuLabel(label)}
-                                      </a>
-                                    );
-                                  }
-
-                                  if (sub.url.startsWith('/')) {
-                                    return (
-                                      <Link
-                                        key={subKey}
-                                        href={sub.url}
-                                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={handleMenuItemClick}
-                                      >
-                                        {renderMenuLabel(label)}
-                                      </Link>
-                                    );
-                                  }
-
-                                  return (
-                                    <a
-                                      key={subKey}
-                                      href={sub.url}
-                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={handleMenuItemClick}
-                                    >
-                                      {renderMenuLabel(label)}
-                                    </a>
-                                  );
-                                }
-
-                                if (sub.linkType === 'page') {
-                                  const href = resolvePageHref(sub.page?.slug);
-                                  return (
-                                    <Link
-                                      key={subKey}
-                                      href={href}
-                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={handleMenuItemClick}
-                                    >
-                                      {renderMenuLabel(label)}
-                 </Link>
-                                  );
-                                }
-
-                                if (sub.linkType === 'service') {
-                                  const href = resolveServiceHref(sub.service?.slug);
-                                  return (
-                                    <Link
-                                      key={subKey}
-                                      href={href}
-                                      className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={handleMenuItemClick}
-                                    >
-                                      {renderMenuLabel(label)}
-               </Link>
-                                  );
-                                }
-
-                                return null;
-                              })}
+                              {renderGroupedExpanderSubItems(
+                                item.subItems as MenuSubItemLocal[]
+                              )}
                      </div>
                    </motion.div>
                  )}

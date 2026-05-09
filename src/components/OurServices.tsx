@@ -14,8 +14,8 @@ interface Service {
   title: string;
   slug: string;
   description: string | unknown;
-  imageUrl: string;
-  imageAlt: string;
+  imageUrl: string | null;
+  imageAlt: string | null;
   subServices: SubService[];
   showInServices?: boolean;
 }
