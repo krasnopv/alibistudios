@@ -224,8 +224,16 @@ const Hero = ({
     return null;
   }
 
+  /** Taller hero on homepage only (matches pageSlug home / '/') */
+  const maxHeroVh = actualSlug === 'home' ? 85 : 75;
+  const maxHeroPx = `${maxHeroVh}vh` as const;
+
   return (
-    <div id="hero" className={`relative w-screen overflow-hidden max-h-[75vh] landscape:max-h-[75vh] ${className}`}>
+    <div
+      id="hero"
+      className={`relative w-screen overflow-hidden ${className}`}
+      style={{ maxHeight: maxHeroPx }}
+    >
       {/* Preloader - Use Hero Video Poster (pages) or Hero Image (services) if available, otherwise Layer_1.svg */}
       {isLoading && isSanityVideo && (
         <div 
@@ -246,7 +254,7 @@ const Hero = ({
                 style={{
                   aspectRatio: '16/9',
                   minHeight: '400px',
-                  maxHeight: '75vh',
+                  maxHeight: maxHeroPx,
                   objectFit: 'cover'
                 }}
                 onError={() => {
@@ -275,11 +283,11 @@ const Hero = ({
           isEmbeddable ? (
             // Embedded video (Vimeo/YouTube) - fullwidth and fullheight to match video element
             <div 
-              className="w-full block landscape:max-h-[75vh] relative overflow-hidden"
+              className="w-full block relative overflow-hidden"
               style={{
                 aspectRatio: '16/9',
                 minHeight: '400px',
-                maxHeight: '75vh',
+                maxHeight: maxHeroPx,
                 margin: 0,
                 padding: 0
               }}
@@ -327,11 +335,11 @@ const Hero = ({
               loop
               muted={isMuted}
               playsInline
-              className="w-full block landscape:max-h-[75vh]"
+              className="w-full block"
               style={{
                 aspectRatio: '16/9',
                 minHeight: '400px',
-                maxHeight: '75vh',
+                maxHeight: maxHeroPx,
                 margin: 0,
                 padding: 0,
                 objectFit: 'cover'
@@ -345,11 +353,11 @@ const Hero = ({
           <img
             src={heroData.posterUrl}
             alt={heroData.title || 'Hero image'}
-            className="w-full block landscape:max-h-[75vh]"
+            className="w-full block"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
-              maxHeight: '75vh',
+              maxHeight: maxHeroPx,
               margin: 0,
               padding: 0,
               objectFit: 'cover'
@@ -358,11 +366,11 @@ const Hero = ({
         ) : (
           // Show nothing when no Sanity media
           <div 
-            className="w-full bg-transparent landscape:max-h-[75vh]"
+            className="w-full bg-transparent"
             style={{
               aspectRatio: '16/9',
               minHeight: '400px',
-              maxHeight: '75vh',
+              maxHeight: maxHeroPx,
               margin: 0,
               padding: 0
             }}
