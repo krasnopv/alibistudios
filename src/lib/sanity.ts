@@ -108,7 +108,7 @@ export const queries = {
     showInServices
   }`,
 
-  // Get primary menu (first menu document)
+  // Nested menuSubItem (expander → subItems) projected to depth 6 for GROQ
   menu: `*[_type == "menu"][0]{
     _id,
     title,
@@ -138,6 +138,51 @@ export const queries = {
           _id,
           title,
           "slug": slug.current
+        },
+        subItems[]{
+          _key,
+          label,
+          linkType,
+          url,
+          page->{ "slug": slug.current },
+          service->{ "slug": slug.current },
+          parentService->{ _id, title, "slug": slug.current },
+          subItems[]{
+            _key,
+            label,
+            linkType,
+            url,
+            page->{ "slug": slug.current },
+            service->{ "slug": slug.current },
+            parentService->{ _id, title, "slug": slug.current },
+            subItems[]{
+              _key,
+              label,
+              linkType,
+              url,
+              page->{ "slug": slug.current },
+              service->{ "slug": slug.current },
+              parentService->{ _id, title, "slug": slug.current },
+              subItems[]{
+                _key,
+                label,
+                linkType,
+                url,
+                page->{ "slug": slug.current },
+                service->{ "slug": slug.current },
+                parentService->{ _id, title, "slug": slug.current },
+                subItems[]{
+                  _key,
+                  label,
+                  linkType,
+                  url,
+                  page->{ "slug": slug.current },
+                  service->{ "slug": slug.current },
+                  parentService->{ _id, title, "slug": slug.current }
+                }
+              }
+            }
+          }
         }
       }
     }

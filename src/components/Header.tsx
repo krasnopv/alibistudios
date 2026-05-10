@@ -8,15 +8,16 @@ import { getAssetPath } from '@/lib/assets';
 import { useMailto } from '@/hooks/useMailto';
 import { useContactEmail } from '@/hooks/useContactEmail';
 
-/** Sidebar expander sub-item (matches Sanity menuSubItem + parentService) */
+/** Sidebar menuSubItem (Sanity): links, nested expanders, optional parentService grouping */
 type MenuSubItemLocal = {
   _key: string;
   label: string;
-  linkType: 'page' | 'service' | 'custom';
+  linkType: 'page' | 'service' | 'custom' | 'expander';
   url?: string;
   page?: { slug?: string };
   service?: { slug?: string };
   parentService?: { title?: string; slug?: string } | null;
+  subItems?: MenuSubItemLocal[];
 };
 
 const Header = () => {
@@ -33,18 +34,12 @@ const Header = () => {
       url?: string;
       page?: { slug?: string };
       service?: { slug?: string };
-      subItems?: Array<{
-        _key: string;
-        label: string;
-        linkType: 'page' | 'service' | 'custom';
-        url?: string;
-        page?: { slug?: string };
-        service?: { slug?: string };
-        parentService?: { title?: string; slug?: string } | null;
-      }>;
+      subItems?: MenuSubItemLocal[];
     }>;
   } | null>(null);
   const [expandedMenuItemKey, setExpandedMenuItemKey] = useState<string | null>(null);
+  /** Open nested expanders under a top-level menu item; key `${topKey}/${ancestor...}/${expandKey}` */
+  const [nestedExpandedKeys, setNestedExpandedKeys] = useState<string[]>([]);
   const { email } = useContactEmail();
   const { handleMailtoClick, copied } = useMailto(email);
 
@@ -213,6 +208,7 @@ const Header = () => {
 
   const handleMenuClose = () => {
     if (isMenuOpen) {
+      setNestedExpandedKeys([]);
       // Start slide-out animation immediately
       setIsMenuOpen(false);
       // Hide sidebar after animation completes
@@ -221,6 +217,16 @@ const Header = () => {
       }, 400);
     }
   };
+
+  const toggleNestedExpandedKey = (fullKey: string) => {
+    setNestedExpandedKeys((prev) =>
+      prev.includes(fullKey) ? prev.filter((k) => k !== fullKey) : [...prev, fullKey]
+    );
+  };
+
+  /** Stable id for nested +/−: top menu item key + ancestor expander _keys + this expander's _key. */
+  const nestedExpanderStableKey = (topMenuItemKey: string, pathSegmentsIncludingSelf: readonly string[]) =>
+    [topMenuItemKey, ...pathSegmentsIncludingSelf].join('/');
 
   const handleMenuItemClick = () => {
     handleMenuClose();
@@ -419,12 +425,80 @@ const Header = () => {
     return null;
   };
 
+  /** One sub row: nested expander or leaf link (supports grouping via renderGroupedExpanderSubItems). */
+  function renderNestedSubMenuRow(
+    topMenuItemKey: string,
+    ancestorExpandPath: readonly string[],
+    sub: MenuSubItemLocal
+  ): ReactNode {
+    if (sub.linkType === 'expander') {
+      const nk = nestedExpanderStableKey(topMenuItemKey, [...ancestorExpandPath, sub._key]);
+      const isExpanded = nestedExpandedKeys.includes(nk);
+      const nested = sub.subItems ?? [];
+
+      return (
+        <div key={sub._key} className="w-full">
+          <button
+            type="button"
+            className="w-full inline-flex justify-start items-center gap-2.5 menu-item-hover"
+            style={{ cursor: 'pointer' }}
+            onClick={() => toggleNestedExpandedKey(nk)}
+          >
+            <div
+              className="relative justify-center text-[20px] md:text-[28px] inline-flex items-center gap-8"
+              style={{
+                color: '#000',
+                fontFamily: 'Plus Jakarta Sans',
+                fontStyle: 'normal',
+                fontWeight: 400,
+              }}
+            >
+              <span className="menu-label-text">{sub.label}</span>
+              <span
+                className="text-[18px] md:text-[24px] menu-expander-symbol"
+                style={{
+                  color: '#000',
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontStyle: 'normal',
+                  fontWeight: 300,
+                  textDecoration: 'none',
+                }}
+              >
+                {isExpanded ? '−' : '+'}
+              </span>
+              <br />
+            </div>
+          </button>
+          <AnimatePresence>
+            {isExpanded && nested.length > 0 && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div className="flex flex-col pl-6">
+                  {renderGroupedExpanderSubItems(topMenuItemKey, [...ancestorExpandPath, sub._key], nested)}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    }
+
+    return renderSubMenuLink(sub);
+  }
+
   /**
-   * Groups sub-items by parentService (slug). If a sub-item without parentService is already a
-   * service link to that slug, it becomes the parent row once — children render indented below it.
-   * Otherwise a synthetic parent link is used (parent title from CMS reference).
+   * Groups sub-items by parentService (slug). Supports nested expanders via renderNestedSubMenuRow.
    */
-  const renderGroupedExpanderSubItems = (subItems: MenuSubItemLocal[]) => {
+  function renderGroupedExpanderSubItems(
+    topMenuItemKey: string,
+    ancestorExpandPath: readonly string[],
+    subItems: MenuSubItemLocal[]
+  ): ReactNode[] {
     const byParentSlug = new Map<string, MenuSubItemLocal[]>();
     for (const sub of subItems) {
       const slug = sub.parentService?.slug;
@@ -434,7 +508,6 @@ const Header = () => {
       else byParentSlug.set(slug, [sub]);
     }
 
-    /** Sub-item rows that serve as the parent link (same service slug, no parentService) — skip duplicate ungrouped render. */
     const explicitParentBySlug = new Map<string, MenuSubItemLocal | null>();
     for (const slug of byParentSlug.keys()) {
       const hit = subItems.find(
@@ -458,7 +531,7 @@ const Header = () => {
       const slug = sub.parentService?.slug;
       if (!slug) {
         if (skipUngroupedKeys.has(sub._key)) continue;
-        const node = renderSubMenuLink(sub);
+        const node = renderNestedSubMenuRow(topMenuItemKey, ancestorExpandPath, sub);
         if (node) out.push(node);
         continue;
       }
@@ -471,10 +544,10 @@ const Header = () => {
 
       const parentRow =
         explicitParent != null ? (
-          renderSubMenuLink(explicitParent)
+          renderNestedSubMenuRow(topMenuItemKey, ancestorExpandPath, explicitParent)
         ) : (
           <Link
-            key={`parent-synthetic-${slug}`}
+            key={`parent-synthetic-${slug}-${topMenuItemKey}`}
             href={resolveServiceHref(slug)}
             className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
             style={{ cursor: 'pointer' }}
@@ -485,17 +558,17 @@ const Header = () => {
         );
 
       out.push(
-        <div key={`parent-group-${slug}`} className="flex flex-col w-full">
+        <div key={`parent-group-${slug}-${topMenuItemKey}`} className="flex flex-col w-full">
           {parentRow}
           <div className="flex flex-col pl-6">
-            {children.map((child) => renderSubMenuLink(child))}
+            {children.map((child) => renderNestedSubMenuRow(topMenuItemKey, ancestorExpandPath, child))}
           </div>
         </div>
       );
     }
 
     return out;
-  };
+  }
 
   return (
     <>
@@ -679,6 +752,8 @@ const Header = () => {
                    >
                      <div className="flex flex-col pl-6">
                               {renderGroupedExpanderSubItems(
+                                key,
+                                [],
                                 item.subItems as MenuSubItemLocal[]
                               )}
                      </div>
