@@ -226,8 +226,8 @@ export const queries = {
     country
   }`,
 
-  // Get all team members
-  teamMembers: `*[_type == "teamMember"] | order(order asc) {
+  // Get visible team members (legacy docs without show remain visible)
+  teamMembers: `*[_type == "teamMember" && coalesce(show, true) == true] | order(order asc) {
     _id,
     name,
     role,
@@ -304,8 +304,8 @@ export const queries = {
         }
       }`,
 
-      // Get all team members
-      team: `*[_type == "teamMember"] | order(order asc, _createdAt asc) {
+      // Visible team members only (missing show field = visible)
+      team: `*[_type == "teamMember" && coalesce(show, true) == true] | order(order asc, _createdAt asc) {
         _id,
         fullName,
         role,
