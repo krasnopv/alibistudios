@@ -12,6 +12,7 @@ import Films from '@/components/Films';
 import GetInTouch from '@/components/GetInTouch';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
+import { PortableTextBlock } from '@portabletext/react';
 
 interface Page {
   _id: string;
@@ -25,12 +26,12 @@ interface Page {
     subtitle?: string;
     enabled?: boolean;
     hide?: boolean;
-    copy?: unknown[];
+    copy?: PortableTextBlock[];
     description?: unknown[];
     buttonText?: string;
     email?: string;
     url?: {
-      type: 'internal' | 'external';
+      type: 'none' | 'internal' | 'external';
       internalPage?: { 
         _id: string;
         slug: string;

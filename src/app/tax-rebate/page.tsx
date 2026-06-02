@@ -28,12 +28,12 @@ interface Page {
     _type: string;
     sectionId?: string;
     title?: string | unknown[];
-    copy?: unknown[];
+    copy?: PortableTextBlock[];
     description?: unknown[];
     buttonText?: string;
     email?: string;
     url?: {
-      type: 'internal' | 'external';
+      type: 'none' | 'internal' | 'external';
       internalPage?: {
         _id: string;
         slug: string;
