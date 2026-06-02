@@ -1,7 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { PortableText, PortableTextBlock } from '@portabletext/react';
 import ServiceAccordion from '@/components/ServiceAccordion';
+
+const portableTextListClasses =
+  '[&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-4 [&_ol]:space-y-2 [&_p]:mb-4 [&_p:last-child]:mb-0';
+
+function CopyContent({ copy }: { copy: PortableTextBlock[] }) {
+  return (
+    <div className={portableTextListClasses}>
+      <PortableText value={copy} />
+    </div>
+  );
+}
 
 interface SubService {
   _id: string;
@@ -23,9 +35,9 @@ interface Service {
 interface TextSectionProps {
   sectionId?: string;
   title?: string;
-  copy?: unknown[];
+  copy?: PortableTextBlock[];
   url?: {
-    type: 'internal' | 'external';
+    type: 'none' | 'internal' | 'external';
     internalPage?: { 
       _id: string;
       slug: string;
@@ -39,6 +51,10 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
   const [loading, setLoading] = useState(true);
   const isOurServicesSection = sectionId === 'services';
   const isOurTeamSection = sectionId === 'our-team';
+  const hasUrlLink = Boolean(
+    (url?.type === 'internal' && url.internalPage) ||
+    (url?.type === 'external' && url.externalUrl)
+  );
 
   useEffect(() => {
     if (isOurServicesSection) {
@@ -66,7 +82,7 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="row">
           {/* Content - Basic text rendering with arrow at the end */}
-          {isOurTeamSection && url ? (
+          {isOurTeamSection && hasUrlLink && url ? (
             url.type === 'internal' && url.internalPage ? (
               <a 
                 href={`/${url.internalPage.slug}`}
@@ -82,28 +98,17 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                 )}
                 {copy && copy.length > 0 && (
                   <div className={isOurServicesSection ? "mb-8" : ""}>
-                    <h6 className="display_h6">
-                      {copy.map((block: unknown, index: number) => {
-                        const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
-                        if (blockObj._type === 'block' && blockObj.children) {
-                          return blockObj.children.map((child: { text?: string }, childIndex: number) => (
-                            <span key={`${index}-${childIndex}`}>
-                              {child.text}
-                              {childIndex < blockObj.children!.length - 1 && <br />}
-                            </span>
-                          ));
-                        }
-                        return null;
-                      })}
+                    <div className="display_h6">
+                      <CopyContent copy={copy} />
                       {' '}
                       <span className="text-black group-hover:text-[#FF0066] group-hover:underline transition-colors duration-200">Meet our Team →</span>
-                    </h6>
+                    </div>
                   </div>
                 )}
               </a>
-            ) : url.type === 'external' && url.externalUrl ? (
+            ) : (
               <a 
-                href={url.externalUrl}
+                href={url.externalUrl!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block cursor-pointer group"
@@ -118,56 +123,14 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                 )}
                 {copy && copy.length > 0 && (
                   <div className={isOurServicesSection ? "mb-8" : ""}>
-                    <h6 className="display_h6">
-                      {copy.map((block: unknown, index: number) => {
-                        const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
-                        if (blockObj._type === 'block' && blockObj.children) {
-                          return blockObj.children.map((child: { text?: string }, childIndex: number) => (
-                            <span key={`${index}-${childIndex}`}>
-                              {child.text}
-                              {childIndex < blockObj.children!.length - 1 && <br />}
-                            </span>
-                          ));
-                        }
-                        return null;
-                      })}
+                    <div className="display_h6">
+                      <CopyContent copy={copy} />
                       {' '}
                       <span className="text-black group-hover:text-[#FF0066] group-hover:underline transition-colors duration-200">Meet our Team →</span>
-                    </h6>
+                    </div>
                   </div>
                 )}
               </a>
-            ) : (
-              <>
-                {/* Title */}
-                {title && (
-                  <div className="mb-4">
-                    <h1 className="display_h1 brand-color">
-                      {title}
-                    </h1>
-                  </div>
-                )}
-                {copy && copy.length > 0 && (
-                  <div className={isOurServicesSection ? "mb-8" : ""}>
-                    <h6 className="display_h6">
-                      {copy.map((block: unknown, index: number) => {
-                        const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
-                        if (blockObj._type === 'block' && blockObj.children) {
-                          return blockObj.children.map((child: { text?: string }, childIndex: number) => (
-                            <span key={`${index}-${childIndex}`}>
-                              {child.text}
-                              {childIndex < blockObj.children!.length - 1 && <br />}
-                            </span>
-                          ));
-                        }
-                        return null;
-                      })}
-                      {' '}
-                      <span className="text-black">Meet our Team →</span>
-                    </h6>
-                  </div>
-                )}
-              </>
             )
           ) : (
             <>
@@ -181,20 +144,9 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
               )}
               {copy && copy.length > 0 && (
                 <div className={isOurServicesSection ? "mb-8" : ""}>
-                  <h6 className="display_h6">
-                    {copy.map((block: unknown, index: number) => {
-                      const blockObj = block as { _type?: string; children?: Array<{ text?: string }> };
-                      if (blockObj._type === 'block' && blockObj.children) {
-                        return blockObj.children.map((child: { text?: string }, childIndex: number) => (
-                          <span key={`${index}-${childIndex}`}>
-                            {child.text}
-                            {childIndex < blockObj.children!.length - 1 && <br />}
-                          </span>
-                        ));
-                      }
-                      return null;
-                    })}
-                    {url && !isOurServicesSection && (
+                  <div className="display_h6">
+                    <CopyContent copy={copy} />
+                    {hasUrlLink && !isOurServicesSection && !isOurTeamSection && url && (
                       url.type === 'internal' && url.internalPage ? (
                         <a 
                           href={`/${url.internalPage.slug}`}
@@ -202,20 +154,18 @@ const TextSection = ({ sectionId, title, copy, url }: TextSectionProps) => {
                         >
                           {' →'}
                         </a>
-                      ) : url.type === 'external' && url.externalUrl ? (
+                      ) : (
                         <a 
-                          href={url.externalUrl}
+                          href={url.externalUrl!}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-black hover:underline"
                         >
                           {' →'}
                         </a>
-                      ) : (
-                        ' →'
                       )
                     )}
-                  </h6>
+                  </div>
                 </div>
               )}
             </>
