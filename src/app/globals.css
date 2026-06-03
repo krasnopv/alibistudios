@@ -392,6 +392,18 @@ h2 {
   display: none;
 }
 
+/* Text Section: CMS class hooks (e.g. Class field ".services-list") */
+.services-list p,
+.services-list li {
+  margin-block: 0 !important;
+  padding-block: calc(var(--spacing) * 4);
+}
+
+.services-list ul,
+.services-list ol {
+  margin-block: 0 !important;
+}
+
 /* Brand Color */
 .brand-color {
   color: #FF0066;

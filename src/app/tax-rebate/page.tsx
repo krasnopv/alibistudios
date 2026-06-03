@@ -29,6 +29,7 @@ interface Page {
     sectionId?: string;
     title?: string | unknown[];
     copy?: PortableTextBlock[];
+    class?: string;
     description?: unknown[];
     buttonText?: string;
     email?: string;
@@ -356,7 +357,7 @@ export default function TaxRebate() {
               return <ThumbnailSection key={index} sectionId={section.sectionId} schemaType={section.schemaType} filters={section.filters} enableParallax={true} />;
             
             case 'textSection':
-              return <TextSection key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} url={section.url} />;
+              return <TextSection key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} copy={section.copy} sectionClass={section.class} url={section.url} />;
             
             case 'filmsSection':
               return section.enabled ? <Films key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
