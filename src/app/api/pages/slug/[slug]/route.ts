@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { client } from '@/lib/sanity';
+import { client, pageContentProjection } from '@/lib/sanity';
 import { getEmbedUrl, isEmbeddableVideo } from '@/lib/videoUtils';
 
 export const dynamic = 'force-dynamic';
@@ -31,16 +31,7 @@ export async function GET(
         "posterUrl": heroVideoPoster.asset->url,
         heroTitle,
         heroSubtitle,
-        content[] {
-          ...,
-          url {
-            ...,
-            internalPage->{
-              _id,
-              "slug": slug.current
-            }
-          }
-        },
+        ${pageContentProjection},
         seoImage,
         "seoImageUrl": seoImage.asset->url,
         publishedAt,

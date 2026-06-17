@@ -22,6 +22,39 @@ export const urlFor = (source: unknown) => {
   return builder.image(source)
 }
 
+/** GROQ projection for dereferenced carousel documents */
+export const carouselProjection = `{
+  _id,
+  title,
+  heading,
+  layout,
+  cardsPerView,
+  scrolling,
+  autoPlayDelay,
+  slides[] {
+    _key,
+    usePlaceholder,
+    caption,
+    imageAlignHorizontal,
+    imageAlignVertical,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt
+  }
+}`
+
+/** GROQ fragment for page content[] with carousel dereferencing */
+export const pageContentProjection = `content[] {
+  ...,
+  url {
+    ...,
+    internalPage->{
+      _id,
+      "slug": slug.current
+    }
+  },
+  carousel->${carouselProjection}
+}`
+
 // GROQ queries for fetching data
 export const queries = {
   // Get all films with category data
@@ -253,7 +286,7 @@ export const queries = {
     image,
     heroTitle,
     heroSubtitle,
-    content,
+    ${pageContentProjection},
     seoImage,
     publishedAt,
     isPublished,

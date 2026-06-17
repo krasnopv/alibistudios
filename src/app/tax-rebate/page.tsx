@@ -7,6 +7,7 @@ import CTASection from '@/components/CTASection';
 import ThumbnailSection from '@/components/ThumbnailSection';
 import Films from '@/components/Films';
 import Awards from '@/components/Awards';
+import Carousel, { CarouselData } from '@/components/Carousel';
 import RebateSection from '@/components/RebateSection';
 import ScrollableCategories from '@/components/ScrollableCategories';
 import GetInTouch from '@/components/GetInTouch';
@@ -49,6 +50,7 @@ interface Page {
     enabled?: boolean;
     hide?: boolean;
     subtitle?: string;
+    carousel?: CarouselData | null;
   }>;
 }
 
@@ -364,6 +366,9 @@ export default function TaxRebate() {
             
             case 'awardsSection':
               return section.enabled ? <Awards key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+            
+            case 'carouselSection':
+              return <Carousel key={index} sectionId={section.sectionId} carousel={section.carousel} />;
             
             case 'pageTitleSection':
               return section.enabled && pageData.title ? (

@@ -9,6 +9,7 @@ import TextSection from '@/components/TextSection';
 import OurServices from '@/components/OurServices';
 import Awards from '@/components/Awards';
 import Films from '@/components/Films';
+import Carousel, { CarouselData } from '@/components/Carousel';
 import GetInTouch from '@/components/GetInTouch';
 import BlockContent from '@sanity/block-content-to-react';
 import { serializers } from '@/lib/serializers';
@@ -44,6 +45,7 @@ interface Page {
       featured?: boolean;
       limit?: number;
     };
+    carousel?: CarouselData | null;
   }>;
 }
 
@@ -96,6 +98,9 @@ export default function Home() {
             
             case 'awardsSection':
               return section.enabled ? <Awards key={index} sectionId={section.sectionId} title={typeof section.title === 'string' ? section.title : undefined} subtitle={section.subtitle} /> : null;
+            
+            case 'carouselSection':
+              return <Carousel key={index} sectionId={section.sectionId} carousel={section.carousel} />;
             
             case 'pageTitleSection':
               return section.enabled && pageData.title ? (
