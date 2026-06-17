@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface CarouselSlide {
@@ -78,6 +78,7 @@ function BrandTriangleOutline({ className = 'h-20 w-auto md:h-28' }: { className
         d="M88.602 52 L2 2 L2 102 Z"
         fill="none"
         stroke="#FF0066"
+        strokeOpacity={0.35}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -86,50 +87,48 @@ function BrandTriangleOutline({ className = 'h-20 w-auto md:h-28' }: { className
   );
 }
 
-function CarouselSlideContent({ slide }: { slide: CarouselSlide }) {
-  const captionClassName =
-    'heading_h3 mt-4 px-1 !text-black transition-colors duration-200 group-hover:!text-[#FF0066]';
+const captionClassName = (isHovered: boolean) =>
+  `heading_h3 px-1 transition-colors duration-200 ${
+    isHovered ? '!text-[#FF0066]' : '!text-black'
+  }`;
 
+function CarouselSlideImage({ slide }: { slide: CarouselSlide }) {
   if (slide.usePlaceholder) {
     return (
-      <div className="flex h-full w-full flex-col">
-        <div className="relative flex aspect-[16/9] w-full items-center justify-center overflow-hidden bg-white">
-          <BrandTriangleOutline />
-        </div>
-        {slide.caption && (
-          <p className={captionClassName}>{slide.caption}</p>
-        )}
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-white">
+        <BrandTriangleOutline />
       </div>
     );
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#F8F9FA]">
-        {slide.imageUrl ? (
-          <>
-            <img
-              src={slide.imageUrl}
-              alt={slide.imageAlt || slide.caption || 'Carousel slide'}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              style={{ objectPosition: getImageObjectPosition(slide) }}
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-              aria-hidden
-            />
-          </>
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <p className="heading_h3 text-gray-500">No image</p>
-          </div>
-        )}
-      </div>
-      {slide.caption && (
-        <p className={captionClassName}>{slide.caption}</p>
+    <div className="relative h-full w-full overflow-hidden bg-[#F8F9FA]">
+      {slide.imageUrl ? (
+        <>
+          <img
+            src={slide.imageUrl}
+            alt={slide.imageAlt || slide.caption || 'Carousel slide'}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            style={{ objectPosition: getImageObjectPosition(slide) }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+            aria-hidden
+          />
+        </>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <p className="heading_h3 text-gray-500">No image</p>
+        </div>
       )}
     </div>
   );
+}
+
+function CarouselSlideCaption({ slide, isHovered }: { slide: CarouselSlide; isHovered: boolean }) {
+  if (!slide.caption) return null;
+
+  return <p className={captionClassName(isHovered)}>{slide.caption}</p>;
 }
 
 const Carousel = ({ sectionId, carousel }: CarouselProps) => {
@@ -144,7 +143,11 @@ const Carousel = ({ sectionId, carousel }: CarouselProps) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [hoveredTrackIndex, setHoveredTrackIndex] = useState<number | null>(null);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const SWIPE_THRESHOLD_PX = 50;
 
   const isInfiniteAuto = scrolling === 'auto' && slides.length > 1;
   const canAutoScroll = slides.length > visibleCount;
@@ -180,8 +183,26 @@ const Carousel = ({ sectionId, carousel }: CarouselProps) => {
   }, [isInfiniteAuto, maxIndex]);
 
   const goPrev = useCallback(() => {
+    if (isInfiniteAuto) {
+      setCurrentIndex((index) => {
+        if (index > 0) return index - 1;
+        setTransitionEnabled(false);
+        return slides.length;
+      });
+      return;
+    }
     setCurrentIndex((index) => (index <= 0 ? maxIndex : index - 1));
-  }, [maxIndex]);
+  }, [isInfiniteAuto, maxIndex, slides.length]);
+
+  useEffect(() => {
+    if (!isInfiniteAuto || transitionEnabled || currentIndex !== slides.length) return;
+
+    const frame = requestAnimationFrame(() => {
+      setTransitionEnabled(true);
+      setCurrentIndex(slides.length - 1);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isInfiniteAuto, transitionEnabled, currentIndex, slides.length]);
 
   const handleTrackTransitionEnd = useCallback(
     (event: React.TransitionEvent<HTMLDivElement>) => {
@@ -218,6 +239,38 @@ const Carousel = ({ sectionId, carousel }: CarouselProps) => {
     return () => window.clearInterval(interval);
   }, [scrolling, canAutoScroll, isPaused, autoPlayDelay, goNext]);
 
+  const handleTouchStart = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
+    if (!canAutoScroll) return;
+
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    setIsPaused(true);
+  }, [canAutoScroll]);
+
+  const handleTouchEnd = useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      const start = touchStartRef.current;
+      touchStartRef.current = null;
+
+      if (!start || !canAutoScroll) return;
+
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+
+      if (Math.abs(deltaX) < SWIPE_THRESHOLD_PX) return;
+      if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+
+      if (deltaX < 0) goNext();
+      else goPrev();
+    },
+    [canAutoScroll, goNext, goPrev]
+  );
+
+  const handleTouchCancel = useCallback(() => {
+    touchStartRef.current = null;
+  }, []);
+
   if (!carousel || slides.length === 0) {
     return null;
   }
@@ -238,54 +291,87 @@ const Carousel = ({ sectionId, carousel }: CarouselProps) => {
     ? { width: `${slideWidthPercent}%` }
     : { width: `${slideWidthPercent}%` };
 
+  const showArrows = canAutoScroll;
+  const imageViewportAspectRatio = `${16 * visibleCount} / 9`;
+
+  const arrowInsetLeftClassName = isCardsLayout ? 'left-0 md:left-3' : 'left-0';
+  const arrowInsetRightClassName = isCardsLayout ? 'right-0 md:right-3' : 'right-0';
+
+  const arrowButtonClassName =
+    'pointer-events-auto absolute inset-y-0 z-10 flex h-full w-24 cursor-pointer items-center justify-center bg-transparent text-[#FF0066] transition-colors hover:bg-white/90 sm:w-28';
+
+  const renderSlideCells = (
+    renderContent: (slide: CarouselSlide, index: number) => ReactNode
+  ) =>
+    trackSlides.map((slide, index) => (
+      <div
+        key={`${slide._key ?? 'slide'}-${index}`}
+        className={`${slideClassName} group shrink-0 cursor-pointer`}
+        style={slideStyle}
+        onMouseEnter={() => {
+          setIsPaused(true);
+          setHoveredTrackIndex(index);
+        }}
+      >
+        {renderContent(slide, index)}
+      </div>
+    ));
+
   const carouselTrack = (
     <div
-      className="relative"
+      className="relative touch-pan-y"
       onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      onMouseLeave={() => {
+        setIsPaused(false);
+        setHoveredTrackIndex(null);
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchCancel}
     >
-      <div className="overflow-hidden">
+      <div
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: imageViewportAspectRatio }}
+      >
         <div
-          className={`flex ${trackTransitionClass}`}
+          className={`flex h-full ${trackTransitionClass}`}
           style={trackStyle}
           onTransitionEnd={handleTrackTransitionEnd}
         >
-          {trackSlides.map((slide, index) => (
-            <div
-              key={`${slide._key ?? 'slide'}-${index}`}
-              className={`${slideClassName} group cursor-pointer`}
-              style={slideStyle}
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
+          {renderSlideCells((slide) => (
+            <CarouselSlideImage slide={slide} />
+          ))}
+        </div>
+
+        {showArrows && (
+          <>
+            <button
+              type="button"
+              onClick={goPrev}
+              className={`${arrowButtonClassName} ${arrowInsetLeftClassName}`}
+              aria-label="Previous slide"
             >
-              <div className="h-full">
-                <CarouselSlideContent slide={slide} />
-              </div>
-            </div>
+              <ChevronLeft className="h-14 w-14 sm:h-16 sm:w-16" />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              className={`${arrowButtonClassName} ${arrowInsetRightClassName}`}
+              aria-label="Next slide"
+            >
+              <ChevronRight className="h-14 w-14 sm:h-16 sm:w-16" />
+            </button>
+          </>
+        )}
+      </div>
+
+      <div className="overflow-hidden pt-6">
+        <div className={`flex ${trackTransitionClass}`} style={trackStyle}>
+          {renderSlideCells((slide, index) => (
+            <CarouselSlideCaption slide={slide} isHovered={hoveredTrackIndex === index} />
           ))}
         </div>
       </div>
-
-      {scrolling === 'manual' && slides.length > visibleCount && (
-        <>
-          <button
-            type="button"
-            onClick={goPrev}
-            className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-md transition-colors hover:bg-[#FF0066] hover:text-white md:left-4"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <button
-            type="button"
-            onClick={goNext}
-            className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-md transition-colors hover:bg-[#FF0066] hover:text-white md:right-4"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-        </>
-      )}
     </div>
   );
 
