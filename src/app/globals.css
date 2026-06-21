@@ -18,6 +18,15 @@ section {
   padding-bottom: 2rem;
 }
 
+/* Offset fixed header when scrolling to in-page sections */
+section[id] {
+  scroll-margin-top: 3.5rem;
+}
+
+#footer {
+  scroll-margin-top: 3.5rem;
+}
+
 /* Pages without Hero sections need padding-top on main */
 main.no-hero {
   padding-top: 56px;

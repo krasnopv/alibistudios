@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/assets';
+import { navigateToHashHref, normalizeHashHref, parseHashHref, scrollToHashSection } from '@/lib/hashScroll';
 import { useMailto } from '@/hooks/useMailto';
 import { useContactEmail } from '@/hooks/useContactEmail';
 
@@ -106,96 +107,10 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-  useEffect(() => {
-    // Unified handler for hash-based section scrolling (#films, #services, etc.)
-    const scrollToSection = (sectionId: string) => {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-        return true;
-      }
-      return false;
-    };
-
-    const handleHash = () => {
-      const hash = window.location.hash;
-      
-      // Map hash to section ID (remove the #)
-      const sectionId = hash.slice(1);
-      
-      if (!sectionId) return;
-      
-      // Only handle known sections to avoid conflicts
-      const knownSections = ['films', 'services', 'footer'];
-      if (!knownSections.includes(sectionId)) return;
-      
-      // Try to scroll immediately first
-      if (!scrollToSection(sectionId)) {
-        // If section not found, wait for content to load
-        let attempts = 0;
-        const maxAttempts = 20; // Maximum 4 seconds of checking (20 * 200ms)
-        
-        const checkForSection = () => {
-          attempts++;
-          if (scrollToSection(sectionId)) {
-            return; // Success, stop checking
-          }
-          
-          if (attempts < maxAttempts) {
-            // If still not found and haven't exceeded max attempts, check again
-            setTimeout(checkForSection, 200);
-          }
-        };
-        
-        // Start checking after initial delay
-        setTimeout(checkForSection, 300);
-      }
-    };
-
-    // Check on mount
-    handleHash();
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHash);
-    
-    // Also listen for route changes (for Next.js navigation)
-    const handleRouteChange = () => {
-      handleHash();
-    };
-
-    // Listen for popstate events (back/forward navigation)
-    window.addEventListener('popstate', handleRouteChange);
-    
-    // Also listen for DOM mutations to catch when content loads
-    // Use a debounce to avoid excessive calls
-    let mutationTimeout: NodeJS.Timeout;
-    const observer = new MutationObserver(() => {
-      clearTimeout(mutationTimeout);
-      mutationTimeout = setTimeout(() => {
-        const hash = window.location.hash;
-        if (hash) {
-          const sectionId = hash.slice(1);
-          const knownSections = ['films', 'services', 'footer'];
-          if (knownSections.includes(sectionId)) {
-            scrollToSection(sectionId);
-          }
-        }
-      }, 100); // Debounce mutations
-    });
-    
-    // Observe the entire document for changes
-    observer.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-    
-    return () => {
-      window.removeEventListener('hashchange', handleHash);
-      window.removeEventListener('popstate', handleRouteChange);
-      observer.disconnect();
-      clearTimeout(mutationTimeout);
-    };
-  }, []);
+  const handleHashLinkClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    navigateToHashHref(href, { onBeforeNavigate: handleMenuClose });
+  };
 
   const handleMenuToggle = () => {
     if (isMenuOpen) {
@@ -204,6 +119,10 @@ const Header = () => {
       setIsMenuOpen(true);
       setShowSidebar(true);
     }
+  };
+
+  const handleMenuItemClick = () => {
+    handleMenuClose();
   };
 
   const handleMenuClose = () => {
@@ -228,70 +147,14 @@ const Header = () => {
   const nestedExpanderStableKey = (topMenuItemKey: string, pathSegmentsIncludingSelf: readonly string[]) =>
     [topMenuItemKey, ...pathSegmentsIncludingSelf].join('/');
 
-  const handleMenuItemClick = () => {
-    handleMenuClose();
-  };
-
   const handleContactUsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     handleMenuClose();
-    // Scroll to footer after menu closes
     setTimeout(() => {
-      const footer = document.getElementById('footer');
-      if (footer) {
-        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      scrollToHashSection('footer');
+      const path = window.location.pathname;
+      window.history.pushState(null, '', `${path}#footer`);
     }, 400);
-  };
-
-  const handleFilmsClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    handleMenuClose();
-    
-    // Check if we're on the homepage
-    if (window.location.pathname === '/') {
-      // If on homepage, scroll directly first, then update hash for browser history
-      const filmsSection = document.getElementById('films');
-      if (filmsSection) {
-        filmsSection.scrollIntoView({ behavior: 'smooth' });
-        // Update hash after a short delay to ensure scroll happens first
-        setTimeout(() => {
-          window.location.hash = '#films';
-        }, 100);
-      } else {
-        // Section not found, set hash and let the unified handler find it
-        window.location.hash = '#films';
-      }
-    } else {
-      // If on different page, navigate to homepage with hash
-      // Use window.location for reliable hash navigation
-      window.location.href = '/#films';
-    }
-  };
-
-  const handleServicesClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    handleMenuClose();
-    
-    // Check if we're on the homepage
-    if (window.location.pathname === '/') {
-      // If on homepage, scroll directly first, then update hash for browser history
-      const servicesSection = document.getElementById('services');
-      if (servicesSection) {
-        servicesSection.scrollIntoView({ behavior: 'smooth' });
-        // Update hash after a short delay to ensure scroll happens first
-        setTimeout(() => {
-          window.location.hash = '#services';
-        }, 100);
-      } else {
-        // Section not found, set hash and let the unified handler find it
-        window.location.hash = '#services';
-      }
-    } else {
-      // If on different page, navigate to homepage with hash
-      // Use window.location for reliable hash navigation
-      window.location.href = '/#services';
-    }
   };
 
   const resolvePageHref = (slug?: string) => {
@@ -320,49 +183,43 @@ const Header = () => {
     </div>
   );
 
+  const renderHashMenuLink = (key: string, label: string, url: string) => {
+    const href = normalizeHashHref(url);
+
+    if (url === '#footer') {
+      return (
+        <a
+          key={key}
+          href="#footer"
+          className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+          style={{ cursor: 'pointer' }}
+          onClick={handleContactUsClick}
+        >
+          {renderMenuLabel(label)}
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={key}
+        href={href}
+        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
+        style={{ cursor: 'pointer' }}
+        onClick={(e) => handleHashLinkClick(e, href)}
+      >
+        {renderMenuLabel(label)}
+      </Link>
+    );
+  };
+
   const renderSubMenuLink = (sub: MenuSubItemLocal) => {
     const subKey = sub._key;
     const label = sub.label;
 
     if (sub.linkType === 'custom' && sub.url) {
-      if (sub.url === '#films') {
-        return (
-          <Link
-            key={subKey}
-            href="/#films"
-            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-            style={{ cursor: 'pointer' }}
-            onClick={handleFilmsClick}
-          >
-            {renderMenuLabel(label)}
-          </Link>
-        );
-      }
-      if (sub.url === '#services') {
-        return (
-          <Link
-            key={subKey}
-            href="/#services"
-            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-            style={{ cursor: 'pointer' }}
-            onClick={handleServicesClick}
-          >
-            {renderMenuLabel(label)}
-          </Link>
-        );
-      }
-      if (sub.url === '#footer') {
-        return (
-          <a
-            key={subKey}
-            href="#footer"
-            className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-            style={{ cursor: 'pointer' }}
-            onClick={handleContactUsClick}
-          >
-            {renderMenuLabel(label)}
-          </a>
-        );
+      if (parseHashHref(normalizeHashHref(sub.url))) {
+        return renderHashMenuLink(subKey, label, sub.url);
       }
 
       if (sub.url.startsWith('/')) {
@@ -765,44 +622,8 @@ const Header = () => {
                 }
 
                 if (item.linkType === 'custom' && item.url) {
-                  if (item.url === '#films') {
-                    return (
-                      <Link
-                        key={key}
-                        href="/#films"
-                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleFilmsClick}
-                      >
-                        {renderMenuLabel(item.label)}
-               </Link>
-                    );
-                  }
-                  if (item.url === '#services') {
-                    return (
-                      <Link
-                        key={key}
-                        href="/#services"
-                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleServicesClick}
-                      >
-                        {renderMenuLabel(item.label)}
-               </Link>
-                    );
-                  }
-                  if (item.url === '#footer') {
-                    return (
-                      <a
-                        key={key}
-                        href="#footer"
-                        className="inline-flex justify-start items-center gap-2.5 menu-item-hover"
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleContactUsClick}
-                      >
-                        {renderMenuLabel(item.label)}
-                      </a>
-                    );
+                  if (parseHashHref(normalizeHashHref(item.url))) {
+                    return renderHashMenuLink(key, item.label, item.url);
                   }
 
                   if (item.url.startsWith('/')) {

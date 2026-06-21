@@ -4,6 +4,7 @@ import "./globals.css";
 import { generateMetadataFromSanity } from "@/lib/seo";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
+import HashScrollHandler from "@/components/HashScrollHandler";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} antialiased bg-[#F8F9FA]`}
       >
         {children}
+        <HashScrollHandler />
         <Footer />
         <BackToTop />
       </body>
