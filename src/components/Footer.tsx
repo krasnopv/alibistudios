@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import FooterItem from './FooterItem';
 
@@ -53,9 +54,11 @@ const Footer = () => {
             className="relative"
             style={{ transform: 'translateY(50%)' }}
           >
-            <img 
-              src="/Layer_1.svg" 
-              alt="Layer 1" 
+            <Image
+              src="/Layer_1.svg"
+              alt="Layer 1"
+              width={1920}
+              height={400}
               className="w-full h-auto absolute"
               style={{ marginTop: '-8.5%' }}
             />
@@ -102,14 +105,14 @@ const Footer = () => {
               </svg>
             </div>
             <div className="my-12 flex flex-col items-center gap-12">
-              <img
+              <Image
                 src="/uk-screen-alliance-logo.png"
                 alt="UK Screen Alliance member company"
                 width={220}
                 height={86}
                 style={{ width: '220px', height: 'auto', maxWidth: 'none' }}
               />
-              <img
+              <Image
                 src="/creeb_logo.png"
                 alt="Secure infrastructure provided by CREE8"
                 width={220}
