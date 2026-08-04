@@ -135,7 +135,7 @@ function CarouselSlideCaption({ slide, isHovered }: { slide: CarouselSlide; isHo
     <div className="px-1">
       {caption && <p className={captionClassName(isHovered)}>{caption}</p>}
       {production && (
-        <p className="body_small brand-color !mb-0">{production}</p>
+        <p className="heading_h3 brand-color !mb-0 !text-[20px] md:!text-[22px]">{production}</p>
       )}
     </div>
   );
