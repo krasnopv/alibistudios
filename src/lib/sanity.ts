@@ -35,6 +35,7 @@ export const carouselProjection = `{
     _key,
     usePlaceholder,
     caption,
+    production,
     imageAlignHorizontal,
     imageAlignVertical,
     "imageUrl": image.asset->url,

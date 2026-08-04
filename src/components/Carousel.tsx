@@ -7,6 +7,7 @@ export interface CarouselSlide {
   _key?: string;
   usePlaceholder?: boolean;
   caption?: string;
+  production?: string;
   imageUrl?: string;
   imageAlt?: string;
   imageAlignHorizontal?: 'left' | 'center' | 'right' | null;
@@ -88,7 +89,7 @@ function BrandTriangleOutline({ className = 'h-20 w-auto md:h-28' }: { className
 }
 
 const captionClassName = (isHovered: boolean) =>
-  `heading_h3 px-1 transition-colors duration-200 ${
+  `heading_h3 transition-colors duration-200 ${
     isHovered ? '!text-[#FF0066]' : '!text-black'
   }`;
 
@@ -126,9 +127,18 @@ function CarouselSlideImage({ slide }: { slide: CarouselSlide }) {
 }
 
 function CarouselSlideCaption({ slide, isHovered }: { slide: CarouselSlide; isHovered: boolean }) {
-  if (!slide.caption) return null;
+  const caption = slide.caption?.trim();
+  const production = slide.production?.trim();
+  if (!caption && !production) return null;
 
-  return <p className={captionClassName(isHovered)}>{slide.caption}</p>;
+  return (
+    <div className="px-1">
+      {caption && <p className={captionClassName(isHovered)}>{caption}</p>}
+      {production && (
+        <p className="body_small brand-color !mb-0">{production}</p>
+      )}
+    </div>
+  );
 }
 
 const Carousel = ({ sectionId, carousel }: CarouselProps) => {
